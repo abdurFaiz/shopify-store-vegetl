@@ -1,0 +1,125 @@
+<footer class="w-full rounded-t-[48px] bg-slate-50 dark:bg-slate-900/50 relative overflow-hidden mt-20" id="Section-{{ section.id }}">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-12 max-w-[1200px] mx-auto px-6 py-20 font-plus-jakarta-sans text-base leading-relaxed">
+    <!-- Brand Column -->
+    <div class="space-y-6">
+      <div class="text-xl font-bold text-emerald-700 dark:text-emerald-400">
+        {% if section.settings.logo_text != blank %}
+          {{ section.settings.logo_text }}
+        {% else %}
+          {{ shop.name }}
+        {% endif %}
+      </div>
+      <p class="text-slate-500 dark:text-slate-400 text-sm">{{ section.settings.text }}</p>
+      
+      <div class="flex gap-4">
+        {% if settings.social_facebook_link != blank %}
+          <a href="{{ settings.social_facebook_link }}" class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 cursor-pointer hover:bg-primary hover:text-white transition-all">
+            <span class="material-symbols-outlined text-sm" data-icon="share">share</span>
+          </a>
+        {% endif %}
+        {% if settings.social_instagram_link != blank %}
+          <a href="{{ settings.social_instagram_link }}" class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 cursor-pointer hover:bg-primary hover:text-white transition-all">
+            <span class="material-symbols-outlined text-sm" data-icon="thumb_up">thumb_up</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="space-y-6">
+      <h4 class="font-bold text-on-surface">{{ section.settings.menu_1_title }}</h4>
+      <ul class="space-y-3">
+        {%- for link in section.settings.menu_1.links -%}
+          <li><a class="text-slate-500 dark:text-slate-400 hover:text-emerald-600 transition-colors" href="{{ link.url }}">{{ link.title }}</a></li>
+        {%- endfor -%}
+      </ul>
+    </div>
+
+    <!-- Contact -->
+    <div class="space-y-6">
+      <h4 class="font-bold text-on-surface">Contact</h4>
+      <ul class="space-y-3 text-slate-500 dark:text-slate-400">
+        <li class="flex gap-2"><span class="material-symbols-outlined text-emerald-600 text-lg" data-icon="location_on">location_on</span> {{ shop.address.street }}, {{ shop.address.city }}</li>
+        <li class="flex gap-2"><span class="material-symbols-outlined text-emerald-600 text-lg" data-icon="call">call</span> {{ shop.phone }}</li>
+        <li class="flex gap-2"><span class="material-symbols-outlined text-emerald-600 text-lg" data-icon="mail">mail</span> {{ shop.email }}</li>
+      </ul>
+    </div>
+
+    <!-- Resources -->
+    <div class="space-y-6">
+      <h4 class="font-bold text-on-surface">{{ section.settings.menu_2_title }}</h4>
+      <ul class="space-y-3">
+        {%- for link in section.settings.menu_2.links -%}
+          <li><a class="text-slate-500 dark:text-slate-400 hover:text-emerald-600 transition-colors" href="{{ link.url }}">{{ link.title }}</a></li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-emerald-100/30 max-w-[1200px] mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-400">
+    <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</p>
+  </div>
+
+  <!-- Decorative Elements -->
+  <div class="absolute bottom-0 right-0 opacity-10 pointer-events-none translate-y-1/2 translate-x-1/2">
+    {% if section.settings.bg_image != blank %}
+      {{ section.settings.bg_image | image_url: width: 300 | image_tag: class: 'w-64 h-64 object-cover rounded-full' }}
+    {% else %}
+      {{ 'image' | placeholder_svg_tag: 'w-64 h-64 object-cover rounded-full bg-surface-variant' }}
+    {% endif %}
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Organic Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text",
+      "default": "Organic Farm"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Description",
+      "default": "Providing the highest quality organic produce since 2008. From our soil to your table."
+    },
+    {
+      "type": "text",
+      "id": "menu_1_title",
+      "label": "Menu 1 Title",
+      "default": "Quick Links"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_1",
+      "label": "Menu 1",
+      "default": "footer"
+    },
+    {
+      "type": "text",
+      "id": "menu_2_title",
+      "label": "Menu 2 Title",
+      "default": "Resources"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_2",
+      "label": "Menu 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Decorative Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Organic Footer"
+    }
+  ]
+}
+{% endschema %}

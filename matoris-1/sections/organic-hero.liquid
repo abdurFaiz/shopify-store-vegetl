@@ -1,0 +1,171 @@
+<section class="bg-white py-4 px-6 lg:py-8 mt-14 full-width" id="Section-{{ section.id }}">
+  <div class="w-full-screen grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-[720px]">
+    
+    <!-- LEFT COLUMN -->
+    <div class="flex flex-col gap-4 lg:gap-6 h-full">
+      <!-- Top Big Card -->
+      <div class="flex-1 bg-[#f0f8ef] rounded-[32px] flex flex-col items-center justify-center p-8 lg:p-16 text-center shadow-sm">
+        {% if section.settings.subheading != blank %}
+          <span class="inline-flex items-center text-gray-500 bg-black/5 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase mb-8 backdrop-blur-sm">
+            {{ section.settings.subheading }}
+          </span>
+        {% endif %}
+        {% if section.settings.heading != blank %}
+          <div class="text-[52px] lg:text-[72px] font-medium font-headline leading-[1.05] tracking-tight text-[#1a201b] mb-10">
+            {{ section.settings.heading }}
+          </div>
+        {% endif %}
+        {% if section.settings.button_label != blank %}
+          <a
+            {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+            class="inline-flex items-center gap-3 bg-[#83e950] text-[#1a201b] pl-8 pr-2 py-2 rounded-full font-semibold text-lg hover:bg-[#72d342] transition-all hover:scale-105 active:scale-95"
+          >
+            {{ section.settings.button_label }}
+            <span class="bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-sm">
+              <span class="material-symbols-outlined text-sm font-bold" data-icon="call_made">call_made</span>
+            </span>
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Bottom Small Cards Row -->
+      <div class="grid grid-cols-2 gap-4 lg:gap-6 h-[240px] lg:h-[300px]">
+        <!-- Bottom Left: Farm Map -->
+        <div class="rounded-[32px] overflow-hidden relative shadow-sm border border-black/5 bg-gray-100 group cursor-pointer">
+          {% if section.settings.sub_image != blank %}
+            {{ section.settings.sub_image | image_url: width: 600 | image_tag: class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700' }}
+          {% else %}
+            {{ 'collection-2' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-200' }}
+          {% endif %}
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bg-white px-5 py-3 rounded-2xl shadow-xl text-center pointer-events-auto hover:-translate-y-1 transition-transform">
+              <p class="text-[13px] font-bold text-gray-800 mb-0.5">🍓 {{ section.settings.card_1_title }}</p>
+              <p class="text-[10px] text-gray-500">{{ section.settings.card_1_subtitle }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Right: Happy Customer / Fruit -->
+        <div class="rounded-[32px] overflow-hidden relative shadow-sm border border-black/5 bg-[#6fac2a]">
+          {% if section.settings.sub_image_2 != blank %}
+            {{ section.settings.sub_image_2 | image_url: width: 600 | image_tag: class: 'w-full h-full object-cover mix-blend-multiply opacity-90 hover:scale-105 transition-transform duration-700' }}
+          {% else %}
+            {{ 'collection-1' | placeholder_svg_tag: 'w-full h-full object-cover mix-blend-overlay opacity-30 bg-green-800' }}
+          {% endif %}
+          
+          <div class="absolute top-4 left-4 right-4 flex items-center gap-2 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-2xl shadow-md">
+             <div class="flex -space-x-2">
+                <div class="w-7 h-7 rounded-full bg-blue-500 border-2 border-white"></div>
+                <div class="w-7 h-7 rounded-full bg-pink-500 border-2 border-white"></div>
+                <div class="w-7 h-7 flex items-center justify-center rounded-full bg-green-500 border-2 border-white text-[9px] text-white font-bold">5k</div>
+             </div>
+             <span class="text-[11px] font-bold text-gray-800 leading-tight">{{ section.settings.card_2_title }}</span>
+          </div>
+
+          <div class="absolute bottom-4 left-4 right-4">
+             <div class="bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl shadow-md">
+                <p class="text-[13px] font-bold leading-tight text-gray-800">{{ section.settings.card_3_title }}</p>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="rounded-[32px] lg:rounded-[48px] overflow-hidden relative shadow-sm border border-black/5 h-full min-h-[500px]">
+      {% if section.settings.image != blank %}
+        {{ section.settings.image | image_url: width: 1200 | image_tag: class: 'w-full h-full object-cover hover:scale-105 transition-transform duration-1000' }}
+      {% else %}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-100' }}
+      {% endif %}
+
+      <div class="absolute bottom-8 left-8">
+        <div class="bg-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 hover:-translate-y-1 transition-transform cursor-pointer">
+          <span class="text-sm font-bold text-gray-800">{{ section.settings.card_3_subtitle }}</span>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Organic Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "100% TRUSTED PLATFORM"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Fresh. Organic.<br>Sustainable.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Shop Now Our Product"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Main Image (Farmer)"
+    },
+    {
+      "type": "image_picker",
+      "id": "sub_image",
+      "label": "Bottom Left Image (Farm Aerial)"
+    },
+    {
+      "type": "image_picker",
+      "id": "sub_image_2",
+      "label": "Bottom Right Image (Fruit Basket)"
+    },
+    {
+      "type": "text",
+      "id": "card_1_title",
+      "label": "Card 1 Title",
+      "default": "Strawberry Field"
+    },
+    {
+      "type": "text",
+      "id": "card_1_subtitle",
+      "label": "Card 1 Subtitle",
+      "default": "Collingwood VIC 3066 AU"
+    },
+    {
+      "type": "text",
+      "id": "card_2_title",
+      "label": "Card 2 Title",
+      "default": "+Happy Customer"
+    },
+    {
+      "type": "text",
+      "id": "card_3_title",
+      "label": "Card 3 Title",
+      "default": "100% Authentic and tasty Fruits"
+    },
+    {
+      "type": "text",
+      "id": "card_3_subtitle",
+      "label": "Card 3 Subtitle",
+      "default": "Organic Fruits 🍎🍅🍓"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Organic Hero"
+    }
+  ]
+}
+{% endschema %}

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ request.locale.iso_code }}">
+<html class="scroll-smooth" lang="{{ request.locale.iso_code }}">
   <head>
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
@@ -24,13 +24,15 @@
     {% render 'meta-tags' %}
 
     {{ content_for_header }}
+    {% render 'organic-styles' %}
   </head>
 
-  <body>
+  <body class="bg-surface font-body text-on-surface antialiased">
     {% sections 'header-group' %}
 
     {{ content_for_layout }}
 
     {% sections 'footer-group' %}
+    {% render 'organic-scripts' %}
   </body>
 </html>

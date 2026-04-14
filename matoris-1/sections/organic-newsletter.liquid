@@ -1,0 +1,81 @@
+<section class="py-20 bg-surface-container-low" id="Section-{{ section.id }}">
+  <div class="max-w-[1200px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    {% if section.settings.heading != blank %}
+      <h2 class="text-5xl font-headline font-bold leading-tight">{{ section.settings.heading }}</h2>
+    {% endif %}
+    
+    <div class="space-y-6">
+      <div class="h-32 rounded-3xl overflow-hidden shadow-lg border border-outline-variant/10">
+        {% if section.settings.image != blank %}
+          {{ section.settings.image | image_url: width: 800 | image_tag: class: 'w-full h-full object-cover' }}
+        {% else %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-surface-variant' }}
+        {% endif %}
+      </div>
+      
+      <div class="bg-surface-container-lowest p-8 rounded-[32px] shadow-xl">
+        <p class="font-bold mb-4 uppercase text-[10px] tracking-widest text-on-surface-variant">{{ section.settings.newsletter_label }}</p>
+        
+        {%- form 'customer', class: 'flex gap-4' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <input class="flex-1 bg-surface-container border-none rounded-full px-6 py-4 focus:ring-2 focus:ring-primary/20" 
+                 placeholder="{{ section.settings.email_placeholder }}" 
+                 type="email"
+                 name="contact[email]"
+                 id="Email-{{ section.id }}"
+                 value="{{ form.email }}"
+                 aria-required="true"
+                 autocorrect="off"
+                 autocapitalize="off"
+                 required />
+          <button type="submit" class="bg-primary-container text-white px-8 py-4 rounded-full font-bold hover:bg-primary transition-colors">
+            {{ section.settings.button_label }}
+          </button>
+        {%- endform -%}
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Organic Newsletter",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Get Updates &<br>Offers</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image Banner"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_label",
+      "label": "Newsletter Label",
+      "default": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email Placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Subscribe"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Organic Newsletter"
+    }
+  ]
+}
+{% endschema %}

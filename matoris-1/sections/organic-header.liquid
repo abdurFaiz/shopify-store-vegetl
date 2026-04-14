@@ -1,0 +1,96 @@
+<header
+  class="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-sm dark:shadow-none"
+  id="Section-{{ section.id }}"
+>
+  <div class="flex justify-between items-center max-w-full mx-auto px-6 h-20">
+    <!-- Brand Logo -->
+    <a
+      href="{{ routes.root_url }}"
+      class="text-2xl font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-2 font-headline"
+    >
+      {%- if section.settings.logo != blank -%}
+        {{ section.settings.logo | image_url: width: 200 | image_tag: class: 'h-8 w-auto' }}
+      {%- else -%}
+        <span class="material-symbols-outlined text-primary-container" data-icon="eco">eco</span>
+        {{ shop.name }}
+      {%- endif -%}
+    </a>
+
+    <!-- Navigation Links -->
+    <nav class="hidden md:flex items-center gap-6 font-plus-jakarta-sans text-md font-medium">
+      {%- for link in section.settings.menu.links -%}
+        <a
+          class="text-slate-700 hover:text-emerald-600 px-3 py-2 rounded-full bg-gray-100 transition-colors {% if link.active %} text-emerald-700 font-bold{% endif %}"
+          href="{{ link.url }}"
+        >
+          {{ link.title }}
+        </a>
+      {%- endfor -%}
+    </nav>
+
+    <!-- Trailing Actions -->
+    <div class="flex items-center gap-6">
+      <a
+        href="{{ routes.cart_url }}"
+        class="material-symbols-outlined rounded-full border border-gray-200 text-slate-600 hover:bg-emerald-50/50 p-2.5 rounded-full transition-all relative"
+        data-icon="shopping_basket"
+      >
+        shopping_basket
+        {% if cart.item_count > 0 %}
+          <span class="absolute top-0 right-0 bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+            {{- cart.item_count -}}
+          </span>
+        {% endif %}
+      </a>
+      {% if section.settings.button_label != blank %}
+        <div class="flex items-center justify-center">
+
+          <a
+            {% if section.settings.button_link != blank %}
+              href="{{ section.settings.button_link }}"
+            {% endif %}
+            class="bg-green-800 text-white pl-4 pr-1 py-2 rounded-full font-semibold text-md scale-95 active:scale-90 transition-transform shadow-lg shadow-primary/20 flex items-center gap-2"
+          >
+            {{ section.settings.button_label }}
+            <span class="material-symbols-outlined text-sm text-green-800 bg-white rounded-full px-2.5 py-1.5" data-icon="call_made">call_made</span>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Organic Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Explore"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Organic Header"
+    }
+  ]
+}
+{% endschema %}

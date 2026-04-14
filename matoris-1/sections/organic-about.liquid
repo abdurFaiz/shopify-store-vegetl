@@ -1,0 +1,83 @@
+<section class="py-32 bg-surface-container-lowest" id="Section-{{ section.id }}">
+  <div class="max-w-[1200px] mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
+    <!-- Image Mosaic Left -->
+    <div class="md:col-span-5 grid grid-cols-2 gap-4">
+      {% if section.settings.image_1 != blank %}
+        {{ section.settings.image_1 | image_url: width: 600 | image_tag: class: 'rounded-3xl w-full h-64 object-cover' }}
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'rounded-3xl w-full h-64 object-cover bg-surface-variant' }}
+      {% endif %}
+
+      {% if section.settings.image_2 != blank %}
+        {{ section.settings.image_2 | image_url: width: 600 | image_tag: class: 'rounded-3xl w-full h-80 object-cover mt-12' }}
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'rounded-3xl w-full h-80 object-cover mt-12 bg-surface-variant' }}
+      {% endif %}
+    </div>
+
+    <!-- About Content -->
+    <div class="md:col-span-7">
+      {% if section.settings.subheading != blank %}
+        <span class="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase mb-6">{{ section.settings.subheading }}</span>
+      {% endif %}
+      
+      {% if section.settings.heading != blank %}
+        <div class="text-[36px] font-headline font-bold leading-tight text-on-surface mb-8">
+          {{ section.settings.heading }}
+        </div>
+      {% endif %}
+      
+      {% if section.settings.button_label != blank %}
+        <a {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %} class="inline-flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all">
+          {{ section.settings.button_label }} <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Organic About",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "First Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Second Image"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "About Us"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Our journey started in the <span>heart of nature</span>. We believe every <span>farm uses sustainable farming practices</span> to protect the environment and <span>deliver the healthiest food</span> for your family.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Organic About"
+    }
+  ]
+}
+{% endschema %}

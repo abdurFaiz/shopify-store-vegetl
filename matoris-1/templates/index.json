@@ -1,20 +1,72 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "hello-world",
+    "hero": {
+      "type": "organic-hero",
+      "settings": {}
+    },
+    "about": {
+      "type": "organic-about",
+      "settings": {}
+    },
+    "products": {
+      "type": "organic-products",
+      "settings": {}
+    },
+    "why_us": {
+      "type": "organic-why-us",
+      "settings": {},
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "icon": "eco",
+            "title": "100% Organic Products"
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "icon": "shutter_speed",
+            "title": "Farm-to-Table Freshness"
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "icon": "psychology",
+            "title": "Sustainable Farming"
+          }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "icon": "verified",
+            "title": "Local & Trusted"
+          }
+        }
+      },
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3",
+        "feature_4"
+      ]
+    },
+    "testimonials": {
+      "type": "organic-testimonials",
+      "settings": {}
+    },
+    "newsletter": {
+      "type": "organic-newsletter",
       "settings": {}
     }
   },
   "order": [
-    "main"
+    "hero",
+    "about",
+    "products",
+    "why_us",
+    "testimonials",
+    "newsletter"
   ]
 }
