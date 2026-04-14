@@ -1,4 +1,4 @@
-# 🌿 Shopify Theme Custom — Luar biasa & tanpa antarmuka templat
+# 🌿 Shopify Theme Custom — Extraordinary & no no template interface
 
 > A custom Shopify theme collection — a modern, clean, and responsive storefront built with Liquid, HTML, CSS, and JavaScript.
 
