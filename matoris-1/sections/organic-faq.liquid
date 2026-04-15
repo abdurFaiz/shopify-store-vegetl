@@ -1,0 +1,165 @@
+<section class="py-12 lg:py-24 bg-white full-width w-full" id="Section-{{ section.id }}">
+  <div class="max-w-[1300px] mx-auto px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-14">
+    
+    <!-- LEFT COLUMN -->
+    <div class="flex flex-col h-full">
+      {% if section.settings.subheading != blank %}
+        <div class="mb-4">
+          <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide bg-white shadow-sm">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#006400] mr-2"></span>
+            {{ section.settings.subheading }}
+          </span>
+        </div>
+      {% endif %}
+      
+      {% if section.settings.heading != blank %}
+        <!-- Using inline HTML default to support the italic gray 'Questions' -->
+        <h2 class="text-4xl md:text-[54px] leading-tight text-[#1a201b] font-semibold tracking-tight mb-10 lg:mb-auto max-w-[400px]">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+      
+      <!-- CONTACT BLOCK -->
+      <div class="flex flex-col items-start gap-2 mt-auto">
+        <h3 class="text-[20px] font-medium text-[#1a201b]">{{ section.settings.contact_heading }}</h3>
+        <p class="text-[14px] text-gray-500 max-w-[260px] leading-relaxed">
+          {{ section.settings.contact_text }}
+        </p>
+        {% if section.settings.button_label != blank %}
+          <a href="{{ section.settings.button_link | default: '#' }}" class="bg-[#006400] text-white font-medium text-[13px] px-6 py-3 rounded-full hover:bg-green-800 transition-colors shadow-sm tracking-wide">
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- RIGHT COLUMN (FAQ ACCORDION) -->
+    <div class="flex flex-col gap-4">
+      {% for block in section.blocks %}
+        <details class="group bg-[#f9faf9] rounded-[20px] sm:rounded-[24px] overflow-hidden cursor-pointer" {{ block.shopify_attributes }}>
+          <summary class="flex items-center justify-between p-5 sm:px-8 sm:py-7 list-none [&::-webkit-details-marker]:hidden outline-none select-none">
+            <div class="flex items-center gap-4 sm:gap-6 font-medium">
+              <span class="text-[18px] text-gray-400 shrink-0">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+              <span class="text-[16px] sm:text-[18px] text-[#1a201b] pr-4">{{ block.settings.question }}</span>
+            </div>
+            <span class="material-symbols-outlined text-gray-600 group-open:hidden shrink-0">add</span>
+            <span class="material-symbols-outlined text-gray-600 hidden group-open:block shrink-0">remove</span>
+          </summary>
+          <div class="px-5 pb-6 sm:px-8 sm:pb-8 pt-0 pl-[48px] sm:pl-[78px] text-[14px] text-gray-500 leading-relaxed max-w-[600px] cursor-text">
+            {{ block.settings.answer }}
+          </div>
+        </details>
+      {% else %}
+        <!-- Default Fallback if no blocks exist yet -->
+        {% for i in (1..5) %}
+          {% assign question = 'What is smart farming?' %}
+          {% assign answer = 'Our solutions provide real-time field monitoring, data-driven insights, and easy-to-use tools that help farmers make better decisions, reduce costs, and improve crop yields.' %}
+          
+          {% if i == 2 %}
+            {% assign question = 'How does your system help farmers?' %}
+          {% elsif i == 3 %}
+            {% assign question = 'Do I need technical knowledge to use your tools?' %}
+          {% elsif i == 4 %}
+            {% assign question = 'How does this help reduce farming costs?' %}
+          {% elsif i == 5 %}
+            {% assign question = 'Are your solutions environmentally friendly?' %}
+          {% endif %}
+          
+          <details class="group bg-[#f9faf9] rounded-[20px] sm:rounded-[24px] overflow-hidden cursor-pointer" {% if i == 2 %}open{% endif %}>
+            <summary class="flex items-center justify-between p-5 sm:px-8 sm:py-7 list-none [&::-webkit-details-marker]:hidden outline-none select-none">
+              <div class="flex items-center gap-4 sm:gap-6 font-medium">
+                <span class="text-[18px] text-gray-400 shrink-0">0{{ i }}</span>
+                <span class="text-[16px] sm:text-[18px] text-[#1a201b] pr-4">{{ question }}</span>
+              </div>
+              <span class="material-symbols-outlined text-gray-600 group-open:hidden shrink-0">add</span>
+              <span class="material-symbols-outlined text-gray-600 hidden group-open:block shrink-0">remove</span>
+            </summary>
+            <div class="px-5 pb-6 sm:px-8 sm:pb-8 pt-0 pl-[48px] sm:pl-[78px] text-[14px] text-gray-500 leading-relaxed max-w-[600px] cursor-text">
+              {{ answer }}
+            </div>
+          </details>
+        {% endfor %}
+      {% endfor %}
+    </div>
+    
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Organic FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Badge Text",
+      "default": "FAQ"
+    },
+    {
+      "type": "html",
+      "id": "heading",
+      "label": "Heading (HTML Supported)",
+      "default": "Frequently Asked <span class='font-normal italic text-gray-700'>Questions</span>"
+    },
+    {
+      "type": "header",
+      "content": "Contact Block"
+    },
+    {
+      "type": "text",
+      "id": "contact_heading",
+      "label": "Contact Heading",
+      "default": "Still have a question?"
+    },
+    {
+      "type": "textarea",
+      "id": "contact_text",
+      "label": "Contact Text",
+      "default": "Don't worry, we're here for free consultation."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "CONTACT US"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is smart farming?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Our solutions provide real-time field monitoring, data-driven insights, and easy-to-use tools that help farmers make better decisions, reduce costs, and improve crop yields."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Organic FAQ",
+      "blocks": [
+        { "type": "faq_item", "settings": { "question": "What is smart farming?" } },
+        { "type": "faq_item", "settings": { "question": "How does your system help farmers?" } },
+        { "type": "faq_item", "settings": { "question": "Do I need technical knowledge to use your tools?" } },
+        { "type": "faq_item", "settings": { "question": "How does this help reduce farming costs?" } },
+        { "type": "faq_item", "settings": { "question": "Are your solutions environmentally friendly?" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

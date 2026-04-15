@@ -1,56 +1,113 @@
-<section class="py-32 bg-white" id="Section-{{ section.id }}">
-  <div class="max-w-[1200px] mx-auto px-6 text-center mb-16">
+<section class="py-12 lg:py-24 bg-[#fafbfa] full-width w-full" id="Section-{{ section.id }}">
+  <div class="max-w-[1300px] mx-auto px-4 lg:px-6 text-center mb-10 lg:mb-12 border-box">
     {% if section.settings.subheading != blank %}
-      <span class="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase mb-4">
+      <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide mb-6 bg-white shadow-sm">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#006400] mr-2"></span>
         {{ section.settings.subheading }}
       </span>
     {% endif %}
     {% if section.settings.heading != blank %}
-      <h2 class="text-4xl font-headline font-bold text-on-surface">
+      <h2 class="text-3xl md:text-[46px] leading-tight font-medium text-[#1a201b] tracking-tight">
         {{ section.settings.heading }}
       </h2>
     {% endif %}
   </div>
 
-  <div class="max-w-[1200px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+  <div class="max-w-[1300px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
     {%- for product in section.settings.collection.products limit: section.settings.products_to_show -%}
-      <div class="group bg-surface-container-lowest rounded-2xl p-4 transition-all hover:shadow-2xl hover:shadow-primary/5 border border-outline-variant/5">
-        <a href="{{ product.url }}" class="block aspect-square rounded-xl overflow-hidden mb-6 bg-surface">
-          {% if product.featured_image != blank %}
-             {{ product.featured_image | image_url: width: 600 | image_tag: class: 'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500' }}
-          {% else %}
-             {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 bg-surface' }}
-          {% endif %}
-        </a>
-        <div class="flex justify-between items-start">
-          <div>
-            <h3 class="font-headline font-bold text-lg mb-1"><a href="{{ product.url }}">{{ product.title }}</a></h3>
-            <p class="text-sm text-on-surface-variant mb-4">{{ product.type | default: 'Organic Product' }}</p>
-            <p class="text-primary font-bold text-xl">{{ product.price | money }}</p>
+      <div class="group flex flex-col">
+        <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate">
+          <a href="{{ product.url }}" class="block w-full h-full">
+            {% if product.featured_image != blank %}
+              {{
+                product.featured_image
+                | image_url: width: 600
+                | image_tag: class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700'
+              }}
+            {% else %}
+              {{
+                'product-1'
+                | placeholder_svg_tag: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 bg-gray-200'
+              }}
+            {% endif %}
+          </a>
+
+          <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
+            <form method="post" action="/cart/add" class="m-0">
+              <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+              <button
+                type="submit"
+                class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#83e950] hover:text-[#1a201b] transition-colors shadow-md"
+              >
+                <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
+              </button>
+            </form>
+            <svg class="absolute -top-[24px] right-0 w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+              <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+            </svg>
+            <svg class="absolute bottom-0 -left-[24px] w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+              <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+            </svg>
           </div>
-          <form method="post" action="/cart/add" class="inline">
-            <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
-            <button type="submit" class="w-12 h-12 rounded-full bg-on-surface flex items-center justify-center text-white hover:bg-primary transition-colors">
-              <span class="material-symbols-outlined text-xl" data-icon="shopping_cart">shopping_cart</span>
-            </button>
-          </form>
+        </div>
+
+        <div class="flex justify-between items-start gap-4 px-2">
+          <div>
+            <h3 class="font-bold text-[18px] text-[#1a201b] leading-tight mb-1.5">
+              <a href="{{ product.url }}">{{ product.title }}</a>
+            </h3>
+            <p class="text-[13px] text-gray-500 leading-snug">
+              {{ product.metafields.custom.short_description | default: 'Sweet, juicy, and naturally grown.' }}
+            </p>
+          </div>
+          <span class="font-bold text-[18px] text-[#1a201b] leading-tight whitespace-nowrap">
+            {{- product.price | money -}}
+          </span>
         </div>
       </div>
     {%- else -%}
       {%- for i in (1..section.settings.products_to_show) -%}
-        <div class="group bg-surface-container-lowest rounded-2xl p-4 transition-all hover:shadow-2xl hover:shadow-primary/5 border border-outline-variant/5">
-          <div class="block aspect-square rounded-xl overflow-hidden mb-6 bg-surface">
-             {{ 'product-' | append: i | placeholder_svg_tag: 'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 bg-surface' }}
-          </div>
-          <div class="flex justify-between items-start">
-            <div>
-              <h3 class="font-headline font-bold text-lg mb-1">Example Product Title</h3>
-              <p class="text-sm text-on-surface-variant mb-4">Grown with natural fertilizers</p>
-              <p class="text-primary font-bold text-xl">$5.99</p>
+        {% assign title = 'Organic Cherry Tomato' %}
+        {% assign desc = 'Sweet, juicy, and naturally grown.' %}
+        {% if i == 2 %}
+          {% assign title = 'Fresh Basil Leaves' %}
+          {% assign desc = 'Handpicked for vibrant flavor' %}
+        {% elsif i == 3 %}
+          {% assign title = 'Organic Kale' %}
+          {% assign desc = 'Rich in nutrients, farm-fresh quality.' %}
+        {% endif %}
+        <div class="group flex flex-col">
+          <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate border border-black/5">
+            <a href="#" class="block w-full h-full">
+              {% assign index = i | modulo: 6 | plus: 1 %}
+              {{
+                'product-'
+                | append: index
+                | placeholder_svg_tag: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 bg-gray-200'
+              }}
+            </a>
+
+            <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
+              <button class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#83e950] hover:text-[#1a201b] transition-colors shadow-md">
+                <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
+              </button>
+              <svg class="absolute -top-[24px] right-0 w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+                <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+              </svg>
+              <svg class="absolute bottom-0 -left-[24px] w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+                <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+              </svg>
             </div>
-            <button class="w-12 h-12 rounded-full bg-on-surface flex items-center justify-center text-white hover:bg-primary transition-colors">
-              <span class="material-symbols-outlined text-xl" data-icon="shopping_cart">shopping_cart</span>
-            </button>
+          </div>
+
+          <div class="flex justify-between items-start gap-4 px-2">
+            <div>
+              <h3 class="font-bold text-[18px] text-[#1a201b] leading-tight mb-1.5">
+                <a href="#">{{ title }}</a>
+              </h3>
+              <p class="text-[13px] text-gray-500 leading-snug">{{ desc }}</p>
+            </div>
+            <span class="font-bold text-[18px] text-[#1a201b] leading-tight whitespace-nowrap">$599</span>
           </div>
         </div>
       {%- endfor -%}
@@ -60,12 +117,12 @@
 
 {% schema %}
 {
-  "name": "Organic Products Grid",
+  "name": "Organic Products",
   "settings": [
     {
       "type": "text",
       "id": "subheading",
-      "label": "Subheading",
+      "label": "Small Badge Text",
       "default": "Products"
     },
     {
@@ -77,7 +134,7 @@
     {
       "type": "collection",
       "id": "collection",
-      "label": "Collection"
+      "label": "Featured Collection"
     },
     {
       "type": "range",
@@ -91,7 +148,7 @@
   ],
   "presets": [
     {
-      "name": "Organic Products Grid"
+      "name": "Organic Products"
     }
   ]
 }

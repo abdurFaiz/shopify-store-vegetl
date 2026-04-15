@@ -1,80 +1,170 @@
-<section class="py-20 bg-surface-container-low" id="Section-{{ section.id }}">
-  <div class="max-w-[1200px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-    {% if section.settings.heading != blank %}
-      <h2 class="text-5xl font-headline font-bold leading-tight">{{ section.settings.heading }}</h2>
-    {% endif %}
-    
-    <div class="space-y-6">
-      <div class="h-32 rounded-3xl overflow-hidden shadow-lg border border-outline-variant/10">
-        {% if section.settings.image != blank %}
-          {{ section.settings.image | image_url: width: 800 | image_tag: class: 'w-full h-full object-cover' }}
-        {% else %}
-          {{ 'lifestyle-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-surface-variant' }}
-        {% endif %}
-      </div>
-      
-      <div class="bg-surface-container-lowest p-8 rounded-[32px] shadow-xl">
-        <p class="font-bold mb-4 uppercase text-[10px] tracking-widest text-on-surface-variant">{{ section.settings.newsletter_label }}</p>
-        
-        {%- form 'customer', class: 'flex gap-4' -%}
-          <input type="hidden" name="contact[tags]" value="newsletter">
-          <input class="flex-1 bg-surface-container border-none rounded-full px-6 py-4 focus:ring-2 focus:ring-primary/20" 
-                 placeholder="{{ section.settings.email_placeholder }}" 
-                 type="email"
-                 name="contact[email]"
-                 id="Email-{{ section.id }}"
-                 value="{{ form.email }}"
-                 aria-required="true"
-                 autocorrect="off"
-                 autocapitalize="off"
-                 required />
-          <button type="submit" class="bg-primary-container text-white px-8 py-4 rounded-full font-bold hover:bg-primary transition-colors">
-            {{ section.settings.button_label }}
-          </button>
-        {%- endform -%}
-        
-      </div>
+<section class="relative min-w-full full-width overflow-hidden bg-white py-16 lg:py-24" id="Section-{{ section.id }}">
+  <!-- Subtle Background Rings / Ripples -->
+  <div
+    class="absolute top-[60%] right-[-20%] md:right-[-5%] lg:right-[10%] translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full border border-gray-200/70 pointer-events-none"
+  ></div>
+  <div
+    class="absolute top-[60%] right-[-20%] md:right-[-5%] lg:right-[10%] translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] md:w-[700px] md:h-[700px] rounded-full border border-gray-200/70 pointer-events-none"
+  ></div>
+  <div
+    class="absolute top-[60%] right-[-20%] md:right-[-5%] lg:right-[10%] translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1000px] md:h-[1000px] rounded-full border border-gray-200/70 pointer-events-none"
+  ></div>
+  <div
+    class="absolute top-[60%] right-[-20%] md:right-[-5%] lg:right-[10%] translate-x-1/2 -translate-y-1/2 w-[1050px] h-[1050px] md:w-[1300px] md:h-[1300px] rounded-full border border-gray-200/50 pointer-events-none"
+  ></div>
+
+  <div class="relative z-10 max-w-[850px] mx-auto px-6 flex flex-col items-center text-center">
+    <!-- Floating Avatar 1 (Top Left) -->
+    <div class="hidden md:block absolute top-[10%] left-[-15%] lg:left-[-22%] z-20 hover:-translate-y-2 transition-transform duration-500">
+      <img
+        src="{% if section.settings.avatar_1 != blank %}{{ section.settings.avatar_1 | image_url: width: 200 }}{% else %}https://i.pravatar.cc/200?img=11{% endif %}"
+        width="90"
+        height="90"
+        alt="Community Member"
+        class="w-[90px] h-[90px] object-cover rounded-full border-[4px] border-white shadow-lg bg-gray-100"
+      >
     </div>
+
+    <!-- Floating Avatar 2 (Top Right) -->
+    <div class="hidden md:block absolute top-[18%] right-[-10%] lg:right-[-15%] z-20 hover:-translate-y-2 transition-transform duration-500">
+      <img
+        src="{% if section.settings.avatar_2 != blank %}{{ section.settings.avatar_2 | image_url: width: 200 }}{% else %}https://i.pravatar.cc/200?img=5{% endif %}"
+        width="85"
+        height="85"
+        alt="Community Member"
+        class="w-[85px] h-[85px] object-cover rounded-full border-[4px] border-white shadow-lg bg-gray-100"
+      >
+    </div>
+
+    <!-- Floating Avatar 3 (Bottom Left) -->
+    <div class="hidden md:block absolute bottom-[8%] left-[-10%] lg:left-[-18%] z-20 hover:-translate-y-2 transition-transform duration-500">
+      <img
+        src="{% if section.settings.avatar_3 != blank %}{{ section.settings.avatar_3 | image_url: width: 200 }}{% else %}https://i.pravatar.cc/200?img=33{% endif %}"
+        width="80"
+        height="80"
+        alt="Community Member"
+        class="w-[80px] h-[80px] object-cover rounded-full border-[4px] border-white shadow-lg bg-gray-100"
+      >
+    </div>
+
+    <!-- Floating Avatar 4 (Bottom Right) -->
+    <div class="hidden md:block absolute bottom-[15%] right-[-5%] lg:right-[-12%] z-20 hover:-translate-y-2 transition-transform duration-500">
+      <img
+        src="{% if section.settings.avatar_4 != blank %}{{ section.settings.avatar_4 | image_url: width: 200 }}{% else %}https://i.pravatar.cc/200?img=12{% endif %}"
+        width="100"
+        height="100"
+        alt="Community Member"
+        class="w-[100px] h-[100px] object-cover rounded-full border-[4px] border-white shadow-lg bg-gray-100"
+      >
+    </div>
+
+    <!-- Main Content Stack -->
+    {% if section.settings.heading != blank %}
+      <h2 class="text-3xl lg:text-[46px] leading-[1.25] font-semibold text-[#1a201b] tracking-[-0.02em] mb-4 lg:mb-6 max-w-[650px] mx-auto px-2">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.description != blank %}
+      <p class="text-[14px] md:text-[15px] text-gray-500 leading-relaxed max-w-[700px] mx-auto mb-8 lg:mb-10 font-medium px-2">
+        {{ section.settings.description }}
+      </p>
+    {% endif %}
+
+    {% if section.settings.button_text != blank %}
+      <a
+        href="{{ section.settings.button_link | default: '#' }}"
+        class="inline-flex items-center gap-3 bg-[#111] text-white rounded-full py-1.5 pl-6 pr-1.5 hover:bg-[#282828] hover:-translate-y-1 transition-all duration-300 shadow-xl shadow-black/10 mx-auto mb-16 group"
+      >
+        <span class="font-medium text-[13px] tracking-wide">{{ section.settings.button_text }}</span>
+        <span class="w-[32px] h-[32px] rounded-full bg-white text-[#111] flex items-center justify-center shrink-0 group-hover:bg-gray-100 transition-colors">
+          <span class="material-symbols-outlined text-[16px] font-bold">north_east</span>
+        </span>
+      </a>
+    {% endif %}
+
+    {% if section.settings.large_number != blank %}
+      <div
+        class="text-[56px] md:text-[80px] lg:text-[130px] font-bold leading-none tracking-tighter drop-shadow-sm"
+        style="color: {{ section.settings.number_color }};"
+      >
+        {{ section.settings.large_number }}
+      </div>
+    {% endif %}
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "Organic Newsletter",
+  "name": "Community Impact",
   "settings": [
     {
-      "type": "richtext",
+      "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "<p>Get Updates &<br>Offers</p>"
+      "default": "Grow With Our Organic Community."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "We are continually expanding our family of organic farming enthusiasts, local suppliers, and sustainable grocers. Join our community to cultivate a greener, healthier future from soil to table."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Join the Harvest"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Impact Statistic"
+    },
+    {
+      "type": "text",
+      "id": "large_number",
+      "label": "Large Number Metric",
+      "default": "243,543+"
+    },
+    {
+      "type": "color",
+      "id": "number_color",
+      "label": "Number Color",
+      "default": "#006E1C"
+    },
+    {
+      "type": "header",
+      "content": "Floating Avatars"
     },
     {
       "type": "image_picker",
-      "id": "image",
-      "label": "Image Banner"
+      "id": "avatar_1",
+      "label": "Top Left Avatar"
     },
     {
-      "type": "text",
-      "id": "newsletter_label",
-      "label": "Newsletter Label",
-      "default": "Newsletter"
+      "type": "image_picker",
+      "id": "avatar_2",
+      "label": "Top Right Avatar"
     },
     {
-      "type": "text",
-      "id": "email_placeholder",
-      "label": "Email Placeholder",
-      "default": "Enter your email"
+      "type": "image_picker",
+      "id": "avatar_3",
+      "label": "Bottom Left Avatar"
     },
     {
-      "type": "text",
-      "id": "button_label",
-      "label": "Button Label",
-      "default": "Subscribe"
+      "type": "image_picker",
+      "id": "avatar_4",
+      "label": "Bottom Right Avatar"
     }
   ],
   "presets": [
     {
-      "name": "Organic Newsletter"
+      "name": "Community Impact Section"
     }
   ]
 }

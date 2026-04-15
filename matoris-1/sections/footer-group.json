@@ -3,7 +3,7 @@
   "name": "Footer",
   "sections": {
     "footer": {
-      "type": "organic-footer",
+      "type": "footer",
       "settings": {}
     }
   },

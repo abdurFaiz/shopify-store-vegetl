@@ -56,6 +56,10 @@
       "type": "organic-testimonials",
       "settings": {}
     },
+    "faq": {
+      "type": "organic-faq",
+      "settings": {}
+    },
     "newsletter": {
       "type": "organic-newsletter",
       "settings": {}
@@ -67,6 +71,7 @@
     "products",
     "why_us",
     "testimonials",
+    "faq",
     "newsletter"
   ]
 }
