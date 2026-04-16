@@ -1,47 +1,121 @@
-{% comment %}
-  This section is used in the collection template to render collection page
-  listing all products within a collection.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
-{% endcomment %}
-
-<h1>{{ collection.title }}</h1>
-
-<div class="collection-products">
-  {% paginate collection.products by 20 %}
-    {% for product in collection.products %}
-      <div class="collection-product">
-        {% if product.featured_image %}
-          {% render 'image',
-            class: 'collection-product__image',
-            image: product.featured_image,
-            url: product.url,
-            width: 400,
-            height: 400,
-            crop: 'center'
-          %}
+<section class="py-12 lg:py-24 bg-[#fafbfa] full-width w-full" id="CollectionSection-{{ section.id }}">
+  <div class="max-w-[1300px] mx-auto px-4 lg:px-6 mb-10 lg:mb-16 gsap-fade-up">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div class="max-w-[600px]">
+        <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide mb-6 bg-white shadow-sm">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#006400] mr-2"></span>
+          {{ 'Catalog' | escape }}
+        </span>
+        <h1 class="text-4xl md:text-[56px] leading-tight font-medium text-[#1a201b] tracking-tight">
+          {{ collection.title }}
+        </h1>
+        {% if collection.description != blank %}
+          <div class="mt-6 text-gray-500 text-lg leading-relaxed max-w-[500px]">
+            {{ collection.description }}
+          </div>
         {% endif %}
-        <div class="collection-product__content">
-          <p>{{ product.title | escape | link_to: product.url }}</p>
-          <p>{{ product.price | money }}</p>
-        </div>
       </div>
-    {% endfor %}
+      
+      <div class="flex items-center gap-4 bg-white p-2 rounded-full border border-gray-100 shadow-sm">
+        <span class="text-[13px] font-medium text-gray-400 pl-4">Sort By:</span>
+        <select id="sort-by" class="border-none bg-transparent text-[14px] font-bold text-[#1a201b] focus:ring-0 cursor-pointer pr-10">
+          {% for option in collection.sort_options %}
+            <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>
+              {{ option.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
 
-    {{ paginate | default_pagination }}
-  {% endpaginate %}
-</div>
+  <div class="max-w-[1300px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 gsap-stagger-parent">
+    {% paginate collection.products by 12 %}
+      {%- for product in collection.products -%}
+        <div class="group flex flex-col">
+          <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate border border-black/5">
+            <a href="{{ product.url }}" class="block w-full h-full">
+              {% if product.featured_image != blank %}
+                {{
+                  product.featured_image
+                  | image_url: width: 600
+                  | image_tag: class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700'
+                }}
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-200' }}
+              {% endif %}
+            </a>
 
-{% stylesheet %}
-  .collection-products {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+            <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
+              <form method="post" action="{{ routes.cart_add_url }}" class="m-0">
+                <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                <button
+                  type="submit"
+                  class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#006400] transition-colors shadow-md"
+                >
+                  <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
+                </button>
+              </form>
+              <svg class="absolute -top-[24px] right-0 w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+                <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+              </svg>
+              <svg class="absolute bottom-0 -left-[24px] w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+                <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-start gap-4 px-2">
+            <div>
+              <h3 class="font-bold text-[18px] text-[#1a201b] leading-tight mb-1.5">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+              <p class="text-[13px] text-gray-500 leading-snug">
+                {{ product.type | default: 'Organic Freshness' }}
+              </p>
+            </div>
+            <span class="font-bold text-[18px] text-[#1a201b] leading-tight whitespace-nowrap">
+              {{- product.price | money -}}
+            </span>
+          </div>
+        </div>
+      {%- else -%}
+        <p class="text-center col-span-full py-20 text-gray-400">No products found in this collection.</p>
+      {%- endfor -%}
+
+      {% if paginate.pages > 1 %}
+        <div class="col-span-full mt-16 flex justify-center">
+          {{ paginate | default_pagination }}
+        </div>
+      {% endif %}
+    {% endpaginate %}
+  </div>
+</section>
+
+<script>
+  Shopify.queryParams = {};
+  if (location.search.length) {
+    for (var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&'); i < aCouples.length; i++) {
+      aKeyValue = aCouples[i].split('=');
+      if (aKeyValue.length > 1) {
+        Shopify.queryParams[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(aKeyValue[1]);
+      }
+    }
   }
-{% endstylesheet %}
+  document.getElementById('sort-by').addEventListener('change', function(e) {
+    Shopify.queryParams.sort_by = e.target.value;
+    location.search = new URLSearchParams(Shopify.queryParams).toString();
+  });
+</script>
 
 {% schema %}
 {
-  "name": "t:general.collection",
-  "settings": []
+  "name": "Organic Collection",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Organic Collection"
+    }
+  ]
 }
 {% endschema %}

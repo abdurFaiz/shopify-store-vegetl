@@ -3,23 +3,84 @@
 {% enddoc %}
 
 <!-- GSAP Core -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-<!-- GSAP ScrollTrigger (very popular for landing page scrolling effects) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="{{ 'gsap.min.js' | asset_url }}" defer></script>
+<!-- GSAP ScrollTrigger -->
+<script src="{{ 'ScrollTrigger.min.js' | asset_url }}" defer></script>
 
 <script>
   // Wait until the DOM is fully loaded before triggering animations
   document.addEventListener('DOMContentLoaded', () => {
+    // Make sure we wait for GSAP to load
+    if (typeof gsap === "undefined") return;
+    
     gsap.registerPlugin(ScrollTrigger);
 
-    // Write your GSAP animations here!
-    // Example: Fade down the Hero section Header on page load
-    gsap.from(".font-headline", {
-      opacity: 0,
-      y: -30,
-      stagger: 0.2, // Adds a slight delay between each element found
-      duration: 1,
-      ease: "power3.out"
+    // 1. FADE UP: Standard fade and slide up
+    const fadeUpElements = gsap.utils.toArray('.gsap-fade-up');
+    fadeUpElements.forEach(elem => {
+      gsap.from(elem, {
+        scrollTrigger: {
+          trigger: elem,
+          start: "top 90%", // Trigger slightly before the element fully enters
+          toggleActions: "play none none none" // Play once
+        },
+        y: 60,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power3.out"
+      });
     });
+
+    // 2. STAGGER FADE UP: Useful for lists, product grids, icons
+    const staggerParents = gsap.utils.toArray('.gsap-stagger-parent');
+    staggerParents.forEach(parent => {
+      gsap.from(parent.children, {
+        scrollTrigger: {
+          trigger: parent,
+          start: "top 85%",
+          toggleActions: "play none none none"
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.15, // Delay between each child
+        ease: "power3.out"
+      });
+    });
+
+    // 3. PARALLAX: Image/Element moving at a different speed than scroll
+    const parallaxImgs = gsap.utils.toArray('.gsap-parallax');
+    parallaxImgs.forEach(img => {
+      // Ensure the parent handles overflow if desired
+      gsap.fromTo(img, 
+        { y: "-15%" }, // Start positioned slightly up
+        {
+          y: "15%", // Move down as you scroll
+          ease: "none",
+          scrollTrigger: {
+            trigger: img.parentElement,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true // Smooth scrubbing effect tied to scrollbar
+          }
+      });
+    });
+    
+    // 4. SCALE UP: Useful for badges or call to action buttons
+    const scaleUpElems = gsap.utils.toArray('.gsap-scale-up');
+    scaleUpElems.forEach(elem => {
+      gsap.from(elem, {
+        scrollTrigger: {
+          trigger: elem,
+          start: "top 85%",
+          toggleActions: "play none none none"
+        },
+        scale: 0.8,
+        opacity: 0,
+        duration: 1.2,
+        ease: "back.out(1.5)"
+      });
+    });
+    
   });
 </script>

@@ -4,7 +4,16 @@
 {% enddoc %}
 
 
+<!-- Anti-FOUC: hide body until Tailwind styles are applied -->
+<style id="fouc-guard">html { visibility: hidden; }</style>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries" defer></script>
+<script defer>
+  document.addEventListener('DOMContentLoaded', function() {
+    var guard = document.getElementById('fouc-guard');
+    if (guard) guard.remove();
+    document.documentElement.style.visibility = 'visible';
+  });
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 

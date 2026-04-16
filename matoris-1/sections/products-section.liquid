@@ -1,0 +1,28 @@
+<section class="py-12 lg:py-24 bg-white" id="Section-{{ section.id }}">
+  <div class="max-w-[1300px] mx-auto px-6 text-center">
+    <h2 class="text-4xl font-headline font-medium text-[#1a201b] mb-12">{{ section.settings.heading }}</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Logic for products would go here -->
+      <p class="text-gray-500">Products will be showcased here.</p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Products Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Exclusive Products"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Products Section"
+    }
+  ]
+}
+{% endschema %}

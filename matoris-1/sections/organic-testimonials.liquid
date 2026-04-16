@@ -1,6 +1,5 @@
 <section class="py-12 lg:py-24 bg-white full-width w-full overflow-hidden" id="Section-{{ section.id }}">
   <div class="max-w-[1300px] mx-auto px-4 lg:px-6 w-full">
-    
     <!-- TOP HEADER -->
     <div class="mb-14 lg:mb-20">
       {% if section.settings.subheading != blank %}
@@ -9,7 +8,7 @@
           {{ section.settings.subheading }}
         </span>
       {% endif %}
-      
+
       <div class="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-6">
         {% if section.settings.heading != blank %}
           <!-- We use inline HTML in the default heading to get the bold/italic split -->
@@ -17,7 +16,7 @@
             {{ section.settings.heading }}
           </h2>
         {% endif %}
-        
+
         {% if section.settings.description != blank %}
           <p class="max-w-[360px] text-[15px] text-gray-600 leading-relaxed text-left lg:text-right pb-2">
             {{ section.settings.description }}
@@ -25,49 +24,158 @@
         {% endif %}
       </div>
     </div>
-    
-    <!-- MAIN CONTENT GRID -->
-    <div class="grid grid-cols-1 lg:grid-cols-[0.6fr_1.3fr] gap-10 lg:gap-16 items-center">
-      
-      <!-- IMAGE -->
-      <div class="w-full aspect-square md:aspect-[4/3] h-full  rounded-[40px] overflow-hidden">
-        {% if section.settings.image != blank %}
-          {{ section.settings.image | image_url: width: 1000 | image_tag: class: 'w-full h-full object-cover' }}
-        {% else %}
-          {{ 'lifestyle-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-100' }}
-        {% endif %}
-      </div>
-      
-      <!-- QUOTE & AUTHOR -->
-      <div class="flex flex-col">
-        
-        <div class="text-[26px] sm:text-[30px] md:text-[36px] leading-[1.3] font-medium tracking-tight mb-12 sm:mb-16">
-          <span class="text-[#1a201b]">“{{ section.settings.quote_highlight }}</span>
-          <span class="text-gray-500">{{ section.settings.quote_text }}”</span>
+
+    <!-- MAIN CONTENT GRID SLIDER -->
+    <div class="relative w-full" id="testimonial-slider-{{ section.id }}">
+      <!-- ARROW NAVIGATION (STATIC, ONLY 1 PAIR) -->
+      <div class="absolute bottom-0 right-0 z-10 flex items-center gap-3 pointer-events-none">
+        <div class=" pointer-events-auto flex gap-3 pl-4">
+          <button class="testimonial-prev w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors shadow-sm focus:outline-none">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+          </button>
+          <button class="testimonial-next w-12 h-12 rounded-full bg-[#006400] flex items-center justify-center text-white hover:bg-green-800 transition-colors shadow-md focus:outline-none">
+            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </button>
         </div>
-        
-        <div class="flex items-center justify-between">
-          <div class="flex flex-col">
-            <span class="text-[#1a201b] font-bold text-[18px]">{{ section.settings.author_name }}</span>
-            <span class="text-gray-500 text-[14px] mt-0.5">{{ section.settings.author_location }}</span>
-          </div>
-          
-          <!-- ARROW NAVIGATION -->
-          <div class="flex items-center gap-3">
-            <button class="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors shadow-sm">
-              <span class="material-symbols-outlined text-[20px]">arrow_back</span>
-            </button>
-            <button class="w-12 h-12 rounded-full bg-[#006400] flex items-center justify-center text-white hover:bg-green-800 transition-colors shadow-md">
-              <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
-            </button>
-          </div>
-        </div>
-        
       </div>
-      
+
+      <div class="overflow-hidden w-full relative">
+        <div class="flex transition-transform duration-700 ease-in-out w-full" id="testimonial-track-{{ section.id }}">
+          {% for block in section.blocks %}
+            <div
+              class="w-full flex-shrink-0 grid grid-cols-1 lg:grid-cols-[0.6fr_1.3fr] gap-10 lg:gap-16 items-center"
+              {{ block.shopify_attributes }}
+            >
+              <!-- IMAGE -->
+              <div class="w-full aspect-square md:aspect-[4/3] h-full rounded-[40px] overflow-hidden bg-gray-100">
+                {% if block.settings.image != blank %}
+                  {{
+                    block.settings.image
+                    | image_url: width: 1000
+                    | image_tag: class: 'w-full h-full object-cover transition-transform duration-1000'
+                  }}
+                {% else %}
+                  <!-- Fallbacks -->
+                  {% if forloop.index == 1 %}
+                    <img
+                      src="{{ 'testimonial.png' | file_url }}"
+                      alt="Farmer"
+                      width="500"
+                      height="500"
+                      class="w-full h-full object-cover"
+                      loading="lazy"
+                    >
+                  {% elsif forloop.index == 2 %}
+                    <img
+                      src="{{ 'testimonial-2.png' | file_url }}"
+                      alt="Farmer"
+                      width="500"
+                      height="500"
+                      class="w-full h-full object-cover"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <img
+                      src="{{ 'testimonial-3.png' | file_url }}"
+                      alt="Farmer"
+                      width="500"
+                      height="500"
+                      class="w-full h-full object-cover"
+                      loading="lazy"
+                    >
+                  {% endif %}
+                {% endif %}
+              </div>
+
+              <!-- QUOTE & AUTHOR -->
+              <div class="flex flex-col">
+                <div class="text-[26px] sm:text-[30px] md:text-[36px] leading-[1.3] font-medium tracking-tight mb-12 sm:mb-16">
+                  <span class="text-[#1a201b]">“{{ block.settings.quote_highlight }}</span>
+                  <span class="text-gray-500">{{ block.settings.quote_text }}”</span>
+                </div>
+
+                <div class="flex items-center justify-between mt-auto pb-1 md:pb-0">
+                  <div class="flex flex-col">
+                    <span class="text-[#1a201b] font-bold text-[18px]">{{ block.settings.author_name }}</span>
+                    <span class="text-gray-500 text-[14px] mt-0.5">{{ block.settings.author_location }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            {%- for i in (1..3) -%}
+              {%- assign highlight = 'I have been farming for over 15 years, but working with this platform completely changed how' -%}
+              {%- assign body = 'I sell my produce. Fair prices, timely support, and genuine care for farmers made a real difference for my family and my land.' -%}
+              {%- assign author = 'Aaron Mitchell' -%}
+              {%- assign location = 'Florida, United States' -%}
+              {%- assign img_src = 'testimonial.png' | file_url -%}
+
+              {%- if i == 2 -%}
+                {%- assign highlight = "The freshness and quality of the organic vegetables are unmatched. It's amazing how much healthier my family feels " -%}
+                {%- assign body = 'since we started getting our weekly farm box. The delivery is always on time, and the produce tastes like it was just picked!' -%}
+                {%- assign author = 'Sarah Jenkins' -%}
+                {%- assign location = 'California, United States' -%}
+                {%- assign img_src = 'testimonial-2.png' | file_url -%}
+              {%- elsif i == 3 -%}
+                {%- assign highlight = 'We used to struggle finding reliable organic produce in the city, but discovering this farm has been incredible. ' -%}
+                {%- assign body = "Now we get farm-to-table vegetables all year round. The connection to the farmers and transparency is something you can't fake." -%}
+                {%- assign author = 'David Choi' -%}
+                {%- assign location = 'Oregon, United States' -%}
+                {%- assign img_src = 'testimonial-3.png' | file_url -%}
+              {%- endif -%}
+
+              <div class="w-full flex-shrink-0 grid grid-cols-1 lg:grid-cols-[0.6fr_1.3fr] gap-10 lg:gap-16 items-center">
+                <div class="w-full aspect-square md:aspect-[4/3] h-full rounded-[40px] overflow-hidden bg-gray-100">
+                  <img src="{{ img_src }}" alt="Farmer" width="500" height="500" class="w-full h-full object-cover">
+                </div>
+                <div class="flex flex-col">
+                  <div class="text-[26px] sm:text-[30px] md:text-[36px] leading-[1.3] font-medium tracking-tight mb-12 sm:mb-16">
+                    <span class="text-[#1a201b]">“{{ highlight }}</span>
+                    <span class="text-gray-500">{{ body }}”</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-auto pb-1 md:pb-0">
+                    <div class="flex flex-col">
+                      <span class="text-[#1a201b] font-bold text-[18px]">{{ author }}</span>
+                      <span class="text-gray-500 text-[14px] mt-0.5">{{ location }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          {% endfor %}
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const sectionId = '{{ section.id }}';
+    const track = document.getElementById('testimonial-track-' + sectionId);
+    let currentSlide = 0;
+    const slidesCount = track.children.length;
+
+    if (slidesCount <= 1) return; // No need to slide if only 1 item
+
+    function moveSlide(direction) {
+      if (direction === 'next') {
+        currentSlide = (currentSlide + 1) % slidesCount;
+      } else {
+        currentSlide = (currentSlide - 1 + slidesCount) % slidesCount;
+      }
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    const sliderElement = document.getElementById('testimonial-slider-' + sectionId);
+    sliderElement.querySelectorAll('.testimonial-prev').forEach((btn) => {
+      btn.addEventListener('click', () => moveSlide('prev'));
+    });
+    sliderElement.querySelectorAll('.testimonial-next').forEach((btn) => {
+      btn.addEventListener('click', () => moveSlide('next'));
+    });
+  });
+</script>
 
 {% schema %}
 {
@@ -90,44 +198,77 @@
       "id": "description",
       "label": "Right Description Text",
       "default": "Read real experiences from farmers who grow with us, sharing trust, quality, and success from field to market."
-    },
+    }
+  ],
+  "blocks": [
     {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Main Image"
-    },
-    {
-      "type": "header",
-      "content": "Quote Selection"
-    },
-    {
-      "type": "textarea",
-      "id": "quote_highlight",
-      "label": "Quote Highlight (Dark Text)",
-      "default": "I have been farming for over 15 years, but working with this platform completely changed how "
-    },
-    {
-      "type": "textarea",
-      "id": "quote_text",
-      "label": "Quote Body (Gray Text)",
-      "default": "I sell my produce. Fair prices, timely support, and genuine care for farmers made a real difference for my family and my land."
-    },
-    {
-      "type": "text",
-      "id": "author_name",
-      "label": "Author Name",
-      "default": "Aaron Mitchell"
-    },
-    {
-      "type": "text",
-      "id": "author_location",
-      "label": "Author Location",
-      "default": "Florida, United States"
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Author/Farm Image"
+        },
+        {
+          "type": "textarea",
+          "id": "quote_highlight",
+          "label": "Quote Highlight (Dark Text)",
+          "default": "I have been farming for over 15 years, but working with this platform completely changed how "
+        },
+        {
+          "type": "textarea",
+          "id": "quote_text",
+          "label": "Quote Body (Gray Text)",
+          "default": "I sell my produce. Fair prices, timely support, and genuine care for farmers made a real difference for my family and my land."
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Author Name",
+          "default": "Aaron Mitchell"
+        },
+        {
+          "type": "text",
+          "id": "author_location",
+          "label": "Author Location",
+          "default": "Florida, United States"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Organic Testimonials"
+      "name": "Organic Testimonials",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote_highlight": "I have been farming for over 15 years, but working with this platform completely changed how ",
+            "quote_text": "I sell my produce. Fair prices, timely support, and genuine care for farmers made a real difference for my family and my land.",
+            "author_name": "Aaron Mitchell",
+            "author_location": "Florida, United States"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote_highlight": "It's amazing how much easier tracking orders has become. ",
+            "quote_text": "The logistics used to give me headaches, but now everything is smooth, and I get paid faster than ever.",
+            "author_name": "Sarah Jenkins",
+            "author_location": "California, United States"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote_highlight": "My crop yield significantly increased after utilizing the insights ",
+            "quote_text": "provided by this service. The community of farmers here is also incredibly supportive.",
+            "author_name": "David Choi",
+            "author_location": "Oregon, United States"
+          }
+        }
+      ]
     }
   ]
 }

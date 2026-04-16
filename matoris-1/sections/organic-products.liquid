@@ -1,5 +1,5 @@
 <section class="py-12 lg:py-24 bg-[#fafbfa] full-width w-full" id="Section-{{ section.id }}">
-  <div class="max-w-[1300px] mx-auto px-4 lg:px-6 text-center mb-10 lg:mb-12 border-box">
+  <div class="max-w-[1300px] mx-auto px-4 lg:px-6 text-center mb-10 lg:mb-12 border-box gsap-fade-up">
     {% if section.settings.subheading != blank %}
       <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide mb-6 bg-white shadow-sm">
         <span class="w-1.5 h-1.5 rounded-full bg-[#006400] mr-2"></span>
@@ -13,7 +13,7 @@
     {% endif %}
   </div>
 
-  <div class="max-w-[1300px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+  <div class="max-w-[1300px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 gsap-stagger-parent">
     {%- for product in section.settings.collection.products limit: section.settings.products_to_show -%}
       <div class="group flex flex-col">
         <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate">
@@ -25,21 +25,25 @@
                 | image_tag: class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700'
               }}
             {% else %}
-              {{
-                'product-1'
-                | placeholder_svg_tag: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 bg-gray-200'
-              }}
+              <img
+                src="{{ 'product-1.png' | file_url }}"
+                width="300"
+                height="300"
+                alt=""
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 bg-gray-200"
+                loading="lazy"
+              >
             {% endif %}
           </a>
 
           <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
-            <form method="post" action="/cart/add" class="m-0">
+            <form method="post" action="{{ routes.cart_add_url }}" class="m-0">
               <input type="hidden" name="id" value="{{ product.variants.first.id }}">
               <button
                 type="submit"
-                class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#83e950] hover:text-[#1a201b] transition-colors shadow-md"
+                class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#006400] hover:text-white transition-colors shadow-md"
               >
-                <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
+                <span class="material-symbols-outlined text-[20px] " data-icon="shopping_cart">shopping_cart</span>
               </button>
             </form>
             <svg class="absolute -top-[24px] right-0 w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
@@ -67,28 +71,35 @@
       </div>
     {%- else -%}
       {%- for i in (1..section.settings.products_to_show) -%}
-        {% assign title = 'Organic Cherry Tomato' %}
-        {% assign desc = 'Sweet, juicy, and naturally grown.' %}
-        {% if i == 2 %}
-          {% assign title = 'Fresh Basil Leaves' %}
-          {% assign desc = 'Handpicked for vibrant flavor' %}
-        {% elsif i == 3 %}
-          {% assign title = 'Organic Kale' %}
-          {% assign desc = 'Rich in nutrients, farm-fresh quality.' %}
-        {% endif %}
+        {% assign index = i | modulo: 6 | plus: 1 %}
+        {% assign file_name = 'product-' | append: index | append: '.png' %}
+
+        {% assign titles = 'Beetroot Detox Blend|Strawberry Raspberry Splash|Dragon Fruit Energy|Mango Pineapple Tropical|Carrot Citrus Zest|Green Apple Celery Clear'
+          | split: '|'
+        %}
+        {% assign descriptions = 'Earthy sweetness for a healthy heart.|A berry delicious antioxidant boost.|Exotic, vibrant, and deeply refreshing.|A sip of sunshine in a bottle.|Vitamin-packed immunity booster.|Crisp, cleansing, and ultra-fresh.'
+          | split: '|'
+        %}
+
+        {% assign array_index = index | minus: 1 %}
+        {% assign title = titles[array_index] %}
+        {% assign desc = descriptions[array_index] %}
+
         <div class="group flex flex-col">
           <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate border border-black/5">
             <a href="#" class="block w-full h-full">
-              {% assign index = i | modulo: 6 | plus: 1 %}
-              {{
-                'product-'
-                | append: index
-                | placeholder_svg_tag: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 bg-gray-200'
-              }}
+              <img
+                src="{{ file_name | file_url }}"
+                width="300"
+                height="300"
+                alt=""
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 bg-gray-200"
+                loading="lazy"
+              >
             </a>
 
             <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
-              <button class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#83e950] hover:text-[#1a201b] transition-colors shadow-md">
+              <button class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#006400] hover:text-[#1a201b] transition-colors shadow-md">
                 <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
               </button>
               <svg class="absolute -top-[24px] right-0 w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">

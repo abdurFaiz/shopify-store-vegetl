@@ -23,7 +23,14 @@
           | image_tag: class: 'w-full h-full object-cover absolute inset-0 z-0'
         }}
       {% else %}
-        {{ 'lifestyle-2' | placeholder_svg_tag: 'w-full h-full object-cover absolute inset-0 z-0 bg-gray-200' }}
+        <img
+          src="{{ 'whyus.png' | file_url }}"
+          alt="Hero Image"
+          class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100"
+          loading="lazy"
+          height="300"
+          width="300"
+        >
       {% endif %}
 
       <!-- Squircle Cutout Wrapper -->
@@ -40,27 +47,27 @@
         <div class="bg-white rounded-[32px] rounded-bl-[24px] p-6 shadow-sm min-w-[220px]">
           <div class="flex items-center -space-x-3 mb-4">
             <img
-              src="https://i.pravatar.cc/100?img=5"
+              src="{{ 'avatar-1.jpg' | asset_url }}"
               alt="Avatar"
               width="100"
               height="100"
               class="w-[40px] h-[40px] rounded-full border-[3px] border-white object-cover bg-gray-100 z-30"
             >
             <img
-              src="https://i.pravatar.cc/100?img=1"
+              src="{{ 'avatar-2.jpg' | asset_url }}"
               alt="Avatar"
               width="100"
               height="100"
               class="w-[40px] h-[40px] rounded-full border-[3px] border-white object-cover bg-gray-100 z-20"
             >
             <img
-              src="https://i.pravatar.cc/100?img=3"
+              src="{{ 'avatar-3.jpg' | asset_url }}"
               alt="Avatar"
               width="100"
               height="100"
               class="w-[40px] h-[40px] rounded-full border-[3px] border-white object-cover bg-gray-100 z-10"
             >
-            <div class="w-[40px] h-[40px] rounded-full border-[3px] border-white bg-[#83e950] text-[#1a201b] text-[11px] font-bold flex items-center justify-center z-0">
+            <div class="w-[40px] h-[40px] rounded-full border-[3px] border-white bg-[#006400] text-white text-[11px] font-bold flex items-center justify-center z-0">
               {{ section.settings.floating_badge_stat }}
             </div>
           </div>
@@ -91,7 +98,7 @@
 
           <a
             href="{{ block.settings.link_url | default: '#' }}"
-            class="w-11 h-11 bg-gray-50 hover:bg-[#83e950] transition-colors rounded-full flex items-center justify-center mt-auto shrink-0 border border-gray-100 group-hover:shadow-md"
+            class="w-11 h-11 bg-gray-50 hover:bg-[#006400] transition-colors rounded-full flex items-center justify-center mt-auto shrink-0 border border-gray-100 group-hover:shadow-md"
           >
             <span class="material-symbols-outlined text-[20px] text-[#1a201b]">north_east</span>
           </a>

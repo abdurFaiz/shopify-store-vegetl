@@ -2,7 +2,7 @@
   <div class="max-w-[1300px] mx-auto px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-14">
     
     <!-- LEFT COLUMN -->
-    <div class="flex flex-col h-full">
+    <div class="flex flex-col h-full gsap-fade-up">
       {% if section.settings.subheading != blank %}
         <div class="mb-4">
           <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide bg-white shadow-sm">
@@ -34,7 +34,7 @@
     </div>
     
     <!-- RIGHT COLUMN (FAQ ACCORDION) -->
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 gsap-stagger-parent">
       {% for block in section.blocks %}
         <details class="group bg-[#f9faf9] rounded-[20px] sm:rounded-[24px] overflow-hidden cursor-pointer" {{ block.shopify_attributes }}>
           <summary class="flex items-center justify-between p-5 sm:px-8 sm:py-7 list-none [&::-webkit-details-marker]:hidden outline-none select-none">
@@ -52,17 +52,21 @@
       {% else %}
         <!-- Default Fallback if no blocks exist yet -->
         {% for i in (1..5) %}
-          {% assign question = 'What is smart farming?' %}
-          {% assign answer = 'Our solutions provide real-time field monitoring, data-driven insights, and easy-to-use tools that help farmers make better decisions, reduce costs, and improve crop yields.' %}
+          {% assign question = 'Are all your vegetables 100% organic?' %}
+          {% assign answer = 'Yes! We grow all our produce locally without synthetic pesticides or fertilizers, ensuring 100% certified organic quality from seed to harvest.' %}
           
           {% if i == 2 %}
-            {% assign question = 'How does your system help farmers?' %}
+            {% assign question = 'Do you deliver fresh vegetables directly?' %}
+            {% assign answer = 'Absolutely. We harvest daily and deliver straight from our fields to your doorstep to ensure maximum freshness and nutritional value.' %}
           {% elsif i == 3 %}
-            {% assign question = 'Do I need technical knowledge to use your tools?' %}
+            {% assign question = 'Can I visit your organic farm?' %}
+            {% assign answer = 'Yes, we welcome visitors! We host weekly farm tours where you can explore our sustainable farming practices and pick your own vegetables.' %}
           {% elsif i == 4 %}
-            {% assign question = 'How does this help reduce farming costs?' %}
+            {% assign question = 'How do you handle pest control without chemicals?' %}
+            {% assign answer = 'We use natural companion planting, encourage beneficial insects like ladybugs, and apply organic-approved natural oils instead of harsh chemical sprays.' %}
           {% elsif i == 5 %}
-            {% assign question = 'Are your solutions environmentally friendly?' %}
+            {% assign question = 'Do you offer weekly vegetable subscription boxes?' %}
+            {% assign answer = 'We do! Our seasonal farm boxes are delivered weekly and feature a curated selection of the freshest organic vegetables harvested that very morning.' %}
           {% endif %}
           
           <details class="group bg-[#f9faf9] rounded-[20px] sm:rounded-[24px] overflow-hidden cursor-pointer" {% if i == 2 %}open{% endif %}>
@@ -138,13 +142,13 @@
           "type": "text",
           "id": "question",
           "label": "Question",
-          "default": "What is smart farming?"
+          "default": "Are all your vegetables 100% organic?"
         },
         {
           "type": "textarea",
           "id": "answer",
           "label": "Answer",
-          "default": "Our solutions provide real-time field monitoring, data-driven insights, and easy-to-use tools that help farmers make better decisions, reduce costs, and improve crop yields."
+          "default": "Yes! We grow all our produce locally without synthetic pesticides or fertilizers, ensuring 100% certified organic quality from seed to harvest."
         }
       ]
     }
@@ -153,11 +157,11 @@
     {
       "name": "Organic FAQ",
       "blocks": [
-        { "type": "faq_item", "settings": { "question": "What is smart farming?" } },
-        { "type": "faq_item", "settings": { "question": "How does your system help farmers?" } },
-        { "type": "faq_item", "settings": { "question": "Do I need technical knowledge to use your tools?" } },
-        { "type": "faq_item", "settings": { "question": "How does this help reduce farming costs?" } },
-        { "type": "faq_item", "settings": { "question": "Are your solutions environmentally friendly?" } }
+        { "type": "faq_item", "settings": { "question": "Are all your vegetables 100% organic?", "answer": "Yes! We grow all our produce locally without synthetic pesticides or fertilizers, ensuring 100% certified organic quality from seed to harvest." } },
+        { "type": "faq_item", "settings": { "question": "Do you deliver fresh vegetables directly?", "answer": "Absolutely. We harvest daily and deliver straight from our fields to your doorstep to ensure maximum freshness and nutritional value." } },
+        { "type": "faq_item", "settings": { "question": "Can I visit your organic farm?", "answer": "Yes, we welcome visitors! We host weekly farm tours where you can explore our sustainable farming practices and pick your own vegetables." } },
+        { "type": "faq_item", "settings": { "question": "How do you handle pest control without chemicals?", "answer": "We use natural companion planting, encourage beneficial insects like ladybugs, and apply organic-approved natural oils instead of harsh chemical sprays." } },
+        { "type": "faq_item", "settings": { "question": "Do you offer weekly vegetable subscription boxes?", "answer": "We do! Our seasonal farm boxes are delivered weekly and feature a curated selection of the freshest organic vegetables harvested that very morning." } }
       ]
     }
   ]
