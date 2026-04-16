@@ -30,18 +30,20 @@
 
     <!-- Trailing Actions -->
     <div class="flex items-center gap-6">
-      <a
-        href="{{ routes.cart_url }}"
-        class="material-symbols-outlined rounded-full border border-gray-200 text-slate-600 hover:bg-emerald-50/50 p-2.5 rounded-full transition-all relative"
-        data-icon="shopping_basket"
+      <button
+        type="button"
+        id="cart-icon-bubble"
+        class="material-symbols-outlined rounded-full border border-gray-200 text-slate-600 hover:bg-emerald-50/50 p-2.5 rounded-full transition-all relative cursor-pointer bg-transparent"
+        data-cart-trigger
       >
-        shopping_basket
-        {% if cart.item_count > 0 %}
-          <span class="absolute top-0 right-0 bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
-            {{- cart.item_count -}}
-          </span>
-        {% endif %}
-      </a>
+        <span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+        <span 
+          class="absolute top-0 right-0 bg-[#006400] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center {% if cart.item_count == 0 %}hidden{% endif %}"
+          data-cart-count
+        >
+          {{- cart.item_count -}}
+        </span>
+      </button>
       {% if section.settings.button_label != blank %}
         <div class="flex items-center justify-center">
 

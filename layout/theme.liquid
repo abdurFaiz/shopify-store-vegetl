@@ -30,9 +30,12 @@
   <body class="bg-surface font-body text-on-surface antialiased">
     {% sections 'header-group' %}
 
-    {{ content_for_layout }}
+    <main class="pt-20">
+      {{ content_for_layout }}
+    </main>
 
     {% sections 'footer-group' %}
+    {% render 'cart-drawer' %}
     {% render 'organic-scripts' %}
   </body>
 </html>

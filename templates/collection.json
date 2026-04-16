@@ -1,20 +1,60 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
       "type": "collection",
-      "settings": {}
+      "settings": {
+        "columns_desktop": "4",
+        "products_per_page": 12
+      }
+    },
+    "testimonials": {
+      "type": "organic-testimonials",
+      "blocks": {
+        "testimonial-1": {
+          "type": "testimonial",
+          "settings": {
+            "quote_highlight": "I have been farming for over 15 years, but working with this platform completely changed how ",
+            "quote_text": "I sell my produce. Fair prices, timely support, and genuine care for farmers made a real difference for my family and my land.",
+            "author_name": "Aaron Mitchell",
+            "author_location": "Florida, United States"
+          }
+        },
+        "testimonial-2": {
+          "type": "testimonial",
+          "settings": {
+            "quote_highlight": "It's amazing how much easier tracking orders has become. ",
+            "quote_text": "The logistics used to give me headaches, but now everything is smooth, and I get paid faster than ever.",
+            "author_name": "Sarah Jenkins",
+            "author_location": "California, United States"
+          }
+        },
+        "testimonial-3": {
+          "type": "testimonial",
+          "settings": {
+            "quote_highlight": "My crop yield significantly increased after utilizing the insights ",
+            "quote_text": "provided by this service. The community of farmers here is also incredibly supportive.",
+            "author_name": "David Choi",
+            "author_location": "Oregon, United States"
+          }
+        }
+      },
+      "block_order": ["testimonial-1", "testimonial-2", "testimonial-3"],
+      "settings": {
+        "subheading": "Testimonials",
+        "heading": "Real Stories From <span class='font-normal italic text-gray-700'>Our Farmers</span>",
+        "description": "Read real experiences from farmers who grow with us, sharing trust, quality, and success from field to market."
+      }
+    },
+    "newsletter": {
+      "type": "organic-newsletter",
+      "settings": {
+        "heading": "Grow With Our Organic Community.",
+        "description": "We are continually expanding our family of organic farming enthusiasts, local suppliers, and sustainable grocers. Join our community to cultivate a greener, healthier future from soil to table.",
+        "button_text": "Join the Harvest",
+        "large_number": "243,543+",
+        "number_color": "#006E1C"
+      }
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["main", "testimonials", "newsletter"]
 }

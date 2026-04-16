@@ -1,0 +1,355 @@
+{% doc %}
+  Renders the global cart drawer that slides in from the right.
+  Triggered by dispatching a CustomEvent 'cart:open' on the document.
+  Refreshes its content via Shopify Cart API after each add-to-cart.
+{% enddoc %}
+
+<!-- ═══════════════════════════════════════════════
+     CART DRAWER OVERLAY + PANEL
+═══════════════════════════════════════════════ -->
+<div
+  id="cart-drawer-overlay"
+  aria-hidden="true"
+  style="
+    position: fixed; inset: 0; z-index: 900;
+    background: rgba(26,32,27,0.35);
+    backdrop-filter: blur(4px);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.35s ease;
+  "
+></div>
+
+<div
+  id="cart-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Shopping cart"
+  style="
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: min(420px, 100vw);
+    z-index: 901;
+    background: #fff;
+    display: flex; flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.32, 0, 0.15, 1);
+    box-shadow: -8px 0 40px rgba(26,32,27,0.12);
+    border-radius: 24px 0 0 24px;
+    overflow: hidden;
+  "
+>
+  <!-- Header -->
+  <div style="
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 24px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    flex-shrink: 0;
+  ">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="material-symbols-outlined" style="font-size: 20px; color: #1a201b;">shopping_basket</span>
+      <h2 style="font-size: 18px; font-weight: 700; color: #1a201b; margin: 0; letter-spacing: -0.02em;">Your Cart</h2>
+      <span
+        id="cart-drawer-count-badge"
+        style="
+          background: #006400; color: #fff;
+          font-size: 11px; font-weight: 700;
+          min-width: 20px; height: 20px;
+          border-radius: 999px;
+          display: flex; align-items: center; justify-content: center;
+          padding: 0 6px;
+        "
+      >{{ cart.item_count }}</span>
+    </div>
+    <button
+      id="cart-drawer-close"
+      aria-label="Close cart"
+      style="
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; color: #1a201b;
+        transition: background 0.2s;
+        flex-shrink: 0;
+      "
+      onmouseover="this.style.background='#f3f4f6'"
+      onmouseout="this.style.background='#fff'"
+    >
+      <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
+    </button>
+  </div>
+
+  <!-- Items list -->
+  <div id="cart-drawer-items" style="flex: 1; overflow-y: auto; padding: 16px 24px;">
+    {% render 'cart-drawer-items' %}
+  </div>
+
+  <!-- Footer -->
+  <div
+    id="cart-drawer-footer"
+    style="
+      flex-shrink: 0;
+      border-top: 1px solid #f0f0f0;
+      padding: 20px 24px 28px;
+    "
+  >
+    {% render 'cart-drawer-footer' %}
+  </div>
+</div>
+
+<style>
+  #cart-drawer::-webkit-scrollbar { display: none; }
+  #cart-drawer-items::-webkit-scrollbar { width: 4px; }
+  #cart-drawer-items::-webkit-scrollbar-track { background: transparent; }
+  #cart-drawer-items::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+
+  .cart-drawer-open #cart-drawer-overlay {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  .cart-drawer-open #cart-drawer {
+    transform: translateX(0) !important;
+  }
+
+  .cart-qty-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: #1a201b;
+    font-size: 14px;
+    transition: background 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+  }
+  .cart-qty-btn:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+  }
+  .cart-remove-btn {
+    background: none; border: none; cursor: pointer;
+    color: #9ca3af;
+    display: flex; align-items: center; justify-content: center;
+    transition: color 0.15s;
+    padding: 4px;
+    border-radius: 6px;
+  }
+  .cart-remove-btn:hover { color: #ef4444; }
+</style>
+
+<script>
+(function () {
+  const drawer    = document.getElementById('cart-drawer');
+  const overlay   = document.getElementById('cart-drawer-overlay');
+  const closeBtn  = document.getElementById('cart-drawer-close');
+  const itemsEl   = document.getElementById('cart-drawer-items');
+  const footerEl  = document.getElementById('cart-drawer-footer');
+  const badgeEl   = document.getElementById('cart-drawer-count-badge');
+
+  /* ── open / close ───────────────────────────────────── */
+  function openDrawer()  { document.body.classList.add('cart-drawer-open'); }
+  function closeDrawer() { document.body.classList.remove('cart-drawer-open'); }
+
+  closeBtn.addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', closeDrawer);
+
+  /* ── external trigger ───────────────────────────────── */
+  document.addEventListener('cart:open', openDrawer);
+
+  /* ── fetch & render cart HTML ───────────────────────── */
+  async function refreshCart() {
+    try {
+      const res  = await fetch(window.Shopify.routes.root + 'cart.js');
+      const cart = await res.json();
+
+      /* update badge in drawer header */
+      if (badgeEl) badgeEl.textContent = cart.item_count;
+
+      /* update header icon badge globally */
+      document.querySelectorAll('[data-cart-count]').forEach(el => {
+        el.textContent = cart.item_count;
+        el.style.display = cart.item_count > 0 ? 'flex' : 'none';
+      });
+
+      renderItems(cart);
+      renderFooter(cart);
+    } catch (e) {
+      console.error('Cart refresh failed', e);
+    }
+  }
+
+  /* ── render cart line items ─────────────────────────── */
+  function renderItems(cart) {
+    if (cart.item_count === 0) {
+      itemsEl.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;gap:12px;color:#9ca3af;">
+          <span class="material-symbols-outlined" style="font-size:48px;opacity:0.4;">shopping_basket</span>
+          <p style="font-size:14px;font-weight:500;">Your cart is empty</p>
+        </div>`;
+      return;
+    }
+
+    itemsEl.innerHTML = cart.items.map((item, idx) => `
+      <div
+        data-line="${idx + 1}"
+        style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #f3f4f6;align-items:flex-start;"
+      >
+        <!-- Thumbnail -->
+        <a href="${item.url}" style="flex-shrink:0;">
+          <img
+            src="${item.image}"
+            alt="${item.product_title}"
+            width="72" height="72"
+            style="width:72px;height:72px;object-fit:cover;border-radius:16px;background:#f3f4f6;border:1px solid #e5e7eb;"
+            loading="lazy"
+          >
+        </a>
+
+        <!-- Details -->
+        <div style="flex:1;min-width:0;">
+          <a href="${item.url}" style="text-decoration:none;">
+            <p style="font-size:14px;font-weight:700;color:#1a201b;margin:0 0 2px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              ${item.product_title}
+            </p>
+          </a>
+          ${item.variant_title && item.variant_title !== 'Default Title'
+            ? `<p style="font-size:12px;color:#9ca3af;margin:0 0 8px;">${item.variant_title}</p>`
+            : '<div style="margin-bottom:8px;"></div>'
+          }
+
+          <!-- Qty controls + price row -->
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button
+                class="cart-qty-btn"
+                data-action="decrease"
+                data-line="${idx + 1}"
+                data-qty="${item.quantity - 1}"
+                aria-label="Decrease quantity"
+              >
+                <span class="material-symbols-outlined" style="font-size:14px;">remove</span>
+              </button>
+              <span style="font-size:14px;font-weight:600;color:#1a201b;min-width:16px;text-align:center;">
+                ${item.quantity}
+              </span>
+              <button
+                class="cart-qty-btn"
+                data-action="increase"
+                data-line="${idx + 1}"
+                data-qty="${item.quantity + 1}"
+                aria-label="Increase quantity"
+              >
+                <span class="material-symbols-outlined" style="font-size:14px;">add</span>
+              </button>
+            </div>
+            <span style="font-size:14px;font-weight:700;color:#1a201b;white-space:nowrap;">
+              ${formatMoney(item.line_price)}
+            </span>
+          </div>
+        </div>
+
+        <!-- Remove -->
+        <button
+          class="cart-remove-btn"
+          data-line="${idx + 1}"
+          aria-label="Remove item"
+        >
+          <span class="material-symbols-outlined" style="font-size:18px;">delete</span>
+        </button>
+      </div>
+    `).join('');
+
+    /* bind qty + remove buttons */
+    itemsEl.querySelectorAll('.cart-qty-btn').forEach(btn => {
+      btn.addEventListener('click', () => updateLine(btn.dataset.line, parseInt(btn.dataset.qty)));
+    });
+    itemsEl.querySelectorAll('.cart-remove-btn').forEach(btn => {
+      btn.addEventListener('click', () => updateLine(btn.dataset.line, 0));
+    });
+  }
+
+  /* ── render footer ──────────────────────────────────── */
+  function renderFooter(cart) {
+    footerEl.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <span style="font-size:14px;color:#6b7280;font-weight:500;">Subtotal</span>
+        <span style="font-size:18px;font-weight:700;color:#1a201b;">${formatMoney(cart.total_price)}</span>
+      </div>
+      <p style="font-size:12px;color:#9ca3af;text-align:center;margin:0 0 14px;">
+        Taxes and shipping calculated at checkout
+      </p>
+      <a
+        href="/checkout"
+        style="
+          display:block;width:100%;
+          background:#1a201b;color:#fff;
+          text-align:center;
+          padding:16px;
+          border-radius:16px;
+          font-size:14px;font-weight:700;
+          text-decoration:none;
+          letter-spacing:0.01em;
+          transition:background 0.2s,transform 0.15s;
+        "
+        onmouseover="this.style.background='#006400';this.style.transform='translateY(-1px)'"
+        onmouseout="this.style.background='#1a201b';this.style.transform='translateY(0)'"
+      >
+        Checkout
+      </a>
+      <a
+        href="/cart"
+        style="
+          display:block;width:100%;
+          text-align:center;
+          padding:12px;
+          border-radius:16px;
+          font-size:13px;font-weight:500;
+          color:#6b7280;
+          text-decoration:none;
+          margin-top:8px;
+          transition:color 0.2s;
+        "
+        onmouseover="this.style.color='#1a201b'"
+        onmouseout="this.style.color='#6b7280'"
+      >
+        View full cart →
+      </a>
+    `;
+  }
+
+  /* ── update line quantity ────────────────────────────── */
+  async function updateLine(line, qty) {
+    try {
+      await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ line: parseInt(line), quantity: qty })
+      });
+      await refreshCart();
+    } catch (e) {
+      console.error('Failed to update cart', e);
+    }
+  }
+
+  /* ── money formatter ─────────────────────────────────── */
+  function formatMoney(cents) {
+    const amount = (cents / 100).toFixed(2);
+    return window.Shopify?.currency?.active
+      ? new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: window.Shopify.currency.active
+        }).format(cents / 100)
+      : '$' + amount;
+  }
+
+  /* ── listen for add-to-cart events ──────────────────── */
+  document.addEventListener('cart:added', async () => {
+    await refreshCart();
+    openDrawer();
+  });
+
+  /* ── initial render ──────────────────────────────────── */
+  refreshCart();
+})();
+</script>

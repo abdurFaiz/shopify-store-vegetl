@@ -1,36 +1,29 @@
-<section class="py-12 lg:py-24 bg-[#fafbfa] full-width w-full" id="CollectionSection-{{ section.id }}">
-  <div class="max-w-[1300px] mx-auto px-4 lg:px-6 mb-10 lg:mb-16 gsap-fade-up">
+<section class="py-12 lg:py-24 bg-white full-width w-full" id="CollectionSection-{{ section.id }}">
+  <div class="max-w-full px-4 lg:px-6 mb-10 lg:mb-16 gsap-fade-up">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div class="max-w-[600px]">
-        <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide mb-6 bg-white shadow-sm">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#006400] mr-2"></span>
-          {{ 'Catalog' | escape }}
-        </span>
         <h1 class="text-4xl md:text-[56px] leading-tight font-medium text-[#1a201b] tracking-tight">
-          {{ collection.title }}
+          {% if section.settings.heading != blank %}
+            {{ section.settings.heading }}
+          {% else %}
+            {{ collection.title }}
+          {% endif %}
         </h1>
-        {% if collection.description != blank %}
+        {% if section.settings.description != blank %}
+          <div class="mt-6 text-gray-500 text-lg leading-relaxed max-w-[500px]">
+            {{ section.settings.description }}
+          </div>
+        {% elsif collection.description != blank %}
           <div class="mt-6 text-gray-500 text-lg leading-relaxed max-w-[500px]">
             {{ collection.description }}
           </div>
         {% endif %}
       </div>
-      
-      <div class="flex items-center gap-4 bg-white p-2 rounded-full border border-gray-100 shadow-sm">
-        <span class="text-[13px] font-medium text-gray-400 pl-4">Sort By:</span>
-        <select id="sort-by" class="border-none bg-transparent text-[14px] font-bold text-[#1a201b] focus:ring-0 cursor-pointer pr-10">
-          {% for option in collection.sort_options %}
-            <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>
-              {{ option.name }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
     </div>
   </div>
 
-  <div class="max-w-[1300px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 gsap-stagger-parent">
-    {% paginate collection.products by 12 %}
+  <div class="max-w-full px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-{{ section.settings.columns_desktop }} gap-x-6 gap-y-12 gsap-stagger-parent">
+    {% paginate collection.products by section.settings.products_per_page %}
       {%- for product in collection.products -%}
         <div class="group flex flex-col">
           <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate border border-black/5">
@@ -39,7 +32,8 @@
                 {{
                   product.featured_image
                   | image_url: width: 600
-                  | image_tag: class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700'
+                  | image_tag:
+                    class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700'
                 }}
               {% else %}
                 {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-200' }}
@@ -47,15 +41,15 @@
             </a>
 
             <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
-              <form method="post" action="{{ routes.cart_add_url }}" class="m-0">
-                <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-                <button
-                  type="submit"
-                  class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#006400] transition-colors shadow-md"
-                >
-                  <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
-                </button>
-              </form>
+              <button
+                type="button"
+                class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#006400] transition-colors shadow-md"
+                data-ajax-add-to-cart
+                data-variant-id="{{ product.variants.first.id }}"
+                aria-label="Add {{ product.title | escape }} to cart"
+              >
+                <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
+              </button>
               <svg class="absolute -top-[24px] right-0 w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
                 <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
               </svg>
@@ -71,7 +65,7 @@
                 <a href="{{ product.url }}">{{ product.title }}</a>
               </h3>
               <p class="text-[13px] text-gray-500 leading-snug">
-                {{ product.type | default: 'Organic Freshness' }}
+                {{ product.metafields.custom.short_description | default: product.type | default: 'Organic Freshness' }}
               </p>
             </div>
             <span class="font-bold text-[18px] text-[#1a201b] leading-tight whitespace-nowrap">
@@ -80,7 +74,61 @@
           </div>
         </div>
       {%- else -%}
-        <p class="text-center col-span-full py-20 text-gray-400">No products found in this collection.</p>
+        {%- for i in (1..section.settings.products_per_page) limit: 6 -%}
+          {%- assign placeholder_index = i | modulo: 6 | plus: 1 -%}
+          {%- assign placeholder_titles = 'Beetroot Detox Blend|Strawberry Raspberry Splash|Dragon Fruit Energy|Mango Pineapple Tropical|Carrot Citrus Zest|Green Apple Celery Clear'
+            | split: '|'
+          -%}
+          {%- assign placeholder_descs = 'Earthy sweetness for a healthy heart.|A berry delicious antioxidant boost.|Exotic, vibrant, and deeply refreshing.|A sip of sunshine in a bottle.|Vitamin-packed immunity booster.|Crisp, cleansing, and ultra-fresh.'
+            | split: '|'
+          -%}
+          {%- assign placeholder_prices = '$5.99|$6.49|$7.99|$5.49|$6.99|$4.99' | split: '|' -%}
+          {%- assign arr_i = placeholder_index | minus: 1 -%}
+          {%- assign p_title = placeholder_titles[arr_i] -%}
+          {%- assign p_desc = placeholder_descs[arr_i] -%}
+          {%- assign p_price = placeholder_prices[arr_i] -%}
+          {%- assign p_file = 'product-' | append: placeholder_index | append: '.png' -%}
+
+          <div class="group flex flex-col">
+            <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate border border-black/5">
+              <a href="#" class="block w-full h-full">
+                <img
+                  src="{{ p_file | file_url }}"
+                  width="300"
+                  height="300"
+                  alt="{{ p_title }}"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 bg-gray-200"
+                  loading="lazy"
+                >
+              </a>
+
+              <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
+                <button
+                  type="button"
+                  class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#006400] transition-colors shadow-md"
+                >
+                  <span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+                </button>
+                <svg class="absolute -top-[24px] right-0 w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+                  <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+                </svg>
+                <svg class="absolute bottom-0 -left-[24px] w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+                  <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-start gap-4 px-2">
+              <div>
+                <h3 class="font-bold text-[18px] text-[#1a201b] leading-tight mb-1.5">
+                  <a href="#">{{ p_title }}</a>
+                </h3>
+                <p class="text-[13px] text-gray-500 leading-snug">{{ p_desc }}</p>
+              </div>
+              <span class="font-bold text-[18px] text-[#1a201b] leading-tight whitespace-nowrap">{{ p_price }}</span>
+            </div>
+          </div>
+        {%- endfor -%}
       {%- endfor -%}
 
       {% if paginate.pages > 1 %}
@@ -92,29 +140,48 @@
   </div>
 </section>
 
-<script>
-  Shopify.queryParams = {};
-  if (location.search.length) {
-    for (var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&'); i < aCouples.length; i++) {
-      aKeyValue = aCouples[i].split('=');
-      if (aKeyValue.length > 1) {
-        Shopify.queryParams[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(aKeyValue[1]);
-      }
-    }
-  }
-  document.getElementById('sort-by').addEventListener('change', function(e) {
-    Shopify.queryParams.sort_by = e.target.value;
-    location.search = new URLSearchParams(Shopify.queryParams).toString();
-  });
-</script>
-
 {% schema %}
 {
-  "name": "Organic Collection",
-  "settings": [],
+  "name": "Collection Product List",
+  "tag": "section",
+  "class": "section-collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Override Heading",
+      "info": "Leave blank to use the collection title"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Override Description",
+      "info": "Leave blank to use the collection description"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Columns on Desktop",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 6,
+      "max": 48,
+      "step": 6,
+      "default": 12
+    }
+  ],
   "presets": [
     {
-      "name": "Organic Collection"
+      "name": "Collection Product List"
     }
   ]
 }
