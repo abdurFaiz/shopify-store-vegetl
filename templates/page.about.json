@@ -1,0 +1,141 @@
+{
+    "sections": {
+        "main": {
+            "type": "about",
+            "blocks": {
+                "stat_1": {
+                    "type": "stat_card",
+                    "settings": {
+                        "stat_number": "10+",
+                        "stat_description": "Years of experience in sustainable farming practices",
+                        "show_badge": true
+                    }
+                },
+                "stat_2": {
+                    "type": "stat_card",
+                    "settings": {
+                        "stat_number": "85%",
+                        "stat_description": "Increase in crop yields using our advanced farming techniques",
+                        "show_badge": true
+                    }
+                },
+                "stat_3": {
+                    "type": "stat_card",
+                    "settings": {
+                        "stat_number": "500+",
+                        "stat_description": "Farmers trust our solutions for their daily operations",
+                        "show_badge": true
+                    }
+                },
+                "stat_4": {
+                    "type": "stat_card",
+                    "settings": {
+                        "stat_number": "24/7",
+                        "stat_description": "Support available whenever you need assistance",
+                        "show_badge": true
+                    }
+                },
+                "feature_1": {
+                    "type": "feature",
+                    "settings": {
+                        "feature_icon": "🌱",
+                        "feature_title": "Organic Farming",
+                        "feature_description": "Sustainable practices that protect the environment while maximizing yields"
+                    }
+                },
+                "feature_2": {
+                    "type": "feature",
+                    "settings": {
+                        "feature_icon": "💧",
+                        "feature_title": "Water Management",
+                        "feature_description": "Smart irrigation systems that conserve water and reduce costs"
+                    }
+                },
+                "feature_3": {
+                    "type": "feature",
+                    "settings": {
+                        "feature_icon": "📊",
+                        "feature_title": "Data Analytics",
+                        "feature_description": "Real-time insights to make informed decisions about your crops"
+                    }
+                },
+                "feature_4": {
+                    "type": "feature",
+                    "settings": {
+                        "feature_icon": "🚁",
+                        "feature_title": "Drone Technology",
+                        "feature_description": "Aerial monitoring and precision application for optimal results"
+                    }
+                },
+                "testimonial_1": {
+                    "type": "testimonial",
+                    "settings": {
+                        "testimonial_text": "Since using their precision farming tools, I've increased my yield by 40% and reduced water usage significantly. Game changer!",
+                        "testimonial_name": "Michael Chen",
+                        "testimonial_role": "Organic Farm Owner"
+                    }
+                },
+                "testimonial_2": {
+                    "type": "testimonial",
+                    "settings": {
+                        "testimonial_text": "The drone technology has saved me countless hours. I can monitor my entire farm in minutes instead of days.",
+                        "testimonial_name": "Sarah Johnson",
+                        "testimonial_role": "Agricultural Manager"
+                    }
+                },
+                "testimonial_3": {
+                    "type": "testimonial",
+                    "settings": {
+                        "testimonial_text": "Their support team is incredible. They helped me transition to sustainable farming practices seamlessly.",
+                        "testimonial_name": "David Martinez",
+                        "testimonial_role": "Family Farm Owner"
+                    }
+                }
+            },
+            "block_order": [
+                "stat_1",
+                "stat_2",
+                "stat_3",
+                "stat_4",
+                "feature_1",
+                "feature_2",
+                "feature_3",
+                "feature_4",
+                "testimonial_1",
+                "testimonial_2",
+                "testimonial_3"
+            ],
+            "settings": {
+                "hero_badge": "Sustainable Farming",
+                "hero_heading": "Bringing Innovation to Your Farming Journey",
+                "hero_subheading": "Empowering farmers with cutting-edge technology and sustainable practices",
+                "hero_button_text": "Learn More",
+                "hero_button_link": "#mission",
+                "mission_badge": "Our Mission",
+                "mission_heading": "Why choose us?",
+                "mission_text": "With proven expertise in modern farming practices, we are committed to helping farmers grow smarter and achieve better yields. Together we are shaping the future of farming for a more sustainable world.",
+                "features_badge": "Our Features",
+                "features_heading": "Unlock the Future of Farming with Powerful Features Designed for Efficiency, Productivity and Sustainability",
+                "features_subheading": "Everything you need to modernize your farming operations",
+                "tech_badge": "Innovation",
+                "tech_heading": "Drone Technology",
+                "tech_description": "Our advanced drone technology provides real-time crop monitoring, precision spraying, and detailed field analysis. See your entire farm from a new perspective and make data-driven decisions that increase productivity.",
+                "tech_button_text": "Explore Technology",
+                "tech_button_link": "/pages/technology",
+                "results_badge": "Proven Results",
+                "results_heading": "See how our precision farming tools have helped farmers increase productivity",
+                "results_text": "<p>Since using precision farming tools, I struggled with unproductive waste and high operating costs. Now, with AI-powered insights and drone monitoring, my farm's productivity has increased by 40%, and I use 30% less water.</p>",
+                "testimonials_heading": "What Our Farmers Say",
+                "cta_heading": "Ready to Transform Your Farm?",
+                "cta_text": "Join hundreds of farmers who are already using our technology to grow smarter and more sustainably",
+                "cta_button_primary_text": "Get Started",
+                "cta_button_primary_link": "/pages/contact",
+                "cta_button_secondary_text": "Contact Us",
+                "cta_button_secondary_link": "/pages/contact"
+            }
+        }
+    },
+    "order": [
+        "main"
+    ]
+}

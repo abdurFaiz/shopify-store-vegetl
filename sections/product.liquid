@@ -5,46 +5,637 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/product
 {% endcomment %}
 
-<div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
+<div class="product-page" style="--layout-gap: {{ section.settings.layout_gap }}px;">
+  <div class="product-page__media">
+    <div class="product-page__main-image">
+      {% if product.featured_image %}
+        {{ product.featured_image | image_url: width: 800 | image_tag: class: 'product-main-image' }}
+      {% endif %}
+    </div>
+    
+    {% if product.images.size > 1 %}
+      <div class="product-page__thumbnails">
+        {% for image in product.images limit: 6 %}
+          <div class="product-thumbnail {% if forloop.first %}active{% endif %}" data-image-index="{{ forloop.index0 }}">
+            {{ image | image_url: width: 100 | image_tag }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="product-page__details">
+    {% if product.metafields.custom.rating %}
+      <div class="product-rating">
+        <span class="stars">★★★★★</span>
+        <span class="rating-value">{{ product.metafields.custom.rating }}</span>
+        <span class="rating-count">({{ product.metafields.custom.review_count | default: 163 }} {{ 'products.reviews' | t }})</span>
+      </div>
+    {% endif %}
+
+    <h1 class="product-title">{{ product.title }}</h1>
+    
+    {% if product.metafields.custom.subtitle %}
+      <p class="product-subtitle">{{ product.metafields.custom.subtitle }}</p>
+    {% endif %}
+
+    {% if product.metafields.custom.badges %}
+      <div class="product-badges">
+        {% assign badges = product.metafields.custom.badges | split: ',' %}
+        {% for badge in badges %}
+          <span class="badge">{{ badge | strip }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="product-description">
+      {{ product.description }}
+    </div>
+
+    {% if product.metafields.custom.ingredients %}
+      <div class="product-ingredients">
+        <p class="ingredients-note">{{ product.metafields.custom.ingredients }}</p>
+      </div>
+    {% endif %}
+
+    {% if product.metafields.custom.concerns or product.metafields.custom.texture or product.metafields.custom.composition or product.metafields.custom.duration %}
+      <div class="product-specs">
+        {% if product.metafields.custom.concerns %}
+          <div class="spec-item">
+            <strong>{{ 'products.concerns' | t }}:</strong> {{ product.metafields.custom.concerns }}
+          </div>
+        {% endif %}
+        {% if product.metafields.custom.texture %}
+          <div class="spec-item">
+            <strong>{{ 'products.texture' | t }}:</strong> {{ product.metafields.custom.texture }}
+          </div>
+        {% endif %}
+        {% if product.metafields.custom.composition %}
+          <div class="spec-item">
+            <strong>{{ 'products.composition' | t }}:</strong> {{ product.metafields.custom.composition }}
+          </div>
+        {% endif %}
+        {% if product.metafields.custom.duration %}
+          <div class="spec-item">
+            <strong>{{ 'products.duration' | t }}:</strong> {{ product.metafields.custom.duration }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% form 'product', product %}
+      {% assign current_variant = product.selected_or_first_available_variant %}
+      
+      {% if product.variants.size > 1 %}
+        <div class="product-variants">
+          <select name="id" class="variant-select">
+            {% for variant in product.variants %}
+              <option
+                value="{{ variant.id }}"
+                {% if variant == current_variant %}selected="selected"{% endif %}
+                {% unless variant.available %}disabled{% endunless %}
+              >
+                {{ variant.title }} - {{ variant.price | money }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      {% else %}
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+      {% endif %}
+
+      <div class="product-price">
+        <span class="price">{{ current_variant.price | money }}</span>
+        {% if current_variant.compare_at_price > current_variant.price %}
+          <span class="compare-price">{{ current_variant.compare_at_price | money }}</span>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="add-to-cart-btn" {% unless current_variant.available %}disabled{% endunless %}>
+        {% if current_variant.available %}
+          {{ 'products.add_to_cart' | t }} - {{ current_variant.price | money }}
+        {% else %}
+          {{ 'products.sold_out' | t }}
+        {% endif %}
+      </button>
+
+      {{ form | payment_button }}
+    {% endform %}
+
+    {% if section.settings.show_delivery_info %}
+      <div class="delivery-info">
+        <p><strong>{{ 'products.fast_delivery' | t }}</strong></p>
+        <p>{{ 'products.shipping_time' | t }}</p>
+      </div>
+    {% endif %}
+
+    {% if section.settings.show_availability %}
+      <div class="availability-info">
+        <p>{{ 'products.available_routinely' | t }}</p>
+      </div>
+    {% endif %}
+  </div>
 </div>
 
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
-  <p>{{ product.description }}</p>
-</div>
+{% if section.settings.show_recommendations %}
+  <section class="py-12 lg:py-24 bg-[#fafbfa] full-width w-full">
+    <div class="max-w-[1300px] mx-auto px-4 lg:px-6 text-center mb-10 lg:mb-12">
+      <h2 class="text-3xl md:text-[46px] leading-tight font-medium text-[#1a201b] tracking-tight">
+        {{ section.settings.recommendations_heading | default: 'You may also like' }}
+      </h2>
+    </div>
 
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
+    <div class="max-w-[1300px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-{{ section.settings.recommendations_columns }} gap-x-6 gap-y-12">
+      {% if recommendations.performed and recommendations.products_count > 0 %}
+        {% for recommended_product in recommendations.products limit: section.settings.recommendations_limit %}
+          <div class="group flex flex-col">
+            <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate">
+              <a href="{{ recommended_product.url }}" class="block w-full h-full">
+                {% if recommended_product.featured_image %}
+                  {{ recommended_product.featured_image | image_url: width: 600 | image_tag: class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700', loading: 'lazy' }}
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-200' }}
+                {% endif %}
+              </a>
 
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
-      {% endfor %}
-    </select>
+              {% if recommended_product.compare_at_price > recommended_product.price %}
+                <div class="absolute top-4 left-4 bg-[#d32f2f] text-white px-3 py-1 rounded-full text-xs font-semibold">
+                  {{ 'products.sale' | t }}
+                </div>
+              {% endif %}
 
-    <input type="text" name="quantity" min="1" value="1">
+              {% unless recommended_product.available %}
+                <div class="absolute top-4 left-4 bg-gray-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                  {{ 'products.sold_out' | t }}
+                </div>
+              {% endunless %}
 
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
-</div>
+              <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
+                <form method="post" action="{{ routes.cart_add_url }}" class="m-0">
+                  <input type="hidden" name="id" value="{{ recommended_product.selected_or_first_available_variant.id }}">
+                  <button
+                    type="submit"
+                    class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#006400] transition-colors shadow-md"
+                    {% unless recommended_product.available %}disabled{% endunless %}
+                  >
+                    <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
+                  </button>
+                </form>
+                <svg class="absolute -top-[24px] right-0 w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+                  <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+                </svg>
+                <svg class="absolute bottom-0 -left-[24px] w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+                  <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-start gap-4 px-2">
+              <div>
+                {% if section.settings.show_vendor and recommended_product.vendor %}
+                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">{{ recommended_product.vendor }}</p>
+                {% endif %}
+                <h3 class="font-bold text-[18px] text-[#1a201b] leading-tight mb-1.5">
+                  <a href="{{ recommended_product.url }}">{{ recommended_product.title }}</a>
+                </h3>
+                <p class="text-[13px] text-gray-500 leading-snug">
+                  {{ recommended_product.metafields.custom.short_description | default: recommended_product.description | strip_html | truncate: 60 }}
+                </p>
+              </div>
+              <div class="text-right whitespace-nowrap">
+                {% if recommended_product.compare_at_price > recommended_product.price %}
+                  <span class="font-bold text-[18px] text-[#d32f2f] leading-tight block">
+                    {{ recommended_product.price | money }}
+                  </span>
+                  <span class="text-[14px] text-gray-400 line-through">
+                    {{ recommended_product.compare_at_price | money }}
+                  </span>
+                {% else %}
+                  <span class="font-bold text-[18px] text-[#1a201b] leading-tight">
+                    {{ recommended_product.price | money }}
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        {% comment %}Fallback: Show products from the same collection{% endcomment %}
+        {% if product.collections.first %}
+          {% assign collection = product.collections.first %}
+          {% assign count = 0 %}
+          {% for related_product in collection.products %}
+            {% if count < section.settings.recommendations_limit %}
+              {% unless related_product.id == product.id %}
+                <div class="group flex flex-col">
+                  <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate">
+                    <a href="{{ related_product.url }}" class="block w-full h-full">
+                      {% if related_product.featured_image %}
+                        {{ related_product.featured_image | image_url: width: 600 | image_tag: class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700', loading: 'lazy' }}
+                      {% else %}
+                        {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-200' }}
+                      {% endif %}
+                    </a>
+
+                    {% if related_product.compare_at_price > related_product.price %}
+                      <div class="absolute top-4 left-4 bg-[#d32f2f] text-white px-3 py-1 rounded-full text-xs font-semibold">
+                        {{ 'products.sale' | t }}
+                      </div>
+                    {% endif %}
+
+                    {% unless related_product.available %}
+                      <div class="absolute top-4 left-4 bg-gray-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                        {{ 'products.sold_out' | t }}
+                      </div>
+                    {% endunless %}
+
+                    <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
+                      <form method="post" action="{{ routes.cart_add_url }}" class="m-0">
+                        <input type="hidden" name="id" value="{{ related_product.selected_or_first_available_variant.id }}">
+                        <button
+                          type="submit"
+                          class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#006400] transition-colors shadow-md"
+                          {% unless related_product.available %}disabled{% endunless %}
+                        >
+                          <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
+                        </button>
+                      </form>
+                      <svg class="absolute -top-[24px] right-0 w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+                        <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+                      </svg>
+                      <svg class="absolute bottom-0 -left-[24px] w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+                        <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div class="flex justify-between items-start gap-4 px-2">
+                    <div>
+                      {% if section.settings.show_vendor and related_product.vendor %}
+                        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">{{ related_product.vendor }}</p>
+                      {% endif %}
+                      <h3 class="font-bold text-[18px] text-[#1a201b] leading-tight mb-1.5">
+                        <a href="{{ related_product.url }}">{{ related_product.title }}</a>
+                      </h3>
+                      <p class="text-[13px] text-gray-500 leading-snug">
+                        {{ related_product.metafields.custom.short_description | default: related_product.description | strip_html | truncate: 60 }}
+                      </p>
+                    </div>
+                    <div class="text-right whitespace-nowrap">
+                      {% if related_product.compare_at_price > related_product.price %}
+                        <span class="font-bold text-[18px] text-[#d32f2f] leading-tight block">
+                          {{ related_product.price | money }}
+                        </span>
+                        <span class="text-[14px] text-gray-400 line-through">
+                          {{ related_product.compare_at_price | money }}
+                        </span>
+                      {% else %}
+                        <span class="font-bold text-[18px] text-[#1a201b] leading-tight">
+                          {{ related_product.price | money }}
+                        </span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                {% assign count = count | plus: 1 %}
+              {% endunless %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endif %}
+    </div>
+  </section>
+{% endif %}
+
+{% stylesheet %}
+  .product-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--layout-gap, 60px);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .product-page__media {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+  }
+
+  .product-page__main-image {
+    background: #f5f5f5;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .product-main-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .product-page__thumbnails {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+  }
+
+  .product-thumbnail {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .product-thumbnail.active,
+  .product-thumbnail:hover {
+    border-color: #333;
+  }
+
+  .product-thumbnail img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .product-page__details {
+    padding: 20px 0;
+  }
+
+  .product-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+
+  .stars {
+    color: #000;
+    letter-spacing: 2px;
+  }
+
+  .rating-value {
+    font-weight: 600;
+  }
+
+  .rating-count {
+    color: #666;
+  }
+
+  .product-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    line-height: 1.2;
+  }
+
+  .product-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin: 0 0 16px 0;
+  }
+
+  .product-badges {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border: 1px solid #333;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .product-description {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .product-ingredients {
+    font-size: 13px;
+    font-style: italic;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .product-specs {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 20px;
+    margin-bottom: 30px;
+  }
+
+  .spec-item {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #333;
+  }
+
+  .spec-item strong {
+    font-weight: 600;
+  }
+
+  .product-variants {
+    margin-bottom: 20px;
+  }
+
+  .variant-select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    background: white;
+  }
+
+  .product-price {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .compare-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 18px;
+    margin-left: 10px;
+  }
+
+  .add-to-cart-btn {
+    width: 100%;
+    padding: 16px 24px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-bottom: 12px;
+  }
+
+  .add-to-cart-btn:hover:not(:disabled) {
+    background: #333;
+  }
+
+  .add-to-cart-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .delivery-info,
+  .availability-info {
+    font-size: 14px;
+    padding: 16px 0;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .delivery-info p,
+  .availability-info p {
+    margin: 4px 0;
+  }
+
+  @media (max-width: 768px) {
+    .product-page {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .product-page__media {
+      position: relative;
+      top: 0;
+    }
+
+    .product-title {
+      font-size: 24px;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function() {
+    // Thumbnail image switching
+    const thumbnails = document.querySelectorAll('.product-thumbnail');
+    const mainImage = document.querySelector('.product-main-image');
+    const productImages = {{ product.images | json }};
+
+    thumbnails.forEach((thumbnail, index) => {
+      thumbnail.addEventListener('click', function() {
+        thumbnails.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        
+        if (productImages[index]) {
+          const newImageUrl = productImages[index].src.replace(/\.(jpg|jpeg|png|gif|webp)/, '_800x.$1');
+          mainImage.src = newImageUrl;
+        }
+      });
+    });
+
+    // Product recommendations
+    const recommendationsSection = document.querySelector('.product-recommendations');
+    if (recommendationsSection) {
+      const productId = {{ product.id }};
+      const recommendationsUrl = `/recommendations/products.json?product_id=${productId}&limit={{ section.settings.recommendations_limit }}`;
+      
+      fetch(recommendationsUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.products && data.products.length > 0) {
+            // Recommendations loaded successfully
+            console.log('Product recommendations loaded:', data.products.length);
+          }
+        })
+        .catch(error => {
+          console.log('Using fallback recommendations from collection');
+        });
+    }
+  });
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "t:general.product",
-  "settings": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product layout"
+    },
+    {
+      "type": "range",
+      "id": "layout_gap",
+      "label": "Layout gap",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "checkbox",
+      "id": "show_delivery_info",
+      "label": "Show delivery information",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_availability",
+      "label": "Show availability information",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Product recommendations"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_recommendations",
+      "label": "Show product recommendations",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "recommendations_heading",
+      "label": "Recommendations heading",
+      "default": "You may also like"
+    },
+    {
+      "type": "range",
+      "id": "recommendations_limit",
+      "label": "Number of products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "recommendations_columns",
+      "label": "Products per row (desktop)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3,
+      "info": "Responsive: 3 columns on tablet, 2 on mobile, 1 on small mobile"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show product vendor",
+      "default": false
+    }
+  ],
   "disabled_on": {
     "groups": ["header", "footer"]
   }

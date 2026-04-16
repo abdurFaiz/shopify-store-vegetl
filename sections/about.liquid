@@ -1,0 +1,571 @@
+{% comment %}
+  About Page Section - Full page layout for farming/agriculture business
+{% endcomment %}
+
+<div class="about-page bg-white">
+  {% comment %} Hero Section {% endcomment %}
+  <section class="relative h-[600px] lg:h-[700px] overflow-hidden">
+    <div class="absolute inset-0">
+      {% if section.settings.hero_image %}
+        {{ section.settings.hero_image | image_url: width: 2000 | image_tag: class: 'w-full h-full object-cover', loading: 'eager' }}
+      {% else %}
+        <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=2000" width="2000" height="1200" alt="Farming" class="w-full h-full object-cover">
+      {% endif %}
+      <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30"></div>
+    </div>
+    
+    <div class="relative h-full max-w-[1300px] mx-auto px-6 flex flex-col justify-center">
+      {% if section.settings.hero_badge %}
+        <span class="inline-flex items-center text-white border border-white/30 px-4 py-2 rounded-full text-sm font-medium tracking-wide mb-6 bg-white/10 backdrop-blur-sm w-fit">
+          {{ section.settings.hero_badge }}
+        </span>
+      {% endif %}
+      
+      <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 max-w-3xl leading-tight">
+        {{ section.settings.hero_heading | default: 'Bringing Innovation to Your Farming Journey' }}
+      </h1>
+      
+      {% if section.settings.hero_subheading %}
+        <p class="text-lg md:text-xl text-white/90 mb-8 max-w-2xl">
+          {{ section.settings.hero_subheading }}
+        </p>
+      {% endif %}
+      
+      {% if section.settings.hero_button_text %}
+        <a href="{{ section.settings.hero_button_link | default: '#' }}" class="inline-flex items-center bg-[#a3d977] hover:bg-[#8bc75a] text-[#1a201b] font-semibold px-8 py-4 rounded-full transition-colors w-fit">
+          {{ section.settings.hero_button_text }}
+          <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+      {% endif %}
+    </div>
+  </section>
+
+  {% comment %} Mission Statement {% endcomment %}
+  <section class="py-16 lg:py-24 bg-white">
+    <div class="max-w-[1300px] mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          {% if section.settings.mission_badge %}
+            <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide mb-6 bg-gray-50">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#a3d977] mr-2"></span>
+              {{ section.settings.mission_badge }}
+            </span>
+          {% endif %}
+          
+          <h2 class="text-3xl md:text-5xl font-bold text-[#1a201b] mb-6 leading-tight">
+            {{ section.settings.mission_heading | default: 'Why choose us?' }}
+          </h2>
+        </div>
+        
+        <div>
+          <p class="text-lg text-gray-700 leading-relaxed">
+            {{ section.settings.mission_text | default: 'With proven expertise in modern farming practices, we are committed to helping farmers grow smarter and achieve better yields. Together we are shaping the future of farming for a more sustainable world.' }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% comment %} Statistics & Images Grid {% endcomment %}
+  <section class="py-16 lg:py-24 bg-gray-50">
+    <div class="max-w-[1300px] mx-auto px-6">
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {% for block in section.blocks %}
+          {% if block.type == 'stat_card' %}
+            <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-md transition-shadow">
+              {% if block.settings.stat_image %}
+                <div class="mb-6 rounded-2xl overflow-hidden aspect-square">
+                  {{ block.settings.stat_image | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
+                </div>
+              {% endif %}
+              
+              <div class="flex items-start gap-3 mb-4">
+                <div class="text-5xl font-bold text-[#1a201b]">{{ block.settings.stat_number }}</div>
+                {% if block.settings.show_badge %}
+                  <span class="bg-[#a3d977] text-[#1a201b] w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mt-1">✓</span>
+                {% endif %}
+              </div>
+              
+              <p class="text-gray-700 leading-relaxed">{{ block.settings.stat_description }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {% comment %} Features Section - Dark Background {% endcomment %}
+  <section class="py-16 lg:py-24 bg-[#1a201b] text-white">
+    <div class="max-w-[1300px] mx-auto px-6">
+      {% if section.settings.features_badge %}
+        <span class="inline-flex items-center text-white/80 border border-white/20 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide mb-6 bg-white/5">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#a3d977] mr-2"></span>
+          {{ section.settings.features_badge }}
+        </span>
+      {% endif %}
+      
+      <h2 class="text-3xl md:text-5xl font-bold mb-4 leading-tight max-w-3xl">
+        {{ section.settings.features_heading | default: 'Unlock the Future of Farming with Powerful Features Designed for Efficiency, Productivity and Sustainability' }}
+      </h2>
+      
+      {% if section.settings.features_subheading %}
+        <p class="text-white/70 text-lg mb-16 max-w-2xl">{{ section.settings.features_subheading }}</p>
+      {% endif %}
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {% for block in section.blocks %}
+          {% if block.type == 'feature' %}
+            <div class="group">
+              {% if block.settings.feature_icon %}
+                <div class="w-12 h-12 bg-[#a3d977] rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span class="text-2xl">{{ block.settings.feature_icon }}</span>
+                </div>
+              {% endif %}
+              
+              <h3 class="text-xl font-bold mb-3">{{ block.settings.feature_title }}</h3>
+              <p class="text-white/70 leading-relaxed">{{ block.settings.feature_description }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {% comment %} Technology Section {% endcomment %}
+  <section class="relative py-16 lg:py-24 overflow-hidden">
+    <div class="absolute inset-0">
+      {% if section.settings.tech_bg_image %}
+        {{ section.settings.tech_bg_image | image_url: width: 2000 | image_tag: class: 'w-full h-full object-cover' }}
+      {% else %}
+        <img src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=2000" width="2000" height="1200" alt="Technology" class="w-full h-full object-cover">
+      {% endif %}
+      <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50"></div>
+    </div>
+    
+    <div class="relative max-w-[1300px] mx-auto px-6">
+      <div class="max-w-2xl">
+        {% if section.settings.tech_badge %}
+          <span class="inline-flex items-center text-white/80 border border-white/30 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide mb-6 bg-white/10 backdrop-blur-sm">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#a3d977] mr-2"></span>
+            {{ section.settings.tech_badge }}
+          </span>
+        {% endif %}
+        
+        <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
+          {{ section.settings.tech_heading | default: 'Drone Technology' }}
+        </h2>
+        
+        <p class="text-lg text-white/90 mb-8 leading-relaxed">
+          {{ section.settings.tech_description }}
+        </p>
+        
+        {% if section.settings.tech_button_text %}
+          <a href="{{ section.settings.tech_button_link | default: '#' }}" class="inline-flex items-center bg-[#a3d977] hover:bg-[#8bc75a] text-[#1a201b] font-semibold px-8 py-4 rounded-full transition-colors">
+            {{ section.settings.tech_button_text }}
+            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  {% comment %} Results Section {% endcomment %}
+  <section class="py-16 lg:py-24 bg-white">
+    <div class="max-w-[1300px] mx-auto px-6">
+      {% if section.settings.results_badge %}
+        <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide mb-6 bg-gray-50">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#a3d977] mr-2"></span>
+          {{ section.settings.results_badge }}
+        </span>
+      {% endif %}
+      
+      <h2 class="text-3xl md:text-5xl font-bold text-[#1a201b] mb-12 leading-tight max-w-3xl">
+        {{ section.settings.results_heading }}
+      </h2>
+      
+      <div class="prose prose-lg max-w-none text-gray-700">
+        {{ section.settings.results_text }}
+      </div>
+    </div>
+  </section>
+
+  {% comment %} Testimonials {% endcomment %}
+  <section class="py-16 lg:py-24 bg-gray-50">
+    <div class="max-w-[1300px] mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-[#1a201b] mb-12 text-center">
+        {{ section.settings.testimonials_heading | default: 'What Our Farmers Say' }}
+      </h2>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        {% for block in section.blocks %}
+          {% if block.type == 'testimonial' %}
+            <div class="bg-white rounded-3xl p-8 shadow-sm">
+              {% if block.settings.testimonial_image %}
+                <div class="w-20 h-20 rounded-full overflow-hidden mb-6 mx-auto">
+                  {{ block.settings.testimonial_image | image_url: width: 200 | image_tag: class: 'w-full h-full object-cover' }}
+                </div>
+              {% endif %}
+              
+              <p class="text-gray-700 mb-6 leading-relaxed text-center">
+                "{{ block.settings.testimonial_text }}"
+              </p>
+              
+              <div class="text-center">
+                <p class="font-bold text-[#1a201b]">{{ block.settings.testimonial_name }}</p>
+                <p class="text-sm text-gray-500">{{ block.settings.testimonial_role }}</p>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {% comment %} CTA Section {% endcomment %}
+  <section class="py-16 lg:py-24 bg-[#1a201b] text-white">
+    <div class="max-w-[1300px] mx-auto px-6 text-center">
+      <h2 class="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+        {{ section.settings.cta_heading | default: 'Ready to Transform Your Farm?' }}
+      </h2>
+      
+      <p class="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
+        {{ section.settings.cta_text }}
+      </p>
+      
+      <div class="flex flex-wrap gap-4 justify-center">
+        {% if section.settings.cta_button_primary_text %}
+          <a href="{{ section.settings.cta_button_primary_link | default: '#' }}" class="inline-flex items-center bg-[#a3d977] hover:bg-[#8bc75a] text-[#1a201b] font-semibold px-8 py-4 rounded-full transition-colors">
+            {{ section.settings.cta_button_primary_text }}
+          </a>
+        {% endif %}
+        
+        {% if section.settings.cta_button_secondary_text %}
+          <a href="{{ section.settings.cta_button_secondary_link | default: '#' }}" class="inline-flex items-center border-2 border-white hover:bg-white hover:text-[#1a201b] text-white font-semibold px-8 py-4 rounded-full transition-colors">
+            {{ section.settings.cta_button_secondary_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "About Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero Section"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero background image"
+    },
+    {
+      "type": "text",
+      "id": "hero_badge",
+      "label": "Hero badge text",
+      "default": "Sustainable Farming"
+    },
+    {
+      "type": "text",
+      "id": "hero_heading",
+      "label": "Hero heading",
+      "default": "Bringing Innovation to Your Farming Journey"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_subheading",
+      "label": "Hero subheading"
+    },
+    {
+      "type": "text",
+      "id": "hero_button_text",
+      "label": "Hero button text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "hero_button_link",
+      "label": "Hero button link"
+    },
+    {
+      "type": "header",
+      "content": "Mission Section"
+    },
+    {
+      "type": "text",
+      "id": "mission_badge",
+      "label": "Mission badge",
+      "default": "Our Mission"
+    },
+    {
+      "type": "text",
+      "id": "mission_heading",
+      "label": "Mission heading",
+      "default": "Why choose us?"
+    },
+    {
+      "type": "textarea",
+      "id": "mission_text",
+      "label": "Mission text",
+      "default": "With proven expertise in modern farming practices, we are committed to helping farmers grow smarter and achieve better yields."
+    },
+    {
+      "type": "header",
+      "content": "Features Section"
+    },
+    {
+      "type": "text",
+      "id": "features_badge",
+      "label": "Features badge",
+      "default": "Our Features"
+    },
+    {
+      "type": "textarea",
+      "id": "features_heading",
+      "label": "Features heading",
+      "default": "Unlock the Future of Farming with Powerful Features"
+    },
+    {
+      "type": "text",
+      "id": "features_subheading",
+      "label": "Features subheading"
+    },
+    {
+      "type": "header",
+      "content": "Technology Section"
+    },
+    {
+      "type": "image_picker",
+      "id": "tech_bg_image",
+      "label": "Technology background image"
+    },
+    {
+      "type": "text",
+      "id": "tech_badge",
+      "label": "Technology badge",
+      "default": "Innovation"
+    },
+    {
+      "type": "text",
+      "id": "tech_heading",
+      "label": "Technology heading",
+      "default": "Drone Technology"
+    },
+    {
+      "type": "textarea",
+      "id": "tech_description",
+      "label": "Technology description"
+    },
+    {
+      "type": "text",
+      "id": "tech_button_text",
+      "label": "Technology button text",
+      "default": "Explore Technology"
+    },
+    {
+      "type": "url",
+      "id": "tech_button_link",
+      "label": "Technology button link"
+    },
+    {
+      "type": "header",
+      "content": "Results Section"
+    },
+    {
+      "type": "text",
+      "id": "results_badge",
+      "label": "Results badge",
+      "default": "Proven Results"
+    },
+    {
+      "type": "textarea",
+      "id": "results_heading",
+      "label": "Results heading",
+      "default": "See how our precision farming tools have helped farmers"
+    },
+    {
+      "type": "richtext",
+      "id": "results_text",
+      "label": "Results text"
+    },
+    {
+      "type": "header",
+      "content": "Testimonials"
+    },
+    {
+      "type": "text",
+      "id": "testimonials_heading",
+      "label": "Testimonials heading",
+      "default": "What Our Farmers Say"
+    },
+    {
+      "type": "header",
+      "content": "CTA Section"
+    },
+    {
+      "type": "text",
+      "id": "cta_heading",
+      "label": "CTA heading",
+      "default": "Ready to Transform Your Farm?"
+    },
+    {
+      "type": "textarea",
+      "id": "cta_text",
+      "label": "CTA text"
+    },
+    {
+      "type": "text",
+      "id": "cta_button_primary_text",
+      "label": "Primary button text",
+      "default": "Get Started"
+    },
+    {
+      "type": "url",
+      "id": "cta_button_primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "cta_button_secondary_text",
+      "label": "Secondary button text",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "cta_button_secondary_link",
+      "label": "Secondary button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat_card",
+      "name": "Statistic Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "stat_image",
+          "label": "Card image"
+        },
+        {
+          "type": "text",
+          "id": "stat_number",
+          "label": "Statistic number",
+          "default": "10+"
+        },
+        {
+          "type": "textarea",
+          "id": "stat_description",
+          "label": "Description",
+          "default": "Years of experience in sustainable farming"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_badge",
+          "label": "Show checkmark badge",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature_icon",
+          "label": "Icon (emoji)",
+          "default": "🌱"
+        },
+        {
+          "type": "text",
+          "id": "feature_title",
+          "label": "Feature title",
+          "default": "Smart Farming"
+        },
+        {
+          "type": "textarea",
+          "id": "feature_description",
+          "label": "Feature description",
+          "default": "Advanced technology for better yields"
+        }
+      ]
+    },
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "testimonial_image",
+          "label": "Customer photo"
+        },
+        {
+          "type": "textarea",
+          "id": "testimonial_text",
+          "label": "Testimonial text",
+          "default": "This has transformed how we farm. Highly recommended!"
+        },
+        {
+          "type": "text",
+          "id": "testimonial_name",
+          "label": "Customer name",
+          "default": "John Smith"
+        },
+        {
+          "type": "text",
+          "id": "testimonial_role",
+          "label": "Customer role",
+          "default": "Farm Owner"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Page",
+      "blocks": [
+        {
+          "type": "stat_card"
+        },
+        {
+          "type": "stat_card"
+        },
+        {
+          "type": "stat_card"
+        },
+        {
+          "type": "stat_card"
+        },
+        {
+          "type": "feature"
+        },
+        {
+          "type": "feature"
+        },
+        {
+          "type": "feature"
+        },
+        {
+          "type": "feature"
+        },
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "testimonial"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

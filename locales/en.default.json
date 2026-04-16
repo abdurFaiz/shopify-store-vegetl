@@ -48,5 +48,20 @@
     "submit": "Search",
     "no_results_html": "No results found for {{ terms }}",
     "results_for_html": "{{ count }} results found for {{ terms }}"
+  },
+  "products": {
+    "add_to_cart": "Add to cart",
+    "sold_out": "Sold out",
+    "sale": "Sale",
+    "reviews": "reviews",
+    "concerns": "Concerns",
+    "texture": "Texture",
+    "composition": "Composition",
+    "duration": "Duration of use",
+    "fast_delivery": "Fast delivery",
+    "shipping_time": "Shipping within 24 hours",
+    "available_routinely": "Available routinely",
+    "you_may_also_like": "You may also like",
+    "recommended_products": "Recommended products"
   }
 }

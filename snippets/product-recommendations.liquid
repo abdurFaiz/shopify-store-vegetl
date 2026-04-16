@@ -1,0 +1,79 @@
+{% doc %}
+  Renders product recommendations based on Shopify's recommendation engine.
+  Falls back to products from the same collection if recommendations are not available.
+
+  @param {product} product - The current product object
+  @param {number} limit - Maximum number of recommendations to show
+  @param {boolean} show_vendor - Whether to display product vendor
+  @param {number} columns - Number of columns in the grid
+
+  @example
+  {% render 'product-recommendations', 
+    product: product, 
+    limit: 4, 
+    show_vendor: false,
+    columns: 4 
+  %}
+{% enddoc %}
+
+<div class="product-recommendations-wrapper" data-product-id="{{ product.id }}">
+  <div class="recommendations-grid" style="--columns: {{ columns | default: 4 }};">
+    {% comment %}This will be populated by the recommendations API or fallback{% endcomment %}
+    
+    {% if recommendations.performed and recommendations.products_count > 0 %}
+      {% for recommended_product in recommendations.products limit: limit %}
+        {% render 'product-card', 
+          product: recommended_product, 
+          show_vendor: show_vendor 
+        %}
+      {% endfor %}
+    {% else %}
+      {% comment %}Fallback: Show products from the same collection{% endcomment %}
+      {% if product.collections.first %}
+        {% assign collection = product.collections.first %}
+        {% assign count = 0 %}
+        {% for related_product in collection.products %}
+          {% if count < limit %}
+            {% unless related_product.id == product.id %}
+              {% render 'product-card', 
+                product: related_product, 
+                show_vendor: show_vendor 
+              %}
+              {% assign count = count | plus: 1 %}
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .product-recommendations-wrapper {
+    width: 100%;
+  }
+
+  .recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--columns, 4), 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 1024px) {
+    .recommendations-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .recommendations-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .recommendations-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
