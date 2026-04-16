@@ -136,6 +136,7 @@
         }
     },
     "order": [
-        "main"
+        "main",
+        "about"
     ]
 }
