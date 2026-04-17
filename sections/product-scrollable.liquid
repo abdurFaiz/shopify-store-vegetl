@@ -1,0 +1,1208 @@
+{% comment %}
+  Scrollable product page section — three-column layout:
+  Left: sticky thumbnail rail
+  Center: scrollable full image gallery (drives page scroll)
+  Right: sticky product info panel
+{% endcomment %}
+
+<section class="product-scrollable-wrapper top-0">
+  <!-- Left Column: Sticky Thumbnail Rail -->
+  <div class="product-gallery-column pt-60">
+    {% if product.images.size > 0 %}
+      <div class="gallery-thumbnails-section">
+        <div class="gallery-thumbnails">
+          {% for image in product.images %}
+            <div
+              class="thumbnail-wrapper {% if forloop.first %}active{% endif %}"
+              data-image-index="{{ forloop.index0 }}"
+              data-target-id="gallery-image-{{ forloop.index0 }}"
+            >
+              {{ image | image_url: width: 200 | image_tag: class: 'thumbnail-image', loading: 'lazy' }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Center Column: Scrollable Full Image Gallery -->
+  <div class="gallery-preview-section" id="galleryScroll">
+    {% if product.images.size > 0 %}
+      {% for image in product.images %}
+        <div class="gallery-image-item" id="gallery-image-{{ forloop.index0 }}" data-image-index="{{ forloop.index0 }}">
+          {{
+            image
+            | image_url: width: 600
+            | image_tag: class: 'gallery-full-image', alt: product.title, loading: 'lazy'
+          }}
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="preview-placeholder">
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-image' }}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Right Column: Sticky Product Info -->
+  <div class="product-info-column">
+    <div class="product-info-content">
+      <!-- Product Title -->
+      <h1 class="product-title">{{ product.title }}</h1>
+
+      <!-- Price -->
+      {% assign current_variant = product.selected_or_first_available_variant %}
+      <div class="product-price-section">
+        <span class="product-price">{{ current_variant.price | money }}</span>
+        {% if current_variant.compare_at_price > current_variant.price %}
+          <span class="product-compare-price">{{ current_variant.compare_at_price | money }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Add to Cart Form -->
+      <form method="post" action="{{ routes.cart_add_url }}" id="psc-product-form" accept-charset="UTF-8" enctype="multipart/form-data">
+        {% if product.variants.size > 1 %}
+          <div class="product-variant-selector">
+            <select name="id" class="variant-select" aria-label="Select variant">
+              {% for variant in product.variants %}
+                <option
+                  value="{{ variant.id }}"
+                  {% if variant == current_variant %}
+                    selected
+                  {% endif %}
+                  {% unless variant.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  {{ variant.title }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        {% else %}
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+        {% endif %}
+
+        <button
+          type="button"
+          class="add-to-cart-button"
+          data-ajax-add-to-cart
+          data-variant-id="{{ current_variant.id }}"
+          {% unless current_variant.available %}
+            disabled
+          {% endunless %}
+        >
+          {% if current_variant.available %}
+            {{ section.settings.button_label }}
+          {% else %}
+            {{ section.settings.sold_out_label }}
+          {% endif %}
+        </button>
+      </form>
+
+      <!-- Product Description -->
+      <div class="product-description">
+        {{ product.description }}
+      </div>
+
+      <!-- Accordions -->
+      <div class="product-accordions">
+        <div class="accordion-item">
+          <button class="accordion-header" data-accordion-toggle="details">
+            <span>{{ section.settings.details_label }}</span>
+            <span class="accordion-chevron">›</span>
+          </button>
+          <div class="accordion-body" data-accordion-content="details" style="display: none;">
+            {% if product.metafields.custom.product_details %}
+              {{ product.metafields.custom.product_details }}
+            {% else %}
+              <p>{{ section.settings.details_placeholder }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header" data-accordion-toggle="shipping">
+            <span>{{ section.settings.shipping_label }}</span>
+            <span class="accordion-chevron">›</span>
+          </button>
+          <div class="accordion-body" data-accordion-content="shipping" style="display: none;">
+            {% if product.metafields.custom.shipping_info %}
+              {{ product.metafields.custom.shipping_info }}
+            {% else %}
+              <p>{{ section.settings.shipping_placeholder }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% comment %} ── "You may also like" recommendations (limit 3) ── {% endcomment %}
+{% if section.settings.show_recommendations %}
+  <div class="psc-recommendations-section max-w-full w-full">
+    <div class="psc-recommendations-inner">
+      <div class="psc-recommendations-header">
+        <h2 class="psc-recommendations-title">
+          {{ section.settings.recommendations_heading | default: 'You may also like' }}
+        </h2>
+      </div>
+
+      <div class="psc-recommendations-grid">
+        {% if recommendations.performed and recommendations.products_count > 0 %}
+          {% for recommended_product in recommendations.products limit: 3 %}
+            <div class="psc-rec-card group">
+              <div class="psc-rec-card__image-wrap">
+                <a href="{{ recommended_product.url }}" class="psc-rec-card__image-link">
+                  {% if recommended_product.featured_image %}
+                    {{ recommended_product.featured_image | image_url: width: 600 | image_tag: class: 'psc-rec-card__image', loading: 'lazy' }}
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'psc-rec-card__image psc-rec-card__image--placeholder' }}
+                  {% endif %}
+                </a>
+
+                {% if recommended_product.compare_at_price > recommended_product.price %}
+                  <div class="psc-rec-card__badge psc-rec-card__badge--sale">
+                    {{ 'products.sale' | t }}
+                  </div>
+                {% endif %}
+
+                {% unless recommended_product.available %}
+                  <div class="psc-rec-card__badge psc-rec-card__badge--sold-out">
+                    {{ 'products.sold_out' | t }}
+                  </div>
+                {% endunless %}
+
+                <div class="psc-rec-card__atc-wrap">
+                  <form method="post" action="{{ routes.cart_add_url }}" class="psc-rec-atc-form">
+                    <input type="hidden" name="id" value="{{ recommended_product.selected_or_first_available_variant.id }}">
+                    <button
+                      type="submit"
+                      class="psc-rec-card__atc-btn"
+                      {% unless recommended_product.available %}disabled{% endunless %}
+                      aria-label="{{ 'products.add_to_cart' | t }}"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                      </svg>
+                    </button>
+                  </form>
+                  <svg class="psc-rec-card__atc-corner psc-rec-card__atc-corner--top" viewBox="0 0 24 24"><path d="M24,24 H0 A24,24 0 0,0 24,0 Z"/></svg>
+                  <svg class="psc-rec-card__atc-corner psc-rec-card__atc-corner--left" viewBox="0 0 24 24"><path d="M24,24 H0 A24,24 0 0,0 24,0 Z"/></svg>
+                </div>
+              </div>
+
+              <div class="psc-rec-card__info">
+                <div class="psc-rec-card__text">
+                  <h3 class="psc-rec-card__name">
+                    <a href="{{ recommended_product.url }}">{{ recommended_product.title }}</a>
+                  </h3>
+                  <p class="psc-rec-card__desc">
+                    {{ recommended_product.metafields.custom.short_description | default: recommended_product.description | strip_html | truncate: 60 }}
+                  </p>
+                </div>
+                <div class="psc-rec-card__price">
+                  {% if recommended_product.compare_at_price > recommended_product.price %}
+                    <span class="psc-rec-card__price--sale">{{ recommended_product.price | money }}</span>
+                    <span class="psc-rec-card__price--compare">{{ recommended_product.compare_at_price | money }}</span>
+                  {% else %}
+                    <span class="psc-rec-card__price--regular">{{ recommended_product.price | money }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+
+        {% else %}
+          {% comment %}Fallback: products from the same collection{% endcomment %}
+          {% if product.collections.first %}
+            {% assign psc_collection = product.collections.first %}
+            {% assign psc_count = 0 %}
+            {% for related_product in psc_collection.products %}
+              {% if psc_count < 3 %}
+                {% unless related_product.id == product.id %}
+                  <div class="psc-rec-card group">
+                    <div class="psc-rec-card__image-wrap">
+                      <a href="{{ related_product.url }}" class="psc-rec-card__image-link">
+                        {% if related_product.featured_image %}
+                          {{ related_product.featured_image | image_url: width: 600 | image_tag: class: 'psc-rec-card__image', loading: 'lazy' }}
+                        {% else %}
+                          {{ 'product-1' | placeholder_svg_tag: 'psc-rec-card__image psc-rec-card__image--placeholder' }}
+                        {% endif %}
+                      </a>
+
+                      {% if related_product.compare_at_price > related_product.price %}
+                        <div class="psc-rec-card__badge psc-rec-card__badge--sale">
+                          {{ 'products.sale' | t }}
+                        </div>
+                      {% endif %}
+
+                      {% unless related_product.available %}
+                        <div class="psc-rec-card__badge psc-rec-card__badge--sold-out">
+                          {{ 'products.sold_out' | t }}
+                        </div>
+                      {% endunless %}
+
+                      <div class="psc-rec-card__atc-wrap">
+                        <form method="post" action="{{ routes.cart_add_url }}" class="psc-rec-atc-form">
+                          <input type="hidden" name="id" value="{{ related_product.selected_or_first_available_variant.id }}">
+                          <button
+                            type="submit"
+                            class="psc-rec-card__atc-btn"
+                            {% unless related_product.available %}disabled{% endunless %}
+                            aria-label="{{ 'products.add_to_cart' | t }}"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            </svg>
+                          </button>
+                        </form>
+                        <svg class="psc-rec-card__atc-corner psc-rec-card__atc-corner--top" viewBox="0 0 24 24"><path d="M24,24 H0 A24,24 0 0,0 24,0 Z"/></svg>
+                        <svg class="psc-rec-card__atc-corner psc-rec-card__atc-corner--left" viewBox="0 0 24 24"><path d="M24,24 H0 A24,24 0 0,0 24,0 Z"/></svg>
+                      </div>
+                    </div>
+
+                    <div class="psc-rec-card__info">
+                      <div class="psc-rec-card__text">
+                        <h3 class="psc-rec-card__name">
+                          <a href="{{ related_product.url }}">{{ related_product.title }}</a>
+                        </h3>
+                        <p class="psc-rec-card__desc">
+                          {{ related_product.metafields.custom.short_description | default: related_product.description | strip_html | truncate: 60 }}
+                        </p>
+                      </div>
+                      <div class="psc-rec-card__price">
+                        {% if related_product.compare_at_price > related_product.price %}
+                          <span class="psc-rec-card__price--sale">{{ related_product.price | money }}</span>
+                          <span class="psc-rec-card__price--compare">{{ related_product.compare_at_price | money }}</span>
+                        {% else %}
+                          <span class="psc-rec-card__price--regular">{{ related_product.price | money }}</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  {% assign psc_count = psc_count | plus: 1 %}
+                {% endunless %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% comment %} ── Testimonials ── {% endcomment %}
+{% if section.settings.show_testimonials %}
+  {% render 'organic-testimonials' %}
+{% endif %}
+
+{% style %}
+  /* ─── Reset & Base ─────────────────────────────────────── */
+  * {
+    box-sizing: border-box;
+  }
+
+  /* ─── Outer Wrapper ────────────────────────────────────── */
+  /* 
+    The wrapper is a flex row. Left and right are sticky.
+    Center column has natural height (all images stacked),
+    which drives the page scroll.
+  */
+  .product-scrollable-wrapper {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    background-color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* ─── Left Column: Sticky Thumbnail Rail ───────────────── */
+  .product-gallery-column {
+    width: 100px;
+    flex-shrink: 0;
+    items-align: center;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .gallery-thumbnails-section {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE */
+  }
+
+  .gallery-thumbnails-section::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  .gallery-thumbnails {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 8px;
+  }
+
+  .thumbnail-wrapper {
+    width: 100%;
+    aspect-ratio: 1;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s ease, opacity 0.2s ease;
+    background-color: #ffffff;
+    flex-shrink: 0;
+  }
+
+  .thumbnail-wrapper:hover {
+    border-color: #aaaaaa;
+    opacity: 0.9;
+  }
+
+  .thumbnail-wrapper.active {
+    border-color: #1a1a1a;
+  }
+
+  .thumbnail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ─── Center Column: Scrollable Gallery ────────────────── */
+  /*
+    This column has no fixed height — it grows with all images.
+    Its natural height is what drives the page-level scroll.
+    Gradient mask creates fade-in/fade-out effect at top and bottom.
+  */
+  .gallery-preview-section {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gallery-preview-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20vh;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .gallery-preview-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20vh;
+    background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .gallery-image-item {
+    width: 100%;
+    /* Each image fills the viewport height so one image = one "screen" */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+
+  .gallery-image-item:last-child {
+    border-bottom: none;
+  }
+
+  .gallery-full-image {
+    max-width: 100%;
+    max-height: 500px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  .preview-placeholder {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .preview-placeholder svg {
+    width: 60%;
+    height: auto;
+    opacity: 0.4;
+  }
+
+  /* ─── Right Column: Sticky Product Info ────────────────── */
+  .product-info-column {
+    width: 420px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #ffffff;
+    /* Hide scrollbar visually but keep it functional */
+    scrollbar-width: thin;
+    scrollbar-color: #e0e0e0 transparent;
+  }
+
+  .product-info-column::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .product-info-column::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .product-info-column::-webkit-scrollbar-thumb {
+    background-color: #e0e0e0;
+    border-radius: 2px;
+  }
+
+  .product-info-content {
+    padding: 60px 40px;
+  }
+
+  /* ─── Product Title ─────────────────────────────────────── */
+  .product-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.25;
+    margin: 0 0 20px 0;
+    color: #1a1a1a;
+  }
+
+  /* ─── Price ─────────────────────────────────────────────── */
+  .product-price-section {
+    margin-bottom: 28px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .product-price {
+    font-size: 20px;
+    font-weight: 400;
+    color: #1a1a1a;
+  }
+
+  .product-compare-price {
+    font-size: 16px;
+    color: #999999;
+    text-decoration: line-through;
+  }
+
+  /* ─── Variant Selector ──────────────────────────────────── */
+  .product-variant-selector {
+    margin-bottom: 20px;
+  }
+
+  .variant-select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    font-family: inherit;
+    cursor: pointer;
+    appearance: auto;
+  }
+
+  .variant-select:focus {
+    outline: none;
+    border-color: #1a1a1a;
+  }
+
+  /* ─── Add to Cart Button ────────────────────────────────── */
+  .add-to-cart-button {
+    width: 100%;
+    padding: 16px 24px;
+    background-color: #111111;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+    font-family: inherit;
+    margin-bottom: 36px;
+  }
+
+  .add-to-cart-button:hover:not(:disabled) {
+    background-color: #333333;
+  }
+
+  .add-to-cart-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+
+  /* ─── Product Description ───────────────────────────────── */
+  .product-description {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #444444;
+    margin-bottom: 36px;
+  }
+
+  .product-description p {
+    margin: 0 0 14px 0;
+  }
+
+  .product-description p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ─── Accordions ────────────────────────────────────────── */
+  .product-accordions {
+    border-top: 1px solid #e8e8e8;
+  }
+
+  .accordion-item {
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  .accordion-header {
+    width: 100%;
+    padding: 16px 0;
+    background: none;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 400;
+    color: #1a1a1a;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.2s ease;
+    text-align: left;
+  }
+
+  .accordion-header:hover {
+    color: #666666;
+  }
+
+  .accordion-chevron {
+    font-size: 22px;
+    line-height: 1;
+    transition: transform 0.3s ease;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .accordion-header.active .accordion-chevron {
+    transform: rotate(90deg);
+  }
+
+  .accordion-body {
+    padding: 0 0 16px 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #666666;
+  }
+
+  .accordion-body p {
+    margin: 0;
+  }
+
+  /* ─── Mobile ────────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .product-scrollable-wrapper {
+      flex-direction: column;
+    }
+
+    /* Left: horizontal scroll strip */
+    .product-gallery-column {
+      width: 100%;
+      height: auto;
+      position: relative;
+      top: auto;
+      border-right: none;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .gallery-thumbnails-section {
+      height: auto;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .gallery-thumbnails {
+      flex-direction: row;
+      padding: 10px 12px;
+      width: max-content;
+    }
+
+    .thumbnail-wrapper {
+      width: 72px;
+      height: 72px;
+    }
+
+    /* Center: natural scroll with adjusted gradients */
+    .gallery-preview-section {
+      width: 100%;
+      background: none;
+    }
+
+    .gallery-preview-section::before {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 15vh;
+    }
+
+    .gallery-preview-section::after {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 15vh;
+    }
+
+    .gallery-image-item {
+      min-height: 70vw;
+      padding: 20px;
+    }
+
+    /* Right: static */
+    .product-info-column {
+      width: 100%;
+      position: relative;
+      top: auto;
+      height: auto;
+      overflow-y: visible;
+      border-left: none;
+      border-top: 1px solid #e8e8e8;
+    }
+
+    .product-info-content {
+      padding: 40px 20px;
+    }
+
+    .product-title {
+      font-size: 26px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .gallery-image-item {
+      padding: 16px;
+    }
+
+    .product-title {
+      font-size: 22px;
+    }
+
+    .product-info-content {
+      padding: 32px 16px;
+    }
+
+    .add-to-cart-button {
+      margin-bottom: 28px;
+    }
+  }
+
+  /* ─── Recommendations Section ───────────────────────────── */
+  .psc-recommendations-section {
+    width: 100%;
+    padding: 64px 0;
+  }
+
+  .psc-recommendations-inner {
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .psc-recommendations-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .psc-recommendations-title {
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 500;
+    color: #1a201b;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .psc-recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px 24px;
+  }
+
+  /* ─── Recommendation Card ───────────────────────────────── */
+  .psc-rec-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .psc-rec-card__image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 36px;
+    overflow: hidden;
+    background-color: #e8e8e8;
+    margin-bottom: 20px;
+    isolation: isolate;
+  }
+
+  .psc-rec-card__image-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .psc-rec-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.7s ease;
+  }
+
+  .psc-rec-card:hover .psc-rec-card__image {
+    transform: scale(1.05);
+  }
+
+  .psc-rec-card__image--placeholder {
+    opacity: 0.4;
+  }
+
+  .psc-rec-card__badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    z-index: 2;
+  }
+
+  .psc-rec-card__badge--sale {
+    background-color: #d32f2f;
+  }
+
+  .psc-rec-card__badge--sold-out {
+    background-color: #555555;
+  }
+
+  /* ATC corner button */
+  .psc-rec-card__atc-wrap {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #fafbfa;
+    padding-top: 12px;
+    padding-left: 12px;
+    border-top-left-radius: 36px;
+    z-index: 10;
+  }
+
+  .psc-rec-card__atc-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background-color: #1a201b;
+    color: #ffffff;
+    border: none;
+    border-radius: 24px 12px 24px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .psc-rec-card__atc-btn:hover:not(:disabled) {
+    background-color: #006400;
+  }
+
+  .psc-rec-card__atc-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+
+  .psc-rec-card__atc-corner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    fill: #fafbfa;
+  }
+
+  .psc-rec-card__atc-corner--top {
+    top: -24px;
+    right: 0;
+  }
+
+  .psc-rec-card__atc-corner--left {
+    bottom: 0;
+    left: -24px;
+  }
+
+  /* Card info row */
+  .psc-rec-card__info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 0 8px;
+  }
+
+  .psc-rec-card__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .psc-rec-card__name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a201b;
+    line-height: 1.3;
+    margin: 0 0 6px 0;
+  }
+
+  .psc-rec-card__name a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .psc-rec-card__name a:hover {
+    text-decoration: underline;
+  }
+
+  .psc-rec-card__desc {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .psc-rec-card__price {
+    text-align: right;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .psc-rec-card__price--regular,
+  .psc-rec-card__price--sale {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .psc-rec-card__price--regular {
+    color: #1a201b;
+  }
+
+  .psc-rec-card__price--sale {
+    color: #d32f2f;
+  }
+
+  .psc-rec-card__price--compare {
+    display: block;
+    font-size: 14px;
+    color: #9ca3af;
+    text-decoration: line-through;
+  }
+
+  /* ─── Recommendations responsive ───────────────────────── */
+  @media (max-width: 900px) {
+    .psc-recommendations-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 540px) {
+    .psc-recommendations-section {
+      padding: 48px 0;
+    }
+
+    .psc-recommendations-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .psc-rec-card__image-wrap {
+      border-radius: 24px;
+    }
+  }
+{% endstyle %}
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function () {
+    const thumbnails = document.querySelectorAll('.thumbnail-wrapper');
+    const galleryItems = document.querySelectorAll('.gallery-image-item');
+
+    // ── Thumbnail click: smooth scroll center column to target image ──
+    thumbnails.forEach(function (thumb) {
+      thumb.addEventListener('click', function () {
+        const targetId = this.getAttribute('data-target-id');
+        const targetEl = document.getElementById(targetId);
+
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        setActiveThumb(this.getAttribute('data-image-index'));
+      });
+    });
+
+    // ── IntersectionObserver: highlight thumbnail as images scroll into view ──
+    const observerOptions = {
+      root: null, // use viewport as root
+      rootMargin: '0px',
+      threshold: 0.5, // image is 50% visible → mark as active
+    };
+
+    const observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          const index = entry.target.getAttribute('data-image-index');
+          setActiveThumb(index);
+          scrollThumbnailIntoView(index);
+        }
+      });
+    }, observerOptions);
+
+    galleryItems.forEach(function (item) {
+      observer.observe(item);
+    });
+
+    // ── Helper: set active class on matching thumbnail ──
+    function setActiveThumb(index) {
+      thumbnails.forEach(function (t) {
+        t.classList.remove('active');
+        if (t.getAttribute('data-image-index') === String(index)) {
+          t.classList.add('active');
+        }
+      });
+    }
+
+    // ── Helper: scroll thumbnail strip to keep active thumb visible ──
+    function scrollThumbnailIntoView(index) {
+      const activeThumb = document.querySelector(`.thumbnail-wrapper[data-image-index="${index}"]`);
+      if (activeThumb) {
+        activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+      }
+    }
+
+    // ── Accordion toggle ──
+    document.querySelectorAll('[data-accordion-toggle]').forEach(function (header) {
+      header.addEventListener('click', function () {
+        const id = this.getAttribute('data-accordion-toggle');
+        const body = document.querySelector(`[data-accordion-content="${id}"]`);
+        const isOpen = body.style.display !== 'none';
+
+        body.style.display = isOpen ? 'none' : 'block';
+        this.classList.toggle('active', !isOpen);
+      });
+    });
+
+    // ── Variant select sync ──
+    var variantSelect = document.querySelector('.variant-select');
+    if (variantSelect) {
+      variantSelect.addEventListener('change', function () {
+        var selectedVariantId = this.value;
+        var form = this.closest('form');
+        var addBtn = form ? form.querySelector('[data-ajax-add-to-cart]') : null;
+        
+        // Update hidden input if exists
+        var hidden = form && form.querySelector('input[name="id"]');
+        if (hidden) hidden.value = selectedVariantId;
+        
+        // Update button's data-variant-id
+        if (addBtn) {
+          addBtn.setAttribute('data-variant-id', selectedVariantId);
+        }
+      });
+    }
+
+    // ── AJAX add-to-cart → open cart drawer ──
+    function ajaxAddToCart(form) {
+      console.log('ajaxAddToCart called', form);
+      var btn = form.querySelector('button[type="submit"]');
+      var originalText = btn ? btn.textContent.trim() : '';
+      var originalHTML = btn ? btn.innerHTML : '';
+
+      if (btn) {
+        btn.disabled = true;
+        if (btn.classList.contains('add-to-cart-button')) {
+          btn.textContent = 'Adding…';
+        }
+      }
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: new FormData(form)
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error('Add to cart failed');
+          return res.json();
+        })
+        .then(function (data) {
+          console.log('Product added to cart:', data);
+          document.dispatchEvent(new CustomEvent('cart:added'));
+        })
+        .catch(function (err) {
+          console.error('Add to cart error:', err);
+          alert('Failed to add to cart. Please try again.');
+        })
+        .finally(function () {
+          if (btn) {
+            btn.disabled = false;
+            if (btn.classList.contains('add-to-cart-button')) {
+              btn.textContent = originalText;
+            } else {
+              btn.innerHTML = originalHTML;
+            }
+          }
+        });
+    }
+
+    // Main product form - multiple selectors for safety
+    var productForm = document.getElementById('psc-product-form') || 
+                      document.querySelector('form[action*="/cart/add"]') ||
+                      document.querySelector('.product-info-column form');
+    
+    console.log('Product form found:', productForm);
+    
+    if (productForm) {
+      console.log('Adding submit listener to form');
+      productForm.addEventListener('submit', function (e) {
+        console.log('Form submit intercepted');
+        e.preventDefault();
+        e.stopPropagation();
+        ajaxAddToCart(this);
+        return false;
+      });
+    } else {
+      console.error('Product form NOT found!');
+    }
+
+    // Recommendation card ATC forms (delegated)
+    document.addEventListener('submit', function (e) {
+      var form = e.target;
+      if (form.classList.contains('psc-rec-atc-form')) {
+        console.log('Recommendation form submit intercepted');
+        e.preventDefault();
+        ajaxAddToCart(form);
+      }
+    });
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Product Scrollable",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Button Labels"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Add to cart label",
+      "default": "Add to cart"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_label",
+      "label": "Sold out label",
+      "default": "Sold out"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Labels"
+    },
+    {
+      "type": "text",
+      "id": "details_label",
+      "label": "Product details title",
+      "default": "Product details"
+    },
+    {
+      "type": "text",
+      "id": "details_placeholder",
+      "label": "Product details fallback text",
+      "default": "No additional details available."
+    },
+    {
+      "type": "text",
+      "id": "shipping_label",
+      "label": "Shipping & delivery title",
+      "default": "Shipping & delivery"
+    },
+    {
+      "type": "text",
+      "id": "shipping_placeholder",
+      "label": "Shipping fallback text",
+      "default": "Shipping information coming soon."
+    },
+    {
+      "type": "header",
+      "content": "Product recommendations"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_recommendations",
+      "label": "Show product recommendations",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "recommendations_heading",
+      "label": "Recommendations heading",
+      "default": "You may also like"
+    },
+    {
+      "type": "header",
+      "content": "Testimonials"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_testimonials",
+      "label": "Show testimonials",
+      "default": true
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

@@ -2,255 +2,614 @@
   About Page Section - Full page layout for farming/agriculture business
 {% endcomment %}
 
-<div class="about-page bg-white">
+<div class="about-page bg-white full-width">
   {% comment %} Hero Section {% endcomment %}
-  <section class="relative h-[600px] lg:h-[700px] overflow-hidden">
+  <section class="relative mx-6 rounded-[32px] mt-6 max-w-full h-[600px] lg:h-[780px]">
     <div class="absolute inset-0">
       {% if section.settings.hero_image %}
-        {{ section.settings.hero_image | image_url: width: 2000 | image_tag: class: 'w-full h-full object-cover', loading: 'eager' }}
+        {{
+          section.settings.hero_image
+          | image_url: width: 2000
+          | image_tag: class: 'w-full h-full object-cover', loading: 'eager'
+        }}
       {% else %}
-        <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=2000" width="2000" height="1200" alt="Farming" class="w-full h-full object-cover">
+        <img
+          src="{{ 'hero-about.jpg' | file_url }}"
+          alt="Hero Image"
+          class="w-full h-full rounded-[32px] object-cover transition-transform duration-1000 bg-gray-100"
+          loading="lazy"
+          height="1440"
+          width="1440"
+        >
       {% endif %}
-      <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30"></div>
+      <div class="absolute inset-0 bg-gradient-to-r  rounded-[32px] from-black/60 to-black/0"></div>
     </div>
-    
-    <div class="relative h-full max-w-[1300px] mx-auto px-6 flex flex-col justify-center">
+
+    <div class="relative h-full w-full px-6 py-8 flex flex-col justify-end">
       {% if section.settings.hero_badge %}
-        <span class="inline-flex items-center text-white border border-white/30 px-4 py-2 rounded-full text-sm font-medium tracking-wide mb-6 bg-white/10 backdrop-blur-sm w-fit">
+        <span class="inline-flex items-center text-white border border-white/10 px-4 py-2 rounded-full text-sm font-medium tracking-wide mb-4 bg-[#1a201b]/65 backdrop-blur-md w-fit">
           {{ section.settings.hero_badge }}
         </span>
       {% endif %}
-      
-      <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 max-w-3xl leading-tight">
-        {{ section.settings.hero_heading | default: 'Bringing Innovation to Your Farming Journey' }}
+
+      <h1 class="text-4xl md:text-6xl lg:text-7xl font-medium text-white mb-2 max-w-3xl leading-tight">
+        {{ section.settings.hero_heading | default: 'From Our Soil to Your Glass. Pure & Chemical-Free.' }}
       </h1>
-      
+
       {% if section.settings.hero_subheading %}
-        <p class="text-lg md:text-xl text-white/90 mb-8 max-w-2xl">
-          {{ section.settings.hero_subheading }}
+        <p class="text-lg md:text-xl text-white/90 mb-6 max-w-2xl">
+          {{
+            section.settings.hero_subheading
+            | default: 'Experience the difference of farm-fresh goodness with our premium range of fruits and vegetables. Grown with care and delivered with love.'
+          }}
         </p>
       {% endif %}
-      
+
       {% if section.settings.hero_button_text %}
-        <a href="{{ section.settings.hero_button_link | default: '#' }}" class="inline-flex items-center bg-[#a3d977] hover:bg-[#8bc75a] text-[#1a201b] font-semibold px-8 py-4 rounded-full transition-colors w-fit">
+        <a
+          href="{{ section.settings.hero_button_link | default: '#' }}"
+          class="inline-flex items-center text-white gap-3 bg-[#006400] hover:bg-[#006400]/80 font-medium pr-1 pl-4 py-1 rounded-full transition-colors w-fit"
+        >
           {{ section.settings.hero_button_text }}
-          <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-          </svg>
+          <div class="bg-white rounded-full w-12 h-12 flex items-center justify-center">
+            <svg class="w-5 text-[#006400] h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </div>
         </a>
       {% endif %}
     </div>
-  </section>
 
-  {% comment %} Mission Statement {% endcomment %}
-  <section class="py-16 lg:py-24 bg-white">
-    <div class="max-w-[1300px] mx-auto px-6">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
-        <div>
-          {% if section.settings.mission_badge %}
-            <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide mb-6 bg-gray-50">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#a3d977] mr-2"></span>
-              {{ section.settings.mission_badge }}
-            </span>
-          {% endif %}
-          
-          <h2 class="text-3xl md:text-5xl font-bold text-[#1a201b] mb-6 leading-tight">
-            {{ section.settings.mission_heading | default: 'Why choose us?' }}
-          </h2>
-        </div>
-        
-        <div>
-          <p class="text-lg text-gray-700 leading-relaxed">
-            {{ section.settings.mission_text | default: 'With proven expertise in modern farming practices, we are committed to helping farmers grow smarter and achieve better yields. Together we are shaping the future of farming for a more sustainable world.' }}
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {% comment %} Statistics & Images Grid {% endcomment %}
-  <section class="py-16 lg:py-24 bg-gray-50">
-    <div class="max-w-[1300px] mx-auto px-6">
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {% for block in section.blocks %}
-          {% if block.type == 'stat_card' %}
-            <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-md transition-shadow">
-              {% if block.settings.stat_image %}
-                <div class="mb-6 rounded-2xl overflow-hidden aspect-square">
-                  {{ block.settings.stat_image | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
+    {% comment %} Hero card - bottom right with product image slider {% endcomment %}
+    {% assign card_slides = section.blocks | where: 'type', 'card_image' %}
+    <div class="absolute bottom-8 right-8 w-72 z-10 hidden lg:block">
+      <div class="bg-[#1a201b]/65 backdrop-blur-md rounded-2xl overflow-hidden">
+        {% comment %} Image slider area {% endcomment %}
+        <div class="relative" id="about-hero-card">
+          <div class="about-card-track p-1.5 relative overflow-hidden h-44">
+            {% if card_slides.size > 0 %}
+              {% for block in card_slides %}
+                <div class="about-card-slide absolute inset-0 transition-opacity duration-500 {% if forloop.first %}opacity-100{% else %}opacity-0 pointer-events-none{% endif %}">
+                  {% if block.settings.card_image %}
+                    {{
+                      block.settings.card_image
+                      | image_url: width: 600
+                      | image_tag: class: 'w-full h-full object-cover'
+                    }}
+                  {% else %}
+                    <img
+                      src="{{ 'product-2.png' | file_url }}"
+                      alt="Hero Image"
+                      class="w-full h-full rounded-2xl object-cover transition-transform duration-1000 bg-gray-100"
+                      loading="lazy"
+                      height="100"
+                      width="100"
+                    >
+                  {% endif %}
                 </div>
-              {% endif %}
-              
-              <div class="flex items-start gap-3 mb-4">
-                <div class="text-5xl font-bold text-[#1a201b]">{{ block.settings.stat_number }}</div>
-                {% if block.settings.show_badge %}
-                  <span class="bg-[#a3d977] text-[#1a201b] w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mt-1">✓</span>
-                {% endif %}
-              </div>
-              
-              <p class="text-gray-700 leading-relaxed">{{ block.settings.stat_description }}</p>
+              {% endfor %}
+            {% else %}
+              <img
+                src="{{ 'supprt-hero-img.png' | file_url }}"
+                alt="Hero Image"
+                class="w-full h-full object-cover rounded-2xl transition-transform duration-1000 bg-gray-100"
+                loading="lazy"
+                height="100"
+                width="100"
+              >
+            {% endif %}
+          </div>
+
+          {% comment %} Prev / Next arrows {% endcomment %}
+          {% if card_slides.size > 1 %}
+            <div class="absolute top-3 right-3 flex gap-1.5">
+              <button class="about-card-prev bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center transition-colors">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+              </button>
+              <button class="about-card-next bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center transition-colors">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+
+            {% comment %} Dot indicators {% endcomment %}
+            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+              {% for block in card_slides %}
+                <span
+                  class="about-card-dot w-1.5 h-1.5 rounded-full transition-colors {% if forloop.first %}bg-white{% else %}bg-white/40{% endif %}"
+                ></span>
+              {% endfor %}
             </div>
           {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-  </section>
+        </div>
 
-  {% comment %} Features Section - Dark Background {% endcomment %}
-  <section class="py-16 lg:py-24 bg-[#1a201b] text-white">
-    <div class="max-w-[1300px] mx-auto px-6">
-      {% if section.settings.features_badge %}
-        <span class="inline-flex items-center text-white/80 border border-white/20 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide mb-6 bg-white/5">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#a3d977] mr-2"></span>
-          {{ section.settings.features_badge }}
-        </span>
-      {% endif %}
-      
-      <h2 class="text-3xl md:text-5xl font-bold mb-4 leading-tight max-w-3xl">
-        {{ section.settings.features_heading | default: 'Unlock the Future of Farming with Powerful Features Designed for Efficiency, Productivity and Sustainability' }}
-      </h2>
-      
-      {% if section.settings.features_subheading %}
-        <p class="text-white/70 text-lg mb-16 max-w-2xl">{{ section.settings.features_subheading }}</p>
-      {% endif %}
-
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {% for block in section.blocks %}
-          {% if block.type == 'feature' %}
-            <div class="group">
-              {% if block.settings.feature_icon %}
-                <div class="w-12 h-12 bg-[#a3d977] rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <span class="text-2xl">{{ block.settings.feature_icon }}</span>
-                </div>
-              {% endif %}
-              
-              <h3 class="text-xl font-bold mb-3">{{ block.settings.feature_title }}</h3>
-              <p class="text-white/70 leading-relaxed">{{ block.settings.feature_description }}</p>
+        {% comment %} Card text content {% endcomment %}
+        <div class="p-5">
+          {% if section.settings.hero_card_label %}
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-2 h-2 rounded-full bg-[#a3d977] flex-shrink-0"></span>
+              <span class="text-white/70 text-xs font-medium uppercase tracking-wider">
+                {{- section.settings.hero_card_label -}}
+              </span>
             </div>
           {% endif %}
-        {% endfor %}
+
+          {% if section.settings.hero_card_text %}
+            <p class="text-white/80 text-sm leading-relaxed mb-4">{{ section.settings.hero_card_text }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% comment %} Bottom center label shape overlapping next section {% endcomment %}
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-[999]">
+      <div class="bg-white rounded-[32px] px-24 py-10 flex items-center gap-2 whitespace-nowrap">
+        <span class="text-xl md:text-5xl font-medium text-[#1a201b]">Get to Know</span>
+        <span class="text-xl md:text-5xl font-medium text-[#a3d977]">Us</span>
       </div>
     </div>
   </section>
 
-  {% comment %} Technology Section {% endcomment %}
-  <section class="relative py-16 lg:py-24 overflow-hidden">
-    <div class="absolute inset-0">
-      {% if section.settings.tech_bg_image %}
-        {{ section.settings.tech_bg_image | image_url: width: 2000 | image_tag: class: 'w-full h-full object-cover' }}
-      {% else %}
-        <img src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=2000" width="2000" height="1200" alt="Technology" class="w-full h-full object-cover">
-      {% endif %}
-      <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50"></div>
-    </div>
-    
-    <div class="relative max-w-[1300px] mx-auto px-6">
-      <div class="max-w-2xl">
-        {% if section.settings.tech_badge %}
-          <span class="inline-flex items-center text-white/80 border border-white/30 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide mb-6 bg-white/10 backdrop-blur-sm">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#a3d977] mr-2"></span>
-            {{ section.settings.tech_badge }}
+  {% comment %} Mission Statement - organic floating images layout {% endcomment %}
+  <section class="py-12 lg:py-24 bg-white overflow-hidden relative full-width" id="mission">
+    <div class="max-w-[1440px] mx-auto px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-[1fr_2fr_1fr] gap-8 lg:gap-4 items-center relative z-10 w-full min-h-[500px]">
+      {% comment %} Left floating images {% endcomment %}
+      <div class="lg:absolute left-0 top-0 bottom-0 w-full lg:w-[240px] z-0 pointer-events-none flex lg:block flex-row justify-center gap-4 h-[200px] lg:h-auto overflow-hidden lg:overflow-visible">
+        <div class="lg:absolute top-[5%] lg:left-[20px] w-1/2 max-w-[180px] lg:w-[180px] h-full lg:h-[240px] rounded-[24px] overflow-hidden shadow-sm border border-black/5 pointer-events-auto hover:scale-105 transition-transform duration-500">
+          {% if section.settings.mission_image_1 %}
+            {{
+              section.settings.mission_image_1
+              | image_url: width: 400
+              | image_tag: class: 'w-full h-full object-cover'
+            }}
+          {% else %}
+            <img
+              src="{{ 'about-1.jpg' | file_url }}"
+              alt="Mission"
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="300"
+              height="300"
+            >
+          {% endif %}
+        </div>
+        <div class="lg:absolute bottom-[0%] lg:left-[60px] w-1/2 max-w-[200px] lg:w-[200px] h-full lg:h-[260px] rounded-[24px] overflow-hidden shadow-sm border border-black/5 pointer-events-auto hover:scale-105 transition-transform duration-500">
+          {% if section.settings.mission_image_3 %}
+            {{
+              section.settings.mission_image_3
+              | image_url: width: 400
+              | image_tag: class: 'w-full h-full object-cover'
+            }}
+          {% else %}
+            <img
+              src="{{ 'about-2.png' | file_url }}"
+              alt="Mission"
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="300"
+              height="300"
+            >
+          {% endif %}
+        </div>
+      </div>
+
+      {% comment %} Right floating images {% endcomment %}
+      <div class="hidden lg:block absolute right-0 top-0 bottom-0 w-[240px] z-0 pointer-events-none">
+        <div class="absolute top-[10%] right-0 w-[220px] h-[280px] rounded-[24px] overflow-hidden shadow-sm border border-black/5 pointer-events-auto hover:scale-105 transition-transform duration-500">
+          {% if section.settings.mission_image_2 %}
+            {{
+              section.settings.mission_image_2
+              | image_url: width: 400
+              | image_tag: class: 'w-full h-full object-cover'
+            }}
+          {% else %}
+            <img
+              src="{{ 'about-4.png' | file_url }}"
+              alt="Mission"
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="300"
+              height="300"
+            >
+          {% endif %}
+        </div>
+        <div class="absolute bottom-[-10%] right-[40px] w-[180px] h-[220px] rounded-[24px] overflow-hidden shadow-sm border border-black/5 pointer-events-auto hover:scale-105 transition-transform duration-500">
+          {% if section.settings.mission_image_4 %}
+            {{
+              section.settings.mission_image_4
+              | image_url: width: 400
+              | image_tag: class: 'w-full h-full object-cover'
+            }}
+          {% else %}
+            <img
+              src="{{ 'about-3.png' | file_url }}"
+              alt="Mission"
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="300"
+              height="300"
+            >
+          {% endif %}
+        </div>
+      </div>
+
+      {% comment %} Center content {% endcomment %}
+      <div class="lg:col-start-2 lg:col-span-1 flex flex-col items-center justify-center text-center z-10 w-full max-w-[700px] mx-auto pt-10 pb-10">
+        {% if section.settings.mission_badge %}
+          <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide mb-6 bg-white shadow-sm">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#006400] mr-2"></span>
+            {{ section.settings.mission_badge }}
           </span>
         {% endif %}
-        
-        <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
-          {{ section.settings.tech_heading | default: 'Drone Technology' }}
-        </h2>
-        
-        <p class="text-lg text-white/90 mb-8 leading-relaxed">
-          {{ section.settings.tech_description }}
+        <div class="custom-about-heading text-[26px] md:text-[34px] leading-[1.4] text-gray-800 mb-6 font-medium tracking-tight">
+          {{ section.settings.mission_heading }}
+        </div>
+
+        <p class="text-[13px] md:text-[15px] leading-relaxed text-gray-700 max-w-[560px] mb-8">
+          {{
+            section.settings.mission_text
+            | default: 'We are committed to helping farmers grow smarter and achieve better yields.'
+          }}
         </p>
-        
-        {% if section.settings.tech_button_text %}
-          <a href="{{ section.settings.tech_button_link | default: '#' }}" class="inline-flex items-center bg-[#a3d977] hover:bg-[#8bc75a] text-[#1a201b] font-semibold px-8 py-4 rounded-full transition-colors">
-            {{ section.settings.tech_button_text }}
-            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-            </svg>
-          </a>
-        {% endif %}
       </div>
-    </div>
-  </section>
 
-  {% comment %} Results Section {% endcomment %}
-  <section class="py-16 lg:py-24 bg-white">
-    <div class="max-w-[1300px] mx-auto px-6">
-      {% if section.settings.results_badge %}
-        <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide mb-6 bg-gray-50">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#a3d977] mr-2"></span>
-          {{ section.settings.results_badge }}
-        </span>
-      {% endif %}
-      
-      <h2 class="text-3xl md:text-5xl font-bold text-[#1a201b] mb-12 leading-tight max-w-3xl">
-        {{ section.settings.results_heading }}
-      </h2>
-      
-      <div class="prose prose-lg max-w-none text-gray-700">
-        {{ section.settings.results_text }}
-      </div>
-    </div>
-  </section>
-
-  {% comment %} Testimonials {% endcomment %}
-  <section class="py-16 lg:py-24 bg-gray-50">
-    <div class="max-w-[1300px] mx-auto px-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-[#1a201b] mb-12 text-center">
-        {{ section.settings.testimonials_heading | default: 'What Our Farmers Say' }}
-      </h2>
-      
-      <div class="grid md:grid-cols-3 gap-8">
-        {% for block in section.blocks %}
-          {% if block.type == 'testimonial' %}
-            <div class="bg-white rounded-3xl p-8 shadow-sm">
-              {% if block.settings.testimonial_image %}
-                <div class="w-20 h-20 rounded-full overflow-hidden mb-6 mx-auto">
-                  {{ block.settings.testimonial_image | image_url: width: 200 | image_tag: class: 'w-full h-full object-cover' }}
-                </div>
-              {% endif %}
-              
-              <p class="text-gray-700 mb-6 leading-relaxed text-center">
-                "{{ block.settings.testimonial_text }}"
-              </p>
-              
-              <div class="text-center">
-                <p class="font-bold text-[#1a201b]">{{ block.settings.testimonial_name }}</p>
-                <p class="text-sm text-gray-500">{{ block.settings.testimonial_role }}</p>
-              </div>
-            </div>
+      {% comment %} Mobile images grid {% endcomment %}
+      <div class="grid grid-cols-2 gap-4 lg:hidden mt-4 w-full px-4">
+        <div class="h-48 rounded-[24px] overflow-hidden shadow-sm">
+          {% if section.settings.mission_image_1 %}
+            {{
+              section.settings.mission_image_1
+              | image_url: width: 400
+              | image_tag: class: 'w-full h-full object-cover'
+            }}
+          {% else %}
+            <img
+              src="{{ 'about-1.jpg' | file_url }}"
+              alt="Mission"
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="300"
+              height="300"
+            >
           {% endif %}
-        {% endfor %}
+        </div>
+        <div class="h-56 rounded-[24px] overflow-hidden mt-8 shadow-sm">
+          {% if section.settings.mission_image_2 %}
+            {{
+              section.settings.mission_image_2
+              | image_url: width: 400
+              | image_tag: class: 'w-full h-full object-cover'
+            }}
+          {% else %}
+            <img
+              src="{{ 'about-2.png' | file_url }}"
+              alt="Mission"
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="300"
+              height="300"
+            >
+          {% endif %}
+        </div>
+        <div class="h-64 rounded-[24px] overflow-hidden -mt-4 shadow-sm">
+          {% if section.settings.mission_image_3 %}
+            {{
+              section.settings.mission_image_3
+              | image_url: width: 400
+              | image_tag: class: 'w-full h-full object-cover'
+            }}
+          {% else %}
+            <img
+              src="{{ 'about-2.png' | file_url }}"
+              alt="Mission"
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="300"
+              height="300"
+            >
+          {% endif %}
+        </div>
+        <div class="h-48 rounded-[24px] overflow-hidden mt-4 shadow-sm">
+          {% if section.settings.mission_image_4 %}
+            {{
+              section.settings.mission_image_4
+              | image_url: width: 400
+              | image_tag: class: 'w-full h-full object-cover'
+            }}
+          {% else %}
+            <img
+              src="{{ 'about-1.jpg' | file_url }}"
+              alt="Mission"
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="300"
+              height="300"
+            >
+          {% endif %}
+        </div>
       </div>
     </div>
   </section>
 
-  {% comment %} CTA Section {% endcomment %}
-  <section class="py-16 lg:py-24 bg-[#1a201b] text-white">
-    <div class="max-w-[1300px] mx-auto px-6 text-center">
-      <h2 class="text-3xl md:text-5xl font-bold mb-6 leading-tight">
-        {{ section.settings.cta_heading | default: 'Ready to Transform Your Farm?' }}
-      </h2>
-      
-      <p class="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-        {{ section.settings.cta_text }}
-      </p>
-      
-      <div class="flex flex-wrap gap-4 justify-center">
-        {% if section.settings.cta_button_primary_text %}
-          <a href="{{ section.settings.cta_button_primary_link | default: '#' }}" class="inline-flex items-center bg-[#a3d977] hover:bg-[#8bc75a] text-[#1a201b] font-semibold px-8 py-4 rounded-full transition-colors">
-            {{ section.settings.cta_button_primary_text }}
-          </a>
-        {% endif %}
-        
-        {% if section.settings.cta_button_secondary_text %}
-          <a href="{{ section.settings.cta_button_secondary_link | default: '#' }}" class="inline-flex items-center border-2 border-white hover:bg-white hover:text-[#1a201b] text-white font-semibold px-8 py-4 rounded-full transition-colors">
-            {{ section.settings.cta_button_secondary_text }}
-          </a>
-        {% endif %}
+  {% comment %} Blog highlight section {% endcomment %}
+  <section class="pb-16 lg:pb-24 bg-[#0f3f21] text-white">
+    {% if section.settings.hero_image %}
+      {{
+        section.settings.hero_image
+        | image_url: width: 2000
+        | image_tag: class: 'w-full h-[500px] object-cover', loading: 'eager'
+      }}
+    {% else %}
+      <img
+        src="{{ 'blog-section.jpg' | file_url }}"
+        alt="Hero Image"
+        class="w-full h-[780px] pb-20 object-cover transition-transform duration-1000"
+        loading="lazy"
+        height="1440"
+        width="1440"
+      >
+    {% endif -%}
+
+    <div class="max-w-full mx-auto px-[48px]">
+      <div class="flex flex-col gap-24 items-start">
+        <div class="max-w-full w-full flex flex-col md:flex-row justify-between item-end">
+          <div class="flex flex-col gap-4">
+            {% if section.settings.blog_badge %}
+              <span class="inline-flex items-center text-[#d4f2c1] w-fit border border-white/20 px-3.5 py-2 rounded-full text-sm font-medium Capitalize mb-1 bg-white/10">
+                {{ section.settings.blog_badge }}
+              </span>
+            {% endif %}
+
+            <h2 class="text-4xl md:text-5xl xl:text-6xl font-medium mb-6 max-w-3xl">
+              {{ section.settings.blog_heading | default: 'Our farming and market gardening blog' }}
+            </h2>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <p class="text-base md:text-lg text-white/80 leading-relaxed mb-6 max-w-xl">
+              {{
+                section.settings.blog_subheading
+                | default: 'Reliable tools, techniques and advice to help you take the next step in your agrarian adventures.'
+              }}
+            </p>
+
+            {% if section.settings.blog_button_text %}
+              <a
+                href="{{ section.settings.blog_button_link | default: '#' }}"
+                class="inline-flex items-center justify-center rounded-full bg-[#f8d74a] w-fit text-[#1a201b] font-semibold px-8 py-4 shadow-lg shadow-black/10 hover:bg-[#f1ce36] transition-colors"
+              >
+                {{ section.settings.blog_button_text }}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="grid gap-6 sm:grid-cols-4">
+          {% for block in section.blocks %}
+            {% if block.type == 'blogcard' %}
+              <article class="group rounded-[32px] text-[#1a201b] transition-transform duration-300 hover:-translate-y-1">
+                {% if block.settings.card_image %}
+                  {{
+                    block.settings.card_image
+                    | image_url: width: 900
+                    | image_tag: class: 'w-full h-72 rounded-3xl object-cover', alt: block.settings.card_image_alt
+                    | default: 'Blog image'
+                  }}
+                {% else %}
+                  <div class="h-72  rounded-3xl bg-white"></div>
+                {% endif %}
+
+                <div class="p-6">
+                  {% if block.settings.card_category %}
+                    <p class="text-sm capitalize text-white mb-3 font-medium">
+                      {{ block.settings.card_category }}
+                    </p>
+                  {% endif %}
+
+                  <h3 class="text-xl text-white font-semibold mb-3 leading-snug">{{ block.settings.card_title }}</h3>
+
+                  {% if block.settings.card_url %}
+                    <a
+                      href="{{ block.settings.card_url }}"
+                      class="inline-flex items-center gap-2 text-sm font-semibold text-white"
+                    >
+                      {{ block.settings.card_button_text | default: 'Read more' }}
+                      <svg
+                        class="w-4 h-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M5 12h14"></path>
+                        <path d="m13 6 6 6-6 6"></path>
+                      </svg>
+                    </a>
+                  {% endif %}
+                </div>
+              </article>
+            {% endif %}
+          {% endfor %}
+        </div>
       </div>
     </div>
   </section>
+
+  {% comment %} Features Section - Dark Background with Metrics Layout and Image {% endcomment %}
+  <section class="bg-white text-white w-full">
+    <div class="w-full">
+      <div class="grid lg:grid-cols-2 gap-0">
+        <div class="flex flex-col justify-center overflow-hidden">
+          {% if section.settings.features_image %}
+            {{
+              section.settings.features_image
+              | image_url: width: 1000
+              | image_tag: class: 'w-full h-full object-cover'
+            }}
+          {% else %}
+            <img
+              src="{{ 'supprt-hero-img.png' | file_url }}"
+              alt="Hero Image"
+              class="w-full h-full object-cover transition-transform duration-1000 bg-gray-100"
+              loading="lazy"
+              height="100"
+              width="100"
+            >
+          {% endif %}
+        </div>
+        <div class="px-6 pb-12 lg:px-12 flex flex-col justify-center space-y-8">
+          <h2 class="text-3xl md:text-5xl text-[#0f3f21] font-medium py-14 leading-tight max-w-lg">
+            {{ section.settings.features_heading | default: 'Field-Tested. Farmer-Approved.' }}
+          </h2>
+
+          <!-- Feature 1 -->
+          <div class="flex gap-12 items-start justify-between pb-8 border-b border-[#0f3f21]/10">
+            <div class="flex-shrink-0">
+              <div class="text-6xl md:text-7xl font-medium text-[#a3d977]">4</div>
+            </div>
+            <div class="flex-1 max-w-xs pt-2">
+              <p class="text-base text-[#0f3f21] leading-relaxed">CONTINENTS TESTED</p>
+            </div>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="flex gap-12 items-start justify-between pb-8 border-b border-[#0f3f21]/10">
+            <div class="flex-shrink-0">
+              <div class="text-6xl md:text-7xl font-medium text-[#a3d977]">100x</div>
+            </div>
+            <div class="flex-1 max-w-xs pt-2">
+              <p class="text-base text-[#0f3f21] leading-relaxed">LOWER TRANSPORT COST</p>
+            </div>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="flex gap-12 items-start justify-between pb-8 border-b border-[#0f3f21]/10">
+            <div class="flex-shrink-0">
+              <div class="text-6xl md:text-7xl font-medium text-[#a3d977]">0.5 ton</div>
+            </div>
+            <div class="flex-1 max-w-xs pt-2">
+              <p class="text-base text-[#0f3f21] leading-relaxed">CO₂ SAVED PER ACRE – AT NO EXTRA COST</p>
+            </div>
+          </div>
+
+          <!-- Feature 4 -->
+          <div class="flex gap-12 items-start justify-between">
+            <div class="flex-shrink-0">
+              <div class="text-6xl md:text-7xl font-medium text-[#a3d977]">≥5x</div>
+            </div>
+            <div class="flex-1 max-w-xs pt-2">
+              <p class="text-base text-[#0f3f21] leading-relaxed">RETURN* ON EVERY DOLLAR INVESTED</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% comment %} Products Section {% endcomment %}
+  <section class="py-12 lg:py-40 bg-white full-width w-full">
+    <div class="max-w-[1300px] mx-auto px-4 lg:px-6 text-center mb-10 lg:mb-12">
+      <h2 class="text-3xl md:text-5xl leading-tight font-medium text-[#0f3f21] tracking-tight">
+        {{ section.settings.products_heading | default: 'Our Products' }}
+      </h2>
+    </div>
+
+    <div class="max-w-full mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+      {% for product in collections.all.products limit: 3 %}
+        <div class="group flex flex-col">
+          <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate">
+            <a href="{{ product.url }}" class="block w-full h-full">
+              {% if product.featured_image %}
+                {{
+                  product.featured_image
+                  | image_url: width: 600
+                  | image_tag:
+                    class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700',
+                    loading: 'lazy'
+                }}
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-200' }}
+              {% endif %}
+            </a>
+
+            {% if product.compare_at_price > product.price %}
+              <div class="absolute top-4 left-4 bg-[#d32f2f] text-white px-3 py-1 rounded-full text-xs font-semibold">
+                {{ 'products.sale' | t }}
+              </div>
+            {% endif %}
+
+            {% unless product.available %}
+              <div class="absolute top-4 left-4 bg-gray-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                {{ 'products.sold_out' | t }}
+              </div>
+            {% endunless %}
+
+            <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
+              <form method="post" action="{{ routes.cart_add_url }}" class="m-0">
+                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                <button
+                  type="submit"
+                  class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#006400] transition-colors shadow-md"
+                  {% unless product.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 10m10 0h2m-2 0a2 2 0 100 4 2 2 0 000-4zm0 0h8m-8 0l2-10"/>
+                  </svg>
+                </button>
+              </form>
+              <svg class="absolute -top-[24px] right-0 w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+                <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+              </svg>
+              <svg class="absolute bottom-0 -left-[24px] w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
+                <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-start gap-4 px-2">
+            <div>
+              {% if section.settings.show_vendor and product.vendor %}
+                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">{{ product.vendor }}</p>
+              {% endif %}
+              <h3 class="font-bold text-[18px] text-[#1a201b] leading-tight mb-1.5">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+              <p class="text-[13px] text-gray-500 leading-snug">
+                {{ product.description | strip_html | truncate: 60 }}
+              </p>
+            </div>
+            <div class="text-right whitespace-nowrap">
+              {% if product.compare_at_price > product.price %}
+                <span class="font-bold text-[18px] text-[#d32f2f] leading-tight block">
+                  {{ product.price | money }}
+                </span>
+                <span class="text-[14px] text-gray-400 line-through">
+                  {{ product.compare_at_price | money }}
+                </span>
+              {% else %}
+                <span class="font-bold text-[18px] text-[#1a201b] leading-tight">
+                  {{ product.price | money }}
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% comment %} Testimonials Section {% endcomment %}
+  {% render 'organic-testimonials' %}
+
+  {% comment %} Newsletter/Community Section {% endcomment %}
+  {% render 'organic-newsletter' %}
 </div>
 
 {% schema %}
@@ -270,13 +629,13 @@
       "type": "text",
       "id": "hero_badge",
       "label": "Hero badge text",
-      "default": "Sustainable Farming"
+      "default": "Our Story From Farm to Table"
     },
     {
       "type": "text",
       "id": "hero_heading",
       "label": "Hero heading",
-      "default": "Bringing Innovation to Your Farming Journey"
+      "default": "From Our Soil to Your Glass. Pure & Chemical-Free."
     },
     {
       "type": "textarea",
@@ -293,6 +652,33 @@
       "type": "url",
       "id": "hero_button_link",
       "label": "Hero button link"
+    },
+    {
+      "type": "header",
+      "content": "Hero Card"
+    },
+    {
+      "type": "text",
+      "id": "hero_card_label",
+      "label": "Card label",
+      "default": "Fresh From Nature"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_card_text",
+      "label": "Card description",
+      "default": "Grown naturally for peak sweetness and vibrant flavor"
+    },
+    {
+      "type": "text",
+      "id": "hero_card_link_text",
+      "label": "Card link text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "hero_card_link",
+      "label": "Card link URL"
     },
     {
       "type": "header",
@@ -317,6 +703,70 @@
       "default": "With proven expertise in modern farming practices, we are committed to helping farmers grow smarter and achieve better yields."
     },
     {
+      "type": "image_picker",
+      "id": "mission_image_1",
+      "label": "Top Left Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mission_image_2",
+      "label": "Top Right Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mission_image_3",
+      "label": "Bottom Left Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mission_image_4",
+      "label": "Bottom Right Image"
+    },
+    {
+      "type": "text",
+      "id": "mission_button_text",
+      "label": "Button text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "mission_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Blog highlight section"
+    },
+    {
+      "type": "text",
+      "id": "blog_badge",
+      "label": "Blog badge",
+      "default": "Get your daily dose of knowledge"
+    },
+    {
+      "type": "textarea",
+      "id": "blog_heading",
+      "label": "Blog heading",
+      "default": "Our farming and market gardening blog"
+    },
+    {
+      "type": "textarea",
+      "id": "blog_subheading",
+      "label": "Blog subheading",
+      "default": "Reliable tools, techniques and advice to help you take the next step in your agrarian adventures."
+    },
+    {
+      "type": "text",
+      "id": "blog_button_text",
+      "label": "Button text",
+      "default": "Read our articles"
+    },
+    {
+      "type": "url",
+      "id": "blog_button_link",
+      "label": "Button link"
+    },
+    {
       "type": "header",
       "content": "Features Section"
     },
@@ -338,41 +788,25 @@
       "label": "Features subheading"
     },
     {
-      "type": "header",
-      "content": "Technology Section"
-    },
-    {
       "type": "image_picker",
-      "id": "tech_bg_image",
-      "label": "Technology background image"
+      "id": "features_image",
+      "label": "Features image"
+    },
+    {
+      "type": "header",
+      "content": "Products Section"
     },
     {
       "type": "text",
-      "id": "tech_badge",
-      "label": "Technology badge",
-      "default": "Innovation"
+      "id": "products_heading",
+      "label": "Products heading",
+      "default": "Our Recommended Products"
     },
     {
-      "type": "text",
-      "id": "tech_heading",
-      "label": "Technology heading",
-      "default": "Drone Technology"
-    },
-    {
-      "type": "textarea",
-      "id": "tech_description",
-      "label": "Technology description"
-    },
-    {
-      "type": "text",
-      "id": "tech_button_text",
-      "label": "Technology button text",
-      "default": "Explore Technology"
-    },
-    {
-      "type": "url",
-      "id": "tech_button_link",
-      "label": "Technology button link"
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show product vendor",
+      "default": false
     },
     {
       "type": "header",
@@ -445,31 +879,65 @@
   ],
   "blocks": [
     {
-      "type": "stat_card",
-      "name": "Statistic Card",
+      "type": "card_image",
+      "name": "Hero Card Image",
       "settings": [
         {
           "type": "image_picker",
-          "id": "stat_image",
+          "id": "card_image",
+          "label": "Product image"
+        },
+        {
+          "type": "text",
+          "id": "card_image_alt",
+          "label": "Image alt text",
+          "default": "Product image"
+        }
+      ]
+    },
+    {
+      "type": "blogcard",
+      "name": "Blog card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "card_image",
           "label": "Card image"
         },
         {
           "type": "text",
-          "id": "stat_number",
-          "label": "Statistic number",
-          "default": "10+"
+          "id": "card_image_alt",
+          "label": "Image alt text",
+          "default": "Blog image"
+        },
+        {
+          "type": "text",
+          "id": "card_category",
+          "label": "Category label",
+          "default": "Farming Tips"
+        },
+        {
+          "type": "text",
+          "id": "card_title",
+          "label": "Card title",
+          "default": "Our farming and market gardening blog"
         },
         {
           "type": "textarea",
-          "id": "stat_description",
-          "label": "Description",
-          "default": "Years of experience in sustainable farming"
+          "id": "card_excerpt",
+          "label": "Card excerpt",
+          "default": "Insights, stories, and practical advice for modern growers."
         },
         {
-          "type": "checkbox",
-          "id": "show_badge",
-          "label": "Show checkmark badge",
-          "default": true
+          "type": "text",
+          "id": "card_button_text",
+          "label": "Button text",
+          "default": "Read more"
+        },
+        {
+          "type": "url",
+          "id": "card_url",
+          "label": "Card link"
         }
       ]
     },
@@ -479,21 +947,21 @@
       "settings": [
         {
           "type": "text",
-          "id": "feature_icon",
-          "label": "Icon (emoji)",
-          "default": "🌱"
+          "id": "feature_metric",
+          "label": "Metric/Number",
+          "default": "5"
         },
         {
           "type": "text",
           "id": "feature_title",
           "label": "Feature title",
-          "default": "Smart Farming"
+          "default": "Continents Tested"
         },
         {
           "type": "textarea",
           "id": "feature_description",
           "label": "Feature description",
-          "default": "Advanced technology for better yields"
+          "default": "Field-tested and proven across multiple continents"
         }
       ]
     },
@@ -532,16 +1000,16 @@
       "name": "About Page",
       "blocks": [
         {
-          "type": "stat_card"
+          "type": "blogcard"
         },
         {
-          "type": "stat_card"
+          "type": "blogcard"
         },
         {
-          "type": "stat_card"
+          "type": "blogcard"
         },
         {
-          "type": "stat_card"
+          "type": "blogcard"
         },
         {
           "type": "feature"
@@ -569,3 +1037,36 @@
   ]
 }
 {% endschema %}
+
+{% javascript %}
+  (function () {
+    const card = document.getElementById('about-hero-card');
+    if (!card) return;
+
+    const slides = card.querySelectorAll('.about-card-slide');
+    const dots = card.querySelectorAll('.about-card-dot');
+    const prev = card.querySelector('.about-card-prev');
+    const next = card.querySelector('.about-card-next');
+    if (slides.length < 2) return;
+
+    let current = 0;
+
+    function goTo(index) {
+      slides[current].classList.remove('opacity-100');
+      slides[current].classList.add('opacity-0', 'pointer-events-none');
+      dots[current]?.classList.replace('bg-white', 'bg-white/40');
+
+      current = (index + slides.length) % slides.length;
+
+      slides[current].classList.remove('opacity-0', 'pointer-events-none');
+      slides[current].classList.add('opacity-100');
+      dots[current]?.classList.replace('bg-white/40', 'bg-white');
+    }
+
+    prev?.addEventListener('click', () => goTo(current - 1));
+    next?.addEventListener('click', () => goTo(current + 1));
+
+    // Auto-advance every 4 s
+    setInterval(() => goTo(current + 1), 4000);
+  })();
+{% endjavascript %}

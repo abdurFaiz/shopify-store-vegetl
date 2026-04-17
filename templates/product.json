@@ -1,7 +1,7 @@
 {
   "sections": {
     "main": {
-      "type": "product",
+      "type": "product-scrollable",
       "settings": {
         "layout_gap": 60,
         "show_delivery_info": true,

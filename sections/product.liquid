@@ -9,7 +9,7 @@
   <div class="product-page__media">
     <div class="product-page__main-image">
       {% if product.featured_image %}
-        {{ product.featured_image | image_url: width: 800 | image_tag: class: 'product-main-image' }}
+        {{ product.featured_image | image_url: width: 1000 | image_tag: class: 'product-main-image' }}
       {% endif %}
     </div>
     
@@ -83,7 +83,7 @@
       </div>
     {% endif %}
 
-    {% form 'product', product %}
+    {% form 'product', product, id: 'product-form-standard' %}
       {% assign current_variant = product.selected_or_first_available_variant %}
       
       {% if product.variants.size > 1 %}
@@ -171,7 +171,7 @@
               {% endunless %}
 
               <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
-                <form method="post" action="{{ routes.cart_add_url }}" class="m-0">
+                <form method="post" action="{{ routes.cart_add_url }}" class="m-0 product-rec-atc-form">
                   <input type="hidden" name="id" value="{{ recommended_product.selected_or_first_available_variant.id }}">
                   <button
                     type="submit"
@@ -250,7 +250,7 @@
                     {% endunless %}
 
                     <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
-                      <form method="post" action="{{ routes.cart_add_url }}" class="m-0">
+                      <form method="post" action="{{ routes.cart_add_url }}" class="m-0 product-rec-atc-form">
                         <input type="hidden" name="id" value="{{ related_product.selected_or_first_available_variant.id }}">
                         <button
                           type="submit"
@@ -561,6 +561,64 @@
           console.log('Using fallback recommendations from collection');
         });
     }
+
+    // ── AJAX add-to-cart → open cart drawer ──
+    function ajaxAddToCart(form) {
+      var btn = form.querySelector('button[type="submit"]');
+      var originalText = btn ? btn.textContent.trim() : '';
+      var originalHTML = btn ? btn.innerHTML : '';
+
+      if (btn) {
+        btn.disabled = true;
+        if (btn.classList.contains('add-to-cart-btn')) {
+          btn.textContent = 'Adding…';
+        }
+      }
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: new FormData(form)
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error('Add to cart failed');
+          return res.json();
+        })
+        .then(function () {
+          document.dispatchEvent(new CustomEvent('cart:added'));
+        })
+        .catch(function (err) {
+          console.error('Add to cart error:', err);
+        })
+        .finally(function () {
+          if (btn) {
+            btn.disabled = false;
+            if (btn.classList.contains('add-to-cart-btn')) {
+              btn.textContent = originalText;
+            } else {
+              btn.innerHTML = originalHTML;
+            }
+          }
+        });
+    }
+
+    // Main product form
+    var productForm = document.getElementById('product-form-standard');
+    if (productForm) {
+      productForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        ajaxAddToCart(this);
+      });
+    }
+
+    // Recommendation card ATC forms (delegated)
+    document.addEventListener('submit', function (e) {
+      var form = e.target;
+      if (form.classList.contains('product-rec-atc-form')) {
+        e.preventDefault();
+        ajaxAddToCart(form);
+      }
+    });
   });
 {% endjavascript %}
 

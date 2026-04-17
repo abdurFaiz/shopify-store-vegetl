@@ -3,36 +3,56 @@
         "main": {
             "type": "about",
             "blocks": {
-                "stat_1": {
-                    "type": "stat_card",
+                "card_img_1": {
+                    "type": "card_image",
+                    "settings": {}
+                },
+                "card_img_2": {
+                    "type": "card_image",
+                    "settings": {}
+                },
+                "card_img_3": {
+                    "type": "card_image",
+                    "settings": {}
+                },
+                "blog_1": {
+                    "type": "blogcard",
                     "settings": {
-                        "stat_number": "10+",
-                        "stat_description": "Years of experience in sustainable farming practices",
-                        "show_badge": true
+                        "card_category": "Farming Techniques",
+                        "card_title": "The 15 Most Profitable Crops for Small Farms",
+                        "card_excerpt": "Discover cash crops that thrive in small spaces and boost your bottom line.",
+                        "card_button_text": "Read more",
+                        "card_url": "/blogs/news"
                     }
                 },
-                "stat_2": {
-                    "type": "stat_card",
+                "blog_2": {
+                    "type": "blogcard",
                     "settings": {
-                        "stat_number": "85%",
-                        "stat_description": "Increase in crop yields using our advanced farming techniques",
-                        "show_badge": true
+                        "card_category": "Greenhouse Farming",
+                        "card_title": "Greenhouse Pest Prevention: The Ultimate Guide",
+                        "card_excerpt": "Learn how to protect your greenhouse crops from common pests without harsh chemicals.",
+                        "card_button_text": "Read more",
+                        "card_url": "/blogs/news"
                     }
                 },
-                "stat_3": {
-                    "type": "stat_card",
+                "blog_3": {
+                    "type": "blogcard",
                     "settings": {
-                        "stat_number": "500+",
-                        "stat_description": "Farmers trust our solutions for their daily operations",
-                        "show_badge": true
+                        "card_category": "Growing Cut Flowers",
+                        "card_title": "Guide to the Most Profitable Flowers to Grow",
+                        "card_excerpt": "Find the best floral varieties for high demand and strong margins.",
+                        "card_button_text": "Read more",
+                        "card_url": "/blogs/news"
                     }
                 },
-                "stat_4": {
-                    "type": "stat_card",
+                "blog_4": {
+                    "type": "blogcard",
                     "settings": {
-                        "stat_number": "24/7",
-                        "stat_description": "Support available whenever you need assistance",
-                        "show_badge": true
+                        "card_category": "Farming Tools",
+                        "card_title": "30+ Must-Have Small Farm Equipment and Supplies",
+                        "card_excerpt": "Equip your farm with tools that save time and support sustainable growth.",
+                        "card_button_text": "Read more",
+                        "card_url": "/blogs/news"
                     }
                 },
                 "feature_1": {
@@ -40,7 +60,7 @@
                     "settings": {
                         "feature_icon": "🌱",
                         "feature_title": "Organic Farming",
-                        "feature_description": "Sustainable practices that protect the environment while maximizing yields"
+                        "feature_description": "continents tested"
                     }
                 },
                 "feature_2": {
@@ -48,7 +68,7 @@
                     "settings": {
                         "feature_icon": "💧",
                         "feature_title": "Water Management",
-                        "feature_description": "Smart irrigation systems that conserve water and reduce costs"
+                        "feature_description": "lower transport cost"
                     }
                 },
                 "feature_3": {
@@ -56,7 +76,7 @@
                     "settings": {
                         "feature_icon": "📊",
                         "feature_title": "Data Analytics",
-                        "feature_description": "Real-time insights to make informed decisions about your crops"
+                        "feature_description": "CO₂ saved per acre – at no extra cost"
                     }
                 },
                 "feature_4": {
@@ -64,7 +84,7 @@
                     "settings": {
                         "feature_icon": "🚁",
                         "feature_title": "Drone Technology",
-                        "feature_description": "Aerial monitoring and precision application for optimal results"
+                        "feature_description": "return* on every dollar invested"
                     }
                 },
                 "testimonial_1": {
@@ -93,10 +113,13 @@
                 }
             },
             "block_order": [
-                "stat_1",
-                "stat_2",
-                "stat_3",
-                "stat_4",
+                "card_img_1",
+                "card_img_2",
+                "card_img_3",
+                "blog_1",
+                "blog_2",
+                "blog_3",
+                "blog_4",
                 "feature_1",
                 "feature_2",
                 "feature_3",
@@ -106,17 +129,22 @@
                 "testimonial_3"
             ],
             "settings": {
-                "hero_badge": "Sustainable Farming",
-                "hero_heading": "Bringing Innovation to Your Farming Journey",
-                "hero_subheading": "Empowering farmers with cutting-edge technology and sustainable practices",
-                "hero_button_text": "Learn More",
+                "hero_badge": "Our Story From Farm to Table",
+                "hero_heading": "Harvested with Care. Grown without Chemicals.",
+                "hero_subheading": "Sustainably grown vegetables and raw juices. Real food, grown without synthetic chemicals.",
+                "hero_button_text": "Join Our Community",
                 "hero_button_link": "#mission",
-                "mission_badge": "Our Mission",
-                "mission_heading": "Why choose us?",
+                "mission_badge": "Fresh From Nature",
+                "mission_subheading": "Why choose us?",
+                "mission_heading": "We are passionate about growing fresh, chemical-free produce. Nestled in the <em>heart of nature</em>, our <em>farm uses sustainable farming practices to protect the environment and deliver the healthiest food</em> to your table. Every seed we plant is a step toward a greener, healthier future.",
                 "mission_text": "With proven expertise in modern farming practices, we are committed to helping farmers grow smarter and achieve better yields. Together we are shaping the future of farming for a more sustainable world.",
+                "blog_badge": "Get your daily dose of knowledge",
+                "blog_heading": "Our farming and market gardening blog",
+                "blog_subheading": "Reliable tools, techniques and advice to help you take the next step in your agrarian adventures.",
+                "blog_button_text": "Read our articles",
+                "blog_button_link": "/blogs/news",
                 "features_badge": "Our Features",
-                "features_heading": "Unlock the Future of Farming with Powerful Features Designed for Efficiency, Productivity and Sustainability",
-                "features_subheading": "Everything you need to modernize your farming operations",
+                "features_heading": "Field-Tested.</br> Farmer-Approved.",
                 "tech_badge": "Innovation",
                 "tech_heading": "Drone Technology",
                 "tech_description": "Our advanced drone technology provides real-time crop monitoring, precision spraying, and detailed field analysis. See your entire farm from a new perspective and make data-driven decisions that increase productivity.",
