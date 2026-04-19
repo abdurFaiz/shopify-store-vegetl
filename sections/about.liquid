@@ -48,11 +48,11 @@
       {% if section.settings.hero_button_text %}
         <a
           href="{{ section.settings.hero_button_link | default: '#' }}"
-          class="inline-flex items-center text-white gap-3 bg-[#006400] hover:bg-[#006400]/80 font-medium pr-1 pl-4 py-1 rounded-full transition-colors w-fit"
+          class="inline-flex items-center text-white gap-3 bg-[#0f3f21] hover:bg-[#0f3f21]/80 font-medium pr-1 pl-4 py-1 rounded-full transition-colors w-fit"
         >
           {{ section.settings.hero_button_text }}
           <div class="bg-white rounded-full w-12 h-12 flex items-center justify-center">
-            <svg class="w-5 text-[#006400] h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 text-[#0f3f21] h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
             </svg>
           </div>
@@ -240,7 +240,7 @@
       <div class="lg:col-start-2 lg:col-span-1 flex flex-col items-center justify-center text-center z-10 w-full max-w-[700px] mx-auto pt-10 pb-10">
         {% if section.settings.mission_badge %}
           <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide mb-6 bg-white shadow-sm">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#006400] mr-2"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-[#0f3f21] mr-2"></span>
             {{ section.settings.mission_badge }}
           </span>
         {% endif %}
@@ -554,7 +554,7 @@
                 <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
                 <button
                   type="submit"
-                  class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#006400] transition-colors shadow-md"
+                  class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#0f3f21] transition-colors shadow-md"
                   {% unless product.available %}
                     disabled
                   {% endunless %}

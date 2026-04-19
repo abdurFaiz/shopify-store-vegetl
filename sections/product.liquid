@@ -12,11 +12,14 @@
         {{ product.featured_image | image_url: width: 1000 | image_tag: class: 'product-main-image' }}
       {% endif %}
     </div>
-    
+
     {% if product.images.size > 1 %}
       <div class="product-page__thumbnails">
         {% for image in product.images limit: 6 %}
-          <div class="product-thumbnail {% if forloop.first %}active{% endif %}" data-image-index="{{ forloop.index0 }}">
+          <div
+            class="product-thumbnail {% if forloop.first %}active{% endif %}"
+            data-image-index="{{ forloop.index0 }}"
+          >
             {{ image | image_url: width: 100 | image_tag }}
           </div>
         {% endfor %}
@@ -29,12 +32,15 @@
       <div class="product-rating">
         <span class="stars">★★★★★</span>
         <span class="rating-value">{{ product.metafields.custom.rating }}</span>
-        <span class="rating-count">({{ product.metafields.custom.review_count | default: 163 }} {{ 'products.reviews' | t }})</span>
+        <span class="rating-count"
+          >({{ product.metafields.custom.review_count | default: 163 }}
+          {{ 'products.reviews' | t }})</span
+        >
       </div>
     {% endif %}
 
     <h1 class="product-title">{{ product.title }}</h1>
-    
+
     {% if product.metafields.custom.subtitle %}
       <p class="product-subtitle">{{ product.metafields.custom.subtitle }}</p>
     {% endif %}
@@ -58,7 +64,11 @@
       </div>
     {% endif %}
 
-    {% if product.metafields.custom.concerns or product.metafields.custom.texture or product.metafields.custom.composition or product.metafields.custom.duration %}
+    {% if product.metafields.custom.concerns
+      or product.metafields.custom.texture
+      or product.metafields.custom.composition
+      or product.metafields.custom.duration
+    %}
       <div class="product-specs">
         {% if product.metafields.custom.concerns %}
           <div class="spec-item">
@@ -85,15 +95,19 @@
 
     {% form 'product', product, id: 'product-form-standard' %}
       {% assign current_variant = product.selected_or_first_available_variant %}
-      
+
       {% if product.variants.size > 1 %}
         <div class="product-variants">
           <select name="id" class="variant-select">
             {% for variant in product.variants %}
               <option
                 value="{{ variant.id }}"
-                {% if variant == current_variant %}selected="selected"{% endif %}
-                {% unless variant.available %}disabled{% endunless %}
+                {% if variant == current_variant %}
+                  selected="selected"
+                {% endif %}
+                {% unless variant.available %}
+                  disabled
+                {% endunless %}
               >
                 {{ variant.title }} - {{ variant.price | money }}
               </option>
@@ -111,7 +125,13 @@
         {% endif %}
       </div>
 
-      <button type="submit" class="add-to-cart-btn" {% unless current_variant.available %}disabled{% endunless %}>
+      <button
+        type="submit"
+        class="add-to-cart-btn"
+        {% unless current_variant.available %}
+          disabled
+        {% endunless %}
+      >
         {% if current_variant.available %}
           {{ 'products.add_to_cart' | t }} - {{ current_variant.price | money }}
         {% else %}
@@ -124,7 +144,9 @@
 
     {% if section.settings.show_delivery_info %}
       <div class="delivery-info">
-        <p><strong>{{ 'products.fast_delivery' | t }}</strong></p>
+        <p>
+          <strong>{{ 'products.fast_delivery' | t }}</strong>
+        </p>
         <p>{{ 'products.shipping_time' | t }}</p>
       </div>
     {% endif %}
@@ -152,7 +174,13 @@
             <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate">
               <a href="{{ recommended_product.url }}" class="block w-full h-full">
                 {% if recommended_product.featured_image %}
-                  {{ recommended_product.featured_image | image_url: width: 600 | image_tag: class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700', loading: 'lazy' }}
+                  {{
+                    recommended_product.featured_image
+                    | image_url: width: 600
+                    | image_tag:
+                      class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700',
+                      loading: 'lazy'
+                  }}
                 {% else %}
                   {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-200' }}
                 {% endif %}
@@ -172,11 +200,17 @@
 
               <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
                 <form method="post" action="{{ routes.cart_add_url }}" class="m-0 product-rec-atc-form">
-                  <input type="hidden" name="id" value="{{ recommended_product.selected_or_first_available_variant.id }}">
+                  <input
+                    type="hidden"
+                    name="id"
+                    value="{{ recommended_product.selected_or_first_available_variant.id }}"
+                  >
                   <button
                     type="submit"
-                    class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#006400] transition-colors shadow-md"
-                    {% unless recommended_product.available %}disabled{% endunless %}
+                    class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#0f3f21] transition-colors shadow-md"
+                    {% unless recommended_product.available %}
+                      disabled
+                    {% endunless %}
                   >
                     <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
                   </button>
@@ -199,7 +233,12 @@
                   <a href="{{ recommended_product.url }}">{{ recommended_product.title }}</a>
                 </h3>
                 <p class="text-[13px] text-gray-500 leading-snug">
-                  {{ recommended_product.metafields.custom.short_description | default: recommended_product.description | strip_html | truncate: 60 }}
+                  {{
+                    recommended_product.metafields.custom.short_description
+                    | default: recommended_product.description
+                    | strip_html
+                    | truncate: 60
+                  }}
                 </p>
               </div>
               <div class="text-right whitespace-nowrap">
@@ -231,7 +270,13 @@
                   <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate">
                     <a href="{{ related_product.url }}" class="block w-full h-full">
                       {% if related_product.featured_image %}
-                        {{ related_product.featured_image | image_url: width: 600 | image_tag: class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700', loading: 'lazy' }}
+                        {{
+                          related_product.featured_image
+                          | image_url: width: 600
+                          | image_tag:
+                            class: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700',
+                            loading: 'lazy'
+                        }}
                       {% else %}
                         {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-200' }}
                       {% endif %}
@@ -251,13 +296,21 @@
 
                     <div class="absolute bottom-0 right-0 bg-[#fafbfa] pt-3 pl-3 rounded-tl-[36px] z-10 pointer-events-auto">
                       <form method="post" action="{{ routes.cart_add_url }}" class="m-0 product-rec-atc-form">
-                        <input type="hidden" name="id" value="{{ related_product.selected_or_first_available_variant.id }}">
+                        <input
+                          type="hidden"
+                          name="id"
+                          value="{{ related_product.selected_or_first_available_variant.id }}"
+                        >
                         <button
                           type="submit"
-                          class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#006400] transition-colors shadow-md"
-                          {% unless related_product.available %}disabled{% endunless %}
+                          class="bg-[#1a201b] text-white w-[56px] h-[56px] flex items-center justify-center rounded-tl-[24px] rounded-br-[24px] rounded-tr-[12px] rounded-bl-[12px] hover:bg-[#0f3f21] transition-colors shadow-md"
+                          {% unless related_product.available %}
+                            disabled
+                          {% endunless %}
                         >
-                          <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
+                          <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart"
+                            >shopping_cart</span
+                          >
                         </button>
                       </form>
                       <svg class="absolute -top-[24px] right-0 w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
@@ -278,7 +331,12 @@
                         <a href="{{ related_product.url }}">{{ related_product.title }}</a>
                       </h3>
                       <p class="text-[13px] text-gray-500 leading-snug">
-                        {{ related_product.metafields.custom.short_description | default: related_product.description | strip_html | truncate: 60 }}
+                        {{
+                          related_product.metafields.custom.short_description
+                          | default: related_product.description
+                          | strip_html
+                          | truncate: 60
+                        }}
                       </p>
                     </div>
                     <div class="text-right whitespace-nowrap">

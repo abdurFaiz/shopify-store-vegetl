@@ -1,9 +1,12 @@
-<section class="py-12 lg:py-24 bg-white full-width w-full overflow-hidden" id="testimonial-section-{{ id_suffix | default: section.id }}">
+<section
+  class="py-12 lg:py-24 bg-white full-width w-full overflow-hidden"
+  id="testimonial-section-{{ id_suffix | default: section.id }}"
+>
   <div class="max-w-[1300px] mx-auto px-4 lg:px-6 w-full">
     <!-- TOP HEADER -->
     <div class="mb-14 lg:mb-20">
       <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide mb-6 bg-white shadow-sm">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#006400] mr-2"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-[#0f3f21] mr-2"></span>
         Testimonials
       </span>
 
@@ -19,8 +22,16 @@
     </div>
 
     <!-- MAIN CONTENT GRID SLIDER -->
-    {%- assign slider_id = 'testimonial-slider-' | append: id_suffix | default: 'testimonial-slider-' | append: section.id -%}
-    {%- assign track_id = 'testimonial-track-' | append: id_suffix | default: 'testimonial-track-' | append: section.id -%}
+    {%- assign slider_id = 'testimonial-slider-'
+      | append: id_suffix
+      | default: 'testimonial-slider-'
+      | append: section.id
+    -%}
+    {%- assign track_id = 'testimonial-track-'
+      | append: id_suffix
+      | default: 'testimonial-track-'
+      | append: section.id
+    -%}
     <div class="relative w-full" id="{{ slider_id }}">
       <!-- ARROW NAVIGATION (STATIC, ONLY 1 PAIR) -->
       <div class="absolute bottom-0 right-0 z-10 flex items-center gap-3 pointer-events-none">
@@ -30,7 +41,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
             </svg>
           </button>
-          <button class="testimonial-next w-12 h-12 rounded-full bg-[#006400] flex items-center justify-center text-white hover:bg-green-800 transition-colors shadow-md focus:outline-none">
+          <button class="testimonial-next w-12 h-12 rounded-full bg-[#0f3f21] flex items-center justify-center text-white hover:bg-green-800 transition-colors shadow-md focus:outline-none">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
@@ -151,17 +162,21 @@
       } else {
         currentSlide = (currentSlide - 1 + slidesCount) % slidesCount;
       }
-      track.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+      track.style.transform = 'translateX(-' + currentSlide * 100 + '%)';
     }
 
     var sliderElement = document.getElementById(sliderId);
     if (!sliderElement) return;
 
     sliderElement.querySelectorAll('.testimonial-prev').forEach(function (btn) {
-      btn.addEventListener('click', function () { moveSlide('prev'); });
+      btn.addEventListener('click', function () {
+        moveSlide('prev');
+      });
     });
     sliderElement.querySelectorAll('.testimonial-next').forEach(function (btn) {
-      btn.addEventListener('click', function () { moveSlide('next'); });
+      btn.addEventListener('click', function () {
+        moveSlide('next');
+      });
     });
   });
 </script>

@@ -3,10 +3,11 @@
   id="organic-header-{{ section.id }}"
 >
   <div class="flex justify-between items-center max-w-full mx-auto px-6 h-20">
+
     <!-- Brand Logo -->
     <a
       href="{{ routes.root_url }}"
-      class="text-2xl font-bold text-[#006400] flex items-center gap-2 font-headline"
+      class="text-2xl font-bold text-[#0f3f21] flex items-center gap-2 font-headline"
     >
       {%- if section.settings.logo != blank -%}
         {{ section.settings.logo | image_url: width: 200 | image_tag: class: 'h-8 w-auto' }}
@@ -16,11 +17,11 @@
       {%- endif -%}
     </a>
 
-    <!-- Navigation Links -->
+    <!-- Desktop Navigation -->
     <nav class="hidden md:flex items-center gap-6 font-plus-jakarta-sans text-md font-medium">
       {%- for link in section.settings.menu.links -%}
         <a
-          class="text-slate-700 hover:text-[#006400] px-3 py-2 rounded-full bg-gray-100 transition-colors {% if link.active %} text-[#006400] font-medium{% endif %}"
+          class="text-slate-700 hover:text-[#0f3f21] px-3 py-2 rounded-full bg-gray-100 transition-colors {% if link.active %}text-[#0f3f21] font-medium{% endif %}"
           href="{{ link.url }}"
         >
           {{ link.title }}
@@ -29,62 +30,174 @@
     </nav>
 
     <!-- Trailing Actions -->
-    <div class="flex items-center gap-6">
+    <div class="flex items-center gap-3 md:gap-6">
+
+      <!-- Cart -->
       <button
         type="button"
         id="cart-icon-bubble"
-        class="material-symbols-outlined rounded-full border border-gray-200 text-slate-600 hover:bg-emerald-50/50 p-2.5 rounded-full transition-all relative cursor-pointer bg-transparent"
+        class="relative px-2.5 py-1 rounded-full border border-gray-200 text-slate-600 hover:bg-emerald-50/50 transition-all cursor-pointer bg-transparent"
         data-cart-trigger
       >
         <span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
-        <span 
-          class="absolute top-0 right-0 bg-[#006400] text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center {% if cart.item_count == 0 %}hidden{% endif %}"
+        <span
+          class="absolute top-0 right-0 bg-[#0f3f21] text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center {% if cart.item_count == 0 %}hidden{% endif %}"
           data-cart-count
         >
           {{- cart.item_count -}}
         </span>
       </button>
-      {% if section.settings.button_label != blank %}
-        <div class="flex items-center justify-center">
 
+      <!-- CTA Button — desktop only -->
+      {% if section.settings.button_label != blank %}
+        <div class="hidden md:flex items-center justify-center">
           <a
-            {% if section.settings.button_link != blank %}
-              href="{{ section.settings.button_link }}"
-            {% endif %}
-            class="bg-[#006400] text-white pl-4 pr-1 py-1 rounded-full font-medium text-md scale-95 active:scale-90 transition-transform shadow-lg shadow-primary/20 flex items-center gap-2"
+            {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+            class="bg-[#0f3f21] text-white pl-4 pr-1 py-1 rounded-full font-medium text-md scale-95 active:scale-90 transition-transform shadow-lg shadow-primary/20 flex items-center gap-2"
           >
             {{ section.settings.button_label }}
-            <span class="material-symbols-outlined text-sm text-[#006400] bg-white rounded-full px-2.5 py-1.5" data-icon="call_made">call_made</span>
+            <span class="material-symbols-outlined text-sm text-[#0f3f21] bg-white rounded-full px-2.5 py-1.5" data-icon="call_made">call_made</span>
           </a>
         </div>
       {% endif %}
+
+      <!-- Hamburger — mobile only -->
+      <button
+        type="button"
+        id="mobile-menu-toggle-{{ section.id }}"
+        class="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-full border border-gray-200 bg-transparent cursor-pointer gap-1.5 transition-all"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+      >
+        <span class="hamburger-bar block w-5 h-0.5 bg-[#0f3f21] rounded transition-all duration-300 origin-center"></span>
+        <span class="hamburger-bar block w-5 h-0.5 bg-[#0f3f21] rounded transition-all duration-300 origin-center"></span>
+        <span class="hamburger-bar block w-5 h-0.5 bg-[#0f3f21] rounded transition-all duration-300 origin-center"></span>
+      </button>
+
     </div>
+  </div>
+
+  <!-- Mobile Menu Drawer -->
+  <div
+    id="mobile-menu-{{ section.id }}"
+    class="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
+    style="max-height: 0; opacity: 0;"
+    aria-hidden="true"
+  >
+    <nav class="flex flex-col px-6 pb-6 pt-2 gap-2 border-t border-gray-100 bg-white/95 backdrop-blur-xl">
+      {%- for link in section.settings.menu.links -%}
+        <a
+          class="text-slate-700 hover:text-[#0f3f21] hover:bg-emerald-50 px-4 py-3 rounded-xl text-base font-medium transition-colors {% if link.active %}text-[#0f3f21] bg-emerald-50{% endif %}"
+          href="{{ link.url }}"
+        >
+          {{ link.title }}
+        </a>
+      {%- endfor -%}
+
+      <!-- CTA inside mobile menu -->
+      {% if section.settings.button_label != blank %}
+        <a
+          {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+          class="mt-2 bg-[#0f3f21] text-white px-5 py-3 rounded-full font-medium text-base flex items-center justify-between transition-all active:scale-95"
+        >
+          {{ section.settings.button_label }}
+          <span class="material-symbols-outlined text-sm text-[#0f3f21] bg-white rounded-full px-2 py-1" data-icon="call_made">call_made</span>
+        </a>
+      {% endif %}
+    </nav>
   </div>
 </header>
 
+<!-- Overlay -->
+<div
+  id="mobile-menu-overlay-{{ section.id }}"
+  class="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"
+></div>
+
+<style>
+  /* Hamburger → X animation */
+  #mobile-menu-toggle-{{ section.id }}.is-open .hamburger-bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  #mobile-menu-toggle-{{ section.id }}.is-open .hamburger-bar:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  #mobile-menu-toggle-{{ section.id }}.is-open .hamburger-bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+</style>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const sid      = '{{ section.id }}';
+    const header   = document.getElementById('organic-header-' + sid);
+    const toggle   = document.getElementById('mobile-menu-toggle-' + sid);
+    const drawer   = document.getElementById('mobile-menu-' + sid);
+    const overlay  = document.getElementById('mobile-menu-overlay-' + sid);
+
+    /* ── Scroll hide/show ─────────────────────────────── */
     let lastScrollY = window.scrollY;
-    const header = document.getElementById('organic-header-{{ section.id }}');
-    
-    if(!header) return;
 
     window.addEventListener('scroll', () => {
       const currentScrollY = window.scrollY;
-      
-      // If scrolling down, and we've scrolled past the header height (e.g. 50px)
       if (currentScrollY > lastScrollY && currentScrollY > 50) {
         header.style.transform = 'translateY(-100%)';
-      } 
-      // If scrolling up, or we are within the top 50px of the page
-      else {
+        closeMenu();
+      } else {
         header.style.transform = 'translateY(0)';
       }
-      
       lastScrollY = currentScrollY;
     }, { passive: true });
+
+    /* ── Mobile menu toggle ───────────────────────────── */
+    function openMenu() {
+      toggle.classList.add('is-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      drawer.setAttribute('aria-hidden', 'false');
+
+      // Measure natural height then animate to it
+      drawer.style.maxHeight  = drawer.scrollHeight + 'px';
+      drawer.style.opacity    = '1';
+
+      overlay.style.opacity        = '1';
+      overlay.style.pointerEvents  = 'auto';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      toggle.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+
+      drawer.style.maxHeight  = '0';
+      drawer.style.opacity    = '0';
+
+      overlay.style.opacity        = '0';
+      overlay.style.pointerEvents  = 'none';
+      document.body.style.overflow = '';
+    }
+
+    toggle.addEventListener('click', () => {
+      const isOpen = toggle.classList.contains('is-open');
+      isOpen ? closeMenu() : openMenu();
+    });
+
+    /* Close on overlay click */
+    overlay.addEventListener('click', closeMenu);
+
+    /* Close on nav link click */
+    drawer.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    /* Close on resize to desktop */
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) closeMenu();
+    });
   });
 </script>
+
 {% schema %}
 {
   "name": "Organic Header",

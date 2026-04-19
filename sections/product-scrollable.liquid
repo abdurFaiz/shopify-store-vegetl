@@ -60,7 +60,13 @@
       </div>
 
       <!-- Add to Cart Form -->
-      <form method="post" action="{{ routes.cart_add_url }}" id="psc-product-form" accept-charset="UTF-8" enctype="multipart/form-data">
+      <form
+        method="post"
+        action="{{ routes.cart_add_url }}"
+        id="psc-product-form"
+        accept-charset="UTF-8"
+        enctype="multipart/form-data"
+      >
         {% if product.variants.size > 1 %}
           <div class="product-variant-selector">
             <select name="id" class="variant-select" aria-label="Select variant">
@@ -156,7 +162,11 @@
               <div class="psc-rec-card__image-wrap">
                 <a href="{{ recommended_product.url }}" class="psc-rec-card__image-link">
                   {% if recommended_product.featured_image %}
-                    {{ recommended_product.featured_image | image_url: width: 600 | image_tag: class: 'psc-rec-card__image', loading: 'lazy' }}
+                    {{
+                      recommended_product.featured_image
+                      | image_url: width: 600
+                      | image_tag: class: 'psc-rec-card__image', loading: 'lazy'
+                    }}
                   {% else %}
                     {{ 'product-1' | placeholder_svg_tag: 'psc-rec-card__image psc-rec-card__image--placeholder' }}
                   {% endif %}
@@ -176,21 +186,42 @@
 
                 <div class="psc-rec-card__atc-wrap">
                   <form method="post" action="{{ routes.cart_add_url }}" class="psc-rec-atc-form">
-                    <input type="hidden" name="id" value="{{ recommended_product.selected_or_first_available_variant.id }}">
+                    <input
+                      type="hidden"
+                      name="id"
+                      value="{{ recommended_product.selected_or_first_available_variant.id }}"
+                    >
                     <button
                       type="submit"
                       class="psc-rec-card__atc-btn"
-                      {% unless recommended_product.available %}disabled{% endunless %}
+                      {% unless recommended_product.available %}
+                        disabled
+                      {% endunless %}
                       aria-label="{{ 'products.add_to_cart' | t }}"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
                         <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                       </svg>
                     </button>
                   </form>
-                  <svg class="psc-rec-card__atc-corner psc-rec-card__atc-corner--top" viewBox="0 0 24 24"><path d="M24,24 H0 A24,24 0 0,0 24,0 Z"/></svg>
-                  <svg class="psc-rec-card__atc-corner psc-rec-card__atc-corner--left" viewBox="0 0 24 24"><path d="M24,24 H0 A24,24 0 0,0 24,0 Z"/></svg>
+                  <svg class="psc-rec-card__atc-corner psc-rec-card__atc-corner--top" viewBox="0 0 24 24">
+                    <path d="M24,24 H0 A24,24 0 0,0 24,0 Z"/>
+                  </svg>
+                  <svg class="psc-rec-card__atc-corner psc-rec-card__atc-corner--left" viewBox="0 0 24 24">
+                    <path d="M24,24 H0 A24,24 0 0,0 24,0 Z"/>
+                  </svg>
                 </div>
               </div>
 
@@ -200,7 +231,12 @@
                     <a href="{{ recommended_product.url }}">{{ recommended_product.title }}</a>
                   </h3>
                   <p class="psc-rec-card__desc">
-                    {{ recommended_product.metafields.custom.short_description | default: recommended_product.description | strip_html | truncate: 60 }}
+                    {{
+                      recommended_product.metafields.custom.short_description
+                      | default: recommended_product.description
+                      | strip_html
+                      | truncate: 60
+                    }}
                   </p>
                 </div>
                 <div class="psc-rec-card__price">
@@ -227,9 +263,16 @@
                     <div class="psc-rec-card__image-wrap">
                       <a href="{{ related_product.url }}" class="psc-rec-card__image-link">
                         {% if related_product.featured_image %}
-                          {{ related_product.featured_image | image_url: width: 600 | image_tag: class: 'psc-rec-card__image', loading: 'lazy' }}
+                          {{
+                            related_product.featured_image
+                            | image_url: width: 600
+                            | image_tag: class: 'psc-rec-card__image', loading: 'lazy'
+                          }}
                         {% else %}
-                          {{ 'product-1' | placeholder_svg_tag: 'psc-rec-card__image psc-rec-card__image--placeholder' }}
+                          {{
+                            'product-1'
+                            | placeholder_svg_tag: 'psc-rec-card__image psc-rec-card__image--placeholder'
+                          }}
                         {% endif %}
                       </a>
 
@@ -247,21 +290,42 @@
 
                       <div class="psc-rec-card__atc-wrap">
                         <form method="post" action="{{ routes.cart_add_url }}" class="psc-rec-atc-form">
-                          <input type="hidden" name="id" value="{{ related_product.selected_or_first_available_variant.id }}">
+                          <input
+                            type="hidden"
+                            name="id"
+                            value="{{ related_product.selected_or_first_available_variant.id }}"
+                          >
                           <button
                             type="submit"
                             class="psc-rec-card__atc-btn"
-                            {% unless related_product.available %}disabled{% endunless %}
+                            {% unless related_product.available %}
+                              disabled
+                            {% endunless %}
                             aria-label="{{ 'products.add_to_cart' | t }}"
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              aria-hidden="true"
+                            >
                               <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                             </svg>
                           </button>
                         </form>
-                        <svg class="psc-rec-card__atc-corner psc-rec-card__atc-corner--top" viewBox="0 0 24 24"><path d="M24,24 H0 A24,24 0 0,0 24,0 Z"/></svg>
-                        <svg class="psc-rec-card__atc-corner psc-rec-card__atc-corner--left" viewBox="0 0 24 24"><path d="M24,24 H0 A24,24 0 0,0 24,0 Z"/></svg>
+                        <svg class="psc-rec-card__atc-corner psc-rec-card__atc-corner--top" viewBox="0 0 24 24">
+                          <path d="M24,24 H0 A24,24 0 0,0 24,0 Z"/>
+                        </svg>
+                        <svg class="psc-rec-card__atc-corner psc-rec-card__atc-corner--left" viewBox="0 0 24 24">
+                          <path d="M24,24 H0 A24,24 0 0,0 24,0 Z"/>
+                        </svg>
                       </div>
                     </div>
 
@@ -271,13 +335,20 @@
                           <a href="{{ related_product.url }}">{{ related_product.title }}</a>
                         </h3>
                         <p class="psc-rec-card__desc">
-                          {{ related_product.metafields.custom.short_description | default: related_product.description | strip_html | truncate: 60 }}
+                          {{
+                            related_product.metafields.custom.short_description
+                            | default: related_product.description
+                            | strip_html
+                            | truncate: 60
+                          }}
                         </p>
                       </div>
                       <div class="psc-rec-card__price">
                         {% if related_product.compare_at_price > related_product.price %}
                           <span class="psc-rec-card__price--sale">{{ related_product.price | money }}</span>
-                          <span class="psc-rec-card__price--compare">{{ related_product.compare_at_price | money }}</span>
+                          <span class="psc-rec-card__price--compare">
+                            {{- related_product.compare_at_price | money -}}
+                          </span>
                         {% else %}
                           <span class="psc-rec-card__price--regular">{{ related_product.price | money }}</span>
                         {% endif %}
@@ -848,7 +919,7 @@
   }
 
   .psc-rec-card__atc-btn:hover:not(:disabled) {
-    background-color: #006400;
+    background-color: #0f3f21;
   }
 
   .psc-rec-card__atc-btn:disabled {
@@ -1039,11 +1110,11 @@
         var selectedVariantId = this.value;
         var form = this.closest('form');
         var addBtn = form ? form.querySelector('[data-ajax-add-to-cart]') : null;
-        
+
         // Update hidden input if exists
         var hidden = form && form.querySelector('input[name="id"]');
         if (hidden) hidden.value = selectedVariantId;
-        
+
         // Update button's data-variant-id
         if (addBtn) {
           addBtn.setAttribute('data-variant-id', selectedVariantId);
@@ -1068,7 +1139,7 @@
       fetch('/cart/add.js', {
         method: 'POST',
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        body: new FormData(form)
+        body: new FormData(form),
       })
         .then(function (res) {
           if (!res.ok) throw new Error('Add to cart failed');
@@ -1095,12 +1166,13 @@
     }
 
     // Main product form - multiple selectors for safety
-    var productForm = document.getElementById('psc-product-form') || 
-                      document.querySelector('form[action*="/cart/add"]') ||
-                      document.querySelector('.product-info-column form');
-    
+    var productForm =
+      document.getElementById('psc-product-form') ||
+      document.querySelector('form[action*="/cart/add"]') ||
+      document.querySelector('.product-info-column form');
+
     console.log('Product form found:', productForm);
-    
+
     if (productForm) {
       console.log('Adding submit listener to form');
       productForm.addEventListener('submit', function (e) {

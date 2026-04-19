@@ -4,9 +4,11 @@
   Refreshes its content via Shopify Cart API after each add-to-cart.
 {% enddoc %}
 
-<!-- ═══════════════════════════════════════════════
-     CART DRAWER OVERLAY + PANEL
-═══════════════════════════════════════════════ -->
+<!--
+  ═══════════════════════════════════════════════
+       CART DRAWER OVERLAY + PANEL
+  ═══════════════════════════════════════════════
+-->
 <div
   id="cart-drawer-overlay"
   aria-hidden="true"
@@ -38,26 +40,30 @@
   "
 >
   <!-- Header -->
-  <div style="
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 24px 24px 20px;
-    border-bottom: 1px solid #f0f0f0;
-    flex-shrink: 0;
-  ">
+  <div
+    style="
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 24px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      flex-shrink: 0;
+    "
+  >
     <div style="display: flex; align-items: center; gap: 10px;">
       <span class="material-symbols-outlined" style="font-size: 20px; color: #1a201b;">shopping_basket</span>
       <h2 style="font-size: 18px; font-weight: 700; color: #1a201b; margin: 0; letter-spacing: -0.02em;">Your Cart</h2>
       <span
         id="cart-drawer-count-badge"
         style="
-          background: #006400; color: #fff;
+          background: #0f3f21; color: #fff;
           font-size: 11px; font-weight: 700;
           min-width: 20px; height: 20px;
           border-radius: 999px;
           display: flex; align-items: center; justify-content: center;
           padding: 0 6px;
         "
-      >{{ cart.item_count }}</span>
+      >
+        {{- cart.item_count -}}
+      </span>
     </div>
     <button
       id="cart-drawer-close"
@@ -98,10 +104,19 @@
 </div>
 
 <style>
-  #cart-drawer::-webkit-scrollbar { display: none; }
-  #cart-drawer-items::-webkit-scrollbar { width: 4px; }
-  #cart-drawer-items::-webkit-scrollbar-track { background: transparent; }
-  #cart-drawer-items::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+  #cart-drawer::-webkit-scrollbar {
+    display: none;
+  }
+  #cart-drawer-items::-webkit-scrollbar {
+    width: 4px;
+  }
+  #cart-drawer-items::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #cart-drawer-items::-webkit-scrollbar-thumb {
+    background: #e5e7eb;
+    border-radius: 4px;
+  }
 
   .cart-drawer-open #cart-drawer-overlay {
     opacity: 1 !important;
@@ -112,11 +127,14 @@
   }
 
   .cart-qty-btn {
-    width: 28px; height: 28px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     border: 1px solid #e5e7eb;
     background: #fff;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     color: #1a201b;
     font-size: 14px;
@@ -128,69 +146,81 @@
     border-color: #d1d5db;
   }
   .cart-remove-btn {
-    background: none; border: none; cursor: pointer;
+    background: none;
+    border: none;
+    cursor: pointer;
     color: #9ca3af;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: color 0.15s;
     padding: 4px;
     border-radius: 6px;
   }
-  .cart-remove-btn:hover { color: #ef4444; }
+  .cart-remove-btn:hover {
+    color: #ef4444;
+  }
 </style>
 
 <script>
-(function () {
-  const drawer    = document.getElementById('cart-drawer');
-  const overlay   = document.getElementById('cart-drawer-overlay');
-  const closeBtn  = document.getElementById('cart-drawer-close');
-  const itemsEl   = document.getElementById('cart-drawer-items');
-  const footerEl  = document.getElementById('cart-drawer-footer');
-  const badgeEl   = document.getElementById('cart-drawer-count-badge');
+  (function () {
+    const drawer = document.getElementById('cart-drawer');
+    const overlay = document.getElementById('cart-drawer-overlay');
+    const closeBtn = document.getElementById('cart-drawer-close');
+    const itemsEl = document.getElementById('cart-drawer-items');
+    const footerEl = document.getElementById('cart-drawer-footer');
+    const badgeEl = document.getElementById('cart-drawer-count-badge');
 
-  /* ── open / close ───────────────────────────────────── */
-  function openDrawer()  { document.body.classList.add('cart-drawer-open'); }
-  function closeDrawer() { document.body.classList.remove('cart-drawer-open'); }
-
-  closeBtn.addEventListener('click', closeDrawer);
-  overlay.addEventListener('click', closeDrawer);
-
-  /* ── external trigger ───────────────────────────────── */
-  document.addEventListener('cart:open', openDrawer);
-
-  /* ── fetch & render cart HTML ───────────────────────── */
-  async function refreshCart() {
-    try {
-      const res  = await fetch(window.Shopify.routes.root + 'cart.js');
-      const cart = await res.json();
-
-      /* update badge in drawer header */
-      if (badgeEl) badgeEl.textContent = cart.item_count;
-
-      /* update header icon badge globally */
-      document.querySelectorAll('[data-cart-count]').forEach(el => {
-        el.textContent = cart.item_count;
-        el.style.display = cart.item_count > 0 ? 'flex' : 'none';
-      });
-
-      renderItems(cart);
-      renderFooter(cart);
-    } catch (e) {
-      console.error('Cart refresh failed', e);
+    /* ── open / close ───────────────────────────────────── */
+    function openDrawer() {
+      document.body.classList.add('cart-drawer-open');
     }
-  }
+    function closeDrawer() {
+      document.body.classList.remove('cart-drawer-open');
+    }
 
-  /* ── render cart line items ─────────────────────────── */
-  function renderItems(cart) {
-    if (cart.item_count === 0) {
-      itemsEl.innerHTML = `
+    closeBtn.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+
+    /* ── external trigger ───────────────────────────────── */
+    document.addEventListener('cart:open', openDrawer);
+
+    /* ── fetch & render cart HTML ───────────────────────── */
+    async function refreshCart() {
+      try {
+        const res = await fetch(window.Shopify.routes.root + 'cart.js');
+        const cart = await res.json();
+
+        /* update badge in drawer header */
+        if (badgeEl) badgeEl.textContent = cart.item_count;
+
+        /* update header icon badge globally */
+        document.querySelectorAll('[data-cart-count]').forEach((el) => {
+          el.textContent = cart.item_count;
+          el.style.display = cart.item_count > 0 ? 'flex' : 'none';
+        });
+
+        renderItems(cart);
+        renderFooter(cart);
+      } catch (e) {
+        console.error('Cart refresh failed', e);
+      }
+    }
+
+    /* ── render cart line items ─────────────────────────── */
+    function renderItems(cart) {
+      if (cart.item_count === 0) {
+        itemsEl.innerHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;gap:12px;color:#9ca3af;">
           <span class="material-symbols-outlined" style="font-size:48px;opacity:0.4;">shopping_basket</span>
           <p style="font-size:14px;font-weight:500;">Your cart is empty</p>
         </div>`;
-      return;
-    }
+        return;
+      }
 
-    itemsEl.innerHTML = cart.items.map((item, idx) => `
+      itemsEl.innerHTML = cart.items
+        .map(
+          (item, idx) => `
       <div
         data-line="${idx + 1}"
         style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #f3f4f6;align-items:flex-start;"
@@ -213,9 +243,10 @@
               ${item.product_title}
             </p>
           </a>
-          ${item.variant_title && item.variant_title !== 'Default Title'
-            ? `<p style="font-size:12px;color:#9ca3af;margin:0 0 8px;">${item.variant_title}</p>`
-            : '<div style="margin-bottom:8px;"></div>'
+          ${
+            item.variant_title && item.variant_title !== 'Default Title'
+              ? `<p style="font-size:12px;color:#9ca3af;margin:0 0 8px;">${item.variant_title}</p>`
+              : '<div style="margin-bottom:8px;"></div>'
           }
 
           <!-- Qty controls + price row -->
@@ -258,20 +289,22 @@
           <span class="material-symbols-outlined" style="font-size:18px;">delete</span>
         </button>
       </div>
-    `).join('');
+    `
+        )
+        .join('');
 
-    /* bind qty + remove buttons */
-    itemsEl.querySelectorAll('.cart-qty-btn').forEach(btn => {
-      btn.addEventListener('click', () => updateLine(btn.dataset.line, parseInt(btn.dataset.qty)));
-    });
-    itemsEl.querySelectorAll('.cart-remove-btn').forEach(btn => {
-      btn.addEventListener('click', () => updateLine(btn.dataset.line, 0));
-    });
-  }
+      /* bind qty + remove buttons */
+      itemsEl.querySelectorAll('.cart-qty-btn').forEach((btn) => {
+        btn.addEventListener('click', () => updateLine(btn.dataset.line, parseInt(btn.dataset.qty)));
+      });
+      itemsEl.querySelectorAll('.cart-remove-btn').forEach((btn) => {
+        btn.addEventListener('click', () => updateLine(btn.dataset.line, 0));
+      });
+    }
 
-  /* ── render footer ──────────────────────────────────── */
-  function renderFooter(cart) {
-    footerEl.innerHTML = `
+    /* ── render footer ──────────────────────────────────── */
+    function renderFooter(cart) {
+      footerEl.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
         <span style="font-size:14px;color:#6b7280;font-weight:500;">Subtotal</span>
         <span style="font-size:18px;font-weight:700;color:#1a201b;">${formatMoney(cart.total_price)}</span>
@@ -292,7 +325,7 @@
           letter-spacing:0.01em;
           transition:background 0.2s,transform 0.15s;
         "
-        onmouseover="this.style.background='#006400';this.style.transform='translateY(-1px)'"
+        onmouseover="this.style.background='#0f3f21';this.style.transform='translateY(-1px)'"
         onmouseout="this.style.background='#1a201b';this.style.transform='translateY(0)'"
       >
         Checkout
@@ -316,40 +349,40 @@
         View full cart →
       </a>
     `;
-  }
-
-  /* ── update line quantity ────────────────────────────── */
-  async function updateLine(line, qty) {
-    try {
-      await fetch('/cart/change.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ line: parseInt(line), quantity: qty })
-      });
-      await refreshCart();
-    } catch (e) {
-      console.error('Failed to update cart', e);
     }
-  }
 
-  /* ── money formatter ─────────────────────────────────── */
-  function formatMoney(cents) {
-    const amount = (cents / 100).toFixed(2);
-    return window.Shopify?.currency?.active
-      ? new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: window.Shopify.currency.active
-        }).format(cents / 100)
-      : '$' + amount;
-  }
+    /* ── update line quantity ────────────────────────────── */
+    async function updateLine(line, qty) {
+      try {
+        await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ line: parseInt(line), quantity: qty }),
+        });
+        await refreshCart();
+      } catch (e) {
+        console.error('Failed to update cart', e);
+      }
+    }
 
-  /* ── listen for add-to-cart events ──────────────────── */
-  document.addEventListener('cart:added', async () => {
-    await refreshCart();
-    openDrawer();
-  });
+    /* ── money formatter ─────────────────────────────────── */
+    function formatMoney(cents) {
+      const amount = (cents / 100).toFixed(2);
+      return window.Shopify?.currency?.active
+        ? new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: window.Shopify.currency.active,
+          }).format(cents / 100)
+        : '$' + amount;
+    }
 
-  /* ── initial render ──────────────────────────────────── */
-  refreshCart();
-})();
+    /* ── listen for add-to-cart events ──────────────────── */
+    document.addEventListener('cart:added', async () => {
+      await refreshCart();
+      openDrawer();
+    });
+
+    /* ── initial render ──────────────────────────────────── */
+    refreshCart();
+  })();
 </script>

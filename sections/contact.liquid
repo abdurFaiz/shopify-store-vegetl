@@ -1,0 +1,850 @@
+<section class="contact py-40" id="newsletter-{{ section.id }}">
+  <div class="newsletter-inner">
+
+    <!-- LEFT: Form -->
+    <div class="newsletter-form-col">
+      <h2 class="newsletter-heading">
+        <span class="line-top">LET'S STAY</span>
+      </h2>
+
+      {%- comment -%} Step: Form {%- endcomment -%}
+      <div id="nl-step-form-{{ section.id }}">
+        <form
+          class="newsletter-form"
+          id="newsletter-form-{{ section.id }}"
+          action="/contact#contact_form"
+          method="post"
+          accept-charset="UTF-8"
+          novalidate
+        >
+          <input type="hidden" name="form_type" value="contact">
+          <input type="hidden" name="utf8" value="✓">
+          <input type="hidden" name="contact[tags]" value="newsletter,farm-inquiry">
+
+          <!-- First Name -->
+          <div class="field-group" data-field>
+            <input
+              type="text"
+              name="contact[first_name]"
+              id="first-name-{{ section.id }}"
+              class="newsletter-input"
+              placeholder=" "
+              autocomplete="given-name"
+              data-required
+            >
+            <label for="first-name-{{ section.id }}" class="newsletter-label">
+              {{ section.settings.label_first_name | default: 'First Name' -}}<span aria-hidden="true">*</span>
+            </label>
+            <span class="nl-err-msg">This field is required.</span>
+          </div>
+
+
+          <!-- Email -->
+          <div class="field-group" data-field>
+            <input
+              type="email"
+              name="contact[email]"
+              id="email-{{ section.id }}"
+              class="newsletter-input"
+              placeholder=" "
+              autocomplete="email"
+              data-required
+              data-type="email"
+            >
+            <label for="email-{{ section.id }}" class="newsletter-label">
+              {{ section.settings.label_email | default: 'Email address' -}}<span aria-hidden="true">*</span>
+            </label>
+            <span class="nl-err-msg">Please enter a valid email address.</span>
+          </div>
+
+          <!-- Reason for reaching out -->
+          <div class="field-group field-group--select" data-field>
+            <label for="reason-{{ section.id }}" class="newsletter-label newsletter-label--static">
+              {{ section.settings.label_reason | default: 'Reason for reaching out' }}<span aria-hidden="true">*</span>
+            </label>
+            <div class="nl-select-wrap">
+              <select
+                id="reason-{{ section.id }}"
+                name="contact[reason]"
+                class="nl-select"
+                data-required
+              >
+                <option value="" disabled selected>Select a reason</option>
+                <optgroup label="Vegetables">
+                  <option value="leafy-greens">Leafy Greens (lettuce, spinach, kale)</option>
+                  <option value="root-vegetables">Root Vegetables (carrot, beet, radish)</option>
+                  <option value="brassicas">Brassicas (broccoli, cabbage, cauliflower)</option>
+                  <option value="nightshades">Nightshades (tomato, pepper, eggplant)</option>
+                  <option value="alliums">Alliums (onion, garlic, leek)</option>
+                  <option value="cucurbits">Cucurbits (cucumber, zucchini, squash)</option>
+                  <option value="legumes">Legumes (beans, peas, lentils)</option>
+                </optgroup>
+                <optgroup label="Herbs & Microgreens">
+                  <option value="fresh-herbs">Fresh Herbs (basil, cilantro, parsley)</option>
+                  <option value="microgreens">Microgreens</option>
+                  <option value="edible-flowers">Edible Flowers</option>
+                </optgroup>
+                <optgroup label="Fruits">
+                  <option value="berries">Berries (strawberry, blueberry, raspberry)</option>
+                  <option value="stone-fruit">Stone Fruit (peach, plum, cherry)</option>
+                  <option value="melons">Melons (watermelon, cantaloupe)</option>
+                </optgroup>
+                <optgroup label="Farm Products">
+                  <option value="eggs">Free-Range Eggs</option>
+                  <option value="honey">Raw Honey</option>
+                  <option value="dairy">Dairy (milk, cheese, yogurt)</option>
+                  <option value="mushrooms">Mushrooms</option>
+                </optgroup>
+                <optgroup label="Other">
+                  <option value="mixed-box">Mixed Produce Box / CSA</option>
+                  <option value="wholesale">Wholesale / Bulk Supply</option>
+                  <option value="other">Other</option>
+                </optgroup>
+              </select>
+              <span class="nl-select-arrow" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </div>
+            <span class="nl-err-msg">Please select a reason.</span>
+          </div>
+
+          <!-- Description -->
+          <div class="field-group field-group--textarea" data-field>
+            <label for="desc-{{ section.id }}" class="newsletter-label newsletter-label--static">
+              {{ section.settings.label_desc | default: 'Tell us about your produce' }}<span aria-hidden="true">*</span>
+            </label>
+            <div class="nl-textarea-wrap">
+              <textarea
+                id="desc-{{ section.id }}"
+                name="contact[body]"
+                class="nl-textarea"
+                rows="4"
+                maxlength="{{ section.settings.char_max | default: 500 }}"
+                placeholder="{{ section.settings.textarea_placeholder | default: 'Describe what you grow, your weekly volume...' }}"
+                data-required
+                data-min="20"
+              ></textarea>
+              <div class="nl-char-counter">
+                <span class="nl-char-used">0</span>
+                <span class="nl-char-sep">/</span>
+                <span class="nl-char-max">{{ section.settings.char_max | default: 500 }}</span>
+              </div>
+            </div>
+            <span class="nl-err-msg">Please describe your produce (min. 20 characters).</span>
+          </div>
+
+          <!-- Submit -->
+          <div class="newsletter-submit-wrap">
+            <button type="submit" class="newsletter-btn" id="nl-submit-{{ section.id }}">
+              <span class="nl-btn-label">{{ section.settings.button_label | default: 'Sign up' }}</span>
+              <span class="nl-btn-spinner" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+              </span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      {%- comment -%} Step: Success {%- endcomment -%}
+      <div id="nl-step-success-{{ section.id }}" class="nl-step--hidden">
+        <div class="nl-feedback-state">
+          <div class="nl-feedback-icon nl-feedback-icon--success">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <p class="nl-feedback-title">{{ section.settings.success_title | default: "You're in!" }}</p>
+          <p class="nl-feedback-body">{{ section.settings.success_message | default: "Thanks for reaching out. We'll be in touch within 2 business days." }}</p>
+          <button class="newsletter-btn newsletter-btn--outline" id="nl-reset-{{ section.id }}">
+            Submit another
+          </button>
+        </div>
+      </div>
+
+      {%- comment -%} Step: Error {%- endcomment -%}
+      <div id="nl-step-error-{{ section.id }}" class="nl-step--hidden">
+        <div class="nl-feedback-state">
+          <div class="nl-feedback-icon nl-feedback-icon--error">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <p class="nl-feedback-title">Something went wrong</p>
+          <p class="nl-feedback-body">We couldn't send your message. Please try again.</p>
+          <button class="newsletter-btn newsletter-btn--outline" id="nl-retry-{{ section.id }}">
+            Try again
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Heading + Description + Social -->
+    <div class="newsletter-content-col">
+      <p class="newsletter-description">
+        {{ section.settings.description | default: 'Be the first to receive field-tested growing tips, course invitations, and stories straight from the market garden.' }}
+      </p>
+
+      <h2 class="newsletter-heading newsletter-heading--right">
+        <span class="line-bottom">IN TOUCH!</span>
+      </h2>
+
+      <div class="newsletter-social">
+        <span class="social-label">{{ section.settings.follow_label | default: 'Follow us' }}</span>
+        <div class="social-icons">
+          {%- if section.settings.instagram_url != blank -%}
+            <a href="{{ section.settings.instagram_url }}" class="social-icon" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                  <path d="M3 9.4c0-2.24 0-3.36.436-4.216a4 4 0 0 1 1.748-1.748C6.04 3 7.16 3 9.4 3h5.2c2.24 0 3.36 0 4.216.436a4 4 0 0 1 1.748 1.748C21 6.04 21 7.16 21 9.4v5.2c0 2.24 0 3.36-.436 4.216a4 4 0 0 1-1.748 1.748C17.96 21 16.84 21 14.6 21H9.4c-2.24 0-3.36 0-4.216-.436a4 4 0 0 1-1.748-1.748C3 17.96 3 16.84 3 14.6zm14-2.9h.5"/>
+                  <path d="M15.462 11.487a3.5 3.5 0 1 1-6.925 1.026a3.5 3.5 0 0 1 6.925-1.026"/>
+                </g>
+              </svg>
+            </a>
+          {%- endif -%}
+
+          {%- if section.settings.facebook_url != blank -%}
+            <a href="{{ section.settings.facebook_url }}" class="social-icon" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+              </svg>
+            </a>
+          {%- endif -%}
+
+          {%- if section.settings.youtube_url != blank -%}
+            <a href="{{ section.settings.youtube_url }}" class="social-icon" target="_blank" rel="noopener" aria-label="YouTube">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.45A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.97C5.12 20 12 20 12 20s6.88 0 8.59-.45a2.78 2.78 0 0 0 1.96-1.97A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
+                <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/>
+              </svg>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ── Variables ─────────────────────────────────────────── */
+  #newsletter-{{ section.id }} {
+    --nl-green:    {{ section.settings.text_color  | default: '#1b4a3a' }};
+    --nl-body:     {{ section.settings.body_color  | default: '#3a3a3a' }};
+    --nl-border:   {{ section.settings.border_color| default: '#9aa89e' }};
+    --nl-btn-bg:   {{ section.settings.btn_bg      | default: '#0f3f21' }};
+    --nl-btn-text: {{ section.settings.btn_text    | default: '#ffffff' }};
+    --font-title:  'Plus Jakarta Sans', sans-serif;
+    --font-body:   'Inter', sans-serif;
+  }
+
+  /* ── Shell ─────────────────────────────────────────────── */
+  #newsletter-{{ section.id }} {
+    background-color: var(--nl-bg);
+    padding: 80px 60px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .newsletter-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px 80px;
+    align-items: start;
+  }
+
+  /* ── Headings ──────────────────────────────────────────── */
+  .newsletter-heading {
+    font-family: var(--font-title);
+    font-weight: 900;
+    color: var(--nl-green);
+    line-height: 1;
+    margin: 0;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+  .newsletter-heading .line-top    { display: block; font-size: clamp(48px, 6vw, 88px); }
+  .newsletter-heading--right .line-bottom { display: block; font-size: clamp(52px, 7vw, 100px); }
+
+  /* ── Description ───────────────────────────────────────── */
+  .newsletter-description {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--nl-body);
+    margin: 0 0 24px;
+    max-width: 420px;
+  }
+
+  /* ── Left col ──────────────────────────────────────────── */
+  .newsletter-form-col {
+    display: flex;
+    flex-direction: column;
+    padding-top: 8px;
+  }
+
+  .newsletter-form {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Field group ───────────────────────────────────────── */
+  .field-group {
+    position: relative;
+    margin-bottom: 28px;
+  }
+
+  /* ── Underline inputs (original style) ─────────────────── */
+  .newsletter-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--nl-border);
+    padding: 10px 0 8px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--nl-green);
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+  }
+  .newsletter-input:focus           { border-bottom-color: var(--nl-green); }
+  .newsletter-input.is-invalid      { border-bottom-color: #c0392b; }
+
+  /* Floating label (original inputs) */
+  .newsletter-label {
+    position: absolute;
+    left: 0;
+    top: 10px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--nl-border);
+    pointer-events: none;
+    transition: all 0.18s ease;
+  }
+  .newsletter-input:focus ~ .newsletter-label,
+  .newsletter-input:not(:placeholder-shown) ~ .newsletter-label {
+    top: -12px;
+    font-size: 11px;
+    color: var(--nl-green);
+    letter-spacing: 0.04em;
+  }
+
+  /* Static label (for select + textarea) */
+  .newsletter-label--static {
+    position: static;
+    display: block;
+    font-size: 11px;
+    color: var(--nl-green);
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+    pointer-events: auto;
+  }
+
+  /* ── Select ────────────────────────────────────────────── */
+  .field-group--select { margin-bottom: 28px; }
+
+  .nl-select-wrap {
+    position: relative;
+  }
+
+  .nl-select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--nl-border);
+    border-radius: 0;
+    padding: 8px 24px 8px 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--nl-green);
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+  }
+
+  .nl-select:focus          { border-bottom-color: var(--nl-green); }
+  .nl-select.is-invalid     { border-bottom-color: #c0392b; }
+  .nl-select option[value=""] { color: var(--nl-border); }
+  .nl-select optgroup       { font-family: var(--font-body); font-weight: 600; }
+
+  .nl-select-arrow {
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--nl-border);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ── Textarea ──────────────────────────────────────────── */
+  .field-group--textarea { margin-bottom: 28px; }
+
+  .nl-textarea-wrap { position: relative; }
+
+  .nl-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--nl-border);
+    padding: 8px 0 28px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--nl-green);
+    line-height: 1.6;
+    outline: none;
+    resize: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+  }
+  .nl-textarea::placeholder      { color: var(--nl-border); }
+  .nl-textarea:focus             { border-bottom-color: var(--nl-green); }
+  .nl-textarea.is-invalid        { border-bottom-color: #c0392b; }
+
+  /* Character counter */
+  .nl-char-counter {
+    position: absolute;
+    bottom: 8px;
+    right: 0;
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--nl-border);
+    transition: color 0.2s ease;
+    user-select: none;
+  }
+  .nl-char-counter.is-near { color: #b87a30; }
+  .nl-char-counter.is-max  { color: #c0392b; font-weight: 600; }
+
+  /* ── Error message ─────────────────────────────────────── */
+  .nl-err-msg {
+    display: none;
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    color: #c0392b;
+    margin-top: 4px;
+  }
+  .field-group.has-error .nl-err-msg { display: block; }
+
+  /* ── Submit button ─────────────────────────────────────── */
+  .newsletter-submit-wrap {
+    margin-top: 36px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .newsletter-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--nl-btn-bg);
+    color: var(--nl-btn-text);
+    border: 2px solid var(--nl-btn-bg);
+    border-radius: 100px;
+    padding: 14px 48px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    letter-spacing: 0.01em;
+    min-width: 148px;
+  }
+  .newsletter-btn:hover  { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.14); }
+  .newsletter-btn:active { transform: translateY(0); }
+
+  .newsletter-btn--outline {
+    background: transparent;
+    color: var(--nl-green);
+    border-color: var(--nl-green);
+    margin-top: 16px;
+    padding: 11px 32px;
+    font-size: 13px;
+  }
+  .newsletter-btn--outline:hover { background: var(--nl-green); color: #fff; filter: none; }
+
+  /* Spinner */
+  .nl-btn-spinner {
+    display: none;
+    animation: nl-spin 0.7s linear infinite;
+  }
+  .newsletter-btn.is-loading .nl-btn-label  { display: none; }
+  .newsletter-btn.is-loading .nl-btn-spinner { display: flex; }
+
+  @keyframes nl-spin { to { transform: rotate(360deg); } }
+
+  /* ── Feedback states ───────────────────────────────────── */
+  .nl-step--hidden { display: none; }
+
+  .nl-feedback-state {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 48px;
+    gap: 10px;
+  }
+
+  .nl-feedback-icon          { margin-bottom: 4px; }
+  .nl-feedback-icon--success { color: var(--nl-green); }
+  .nl-feedback-icon--error   { color: #c0392b; }
+
+  .nl-feedback-title {
+    font-family: var(--font-title);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--nl-green);
+    margin: 0;
+  }
+
+  .nl-feedback-body {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--nl-body);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* ── Right column ──────────────────────────────────────── */
+  .newsletter-content-col {
+    display: flex;
+    flex-direction: column;
+    padding-top: 8px;
+  }
+
+  /* ── Social ────────────────────────────────────────────── */
+  .newsletter-social {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 32px;
+  }
+  .social-label {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--nl-body);
+  }
+  .social-icons {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .social-icon {
+    color: var(--nl-green);
+    display: flex;
+    align-items: center;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .social-icon:hover { opacity: 0.65; transform: translateY(-2px); }
+
+  /* ── Responsive ────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    #newsletter-{{ section.id }} { padding: 64px 40px; }
+
+    .newsletter-inner {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .newsletter-form-col    { order: 2; }
+    .newsletter-content-col { order: 1; margin-bottom: 40px; display: block; }
+
+    .newsletter-heading .line-top           { font-size: clamp(48px, 10vw, 72px); }
+    .newsletter-heading--right .line-bottom { font-size: clamp(52px, 12vw, 80px); }
+    .newsletter-description                 { max-width: 100%; }
+  }
+
+  @media (max-width: 600px) {
+    #newsletter-{{ section.id }} { padding: 48px 24px; }
+
+    .newsletter-heading .line-top           { font-size: 44px; }
+    .newsletter-heading--right .line-bottom { font-size: 50px; }
+    .newsletter-description                 { font-size: 14px; }
+    .newsletter-btn                         { width: 100%; padding: 15px 24px; }
+    .newsletter-submit-wrap                 { justify-content: center; }
+    .newsletter-social                      { flex-wrap: wrap; gap: 14px; }
+  }
+</style>
+
+<script>
+(function () {
+  var sid      = '{{ section.id }}';
+  var MAX_CH   = {{ section.settings.char_max | default: 500 }};
+  var MIN_DESC = 20;
+
+  var form        = document.getElementById('newsletter-form-' + sid);
+  var stepForm    = document.getElementById('nl-step-form-' + sid);
+  var stepSuccess = document.getElementById('nl-step-success-' + sid);
+  var stepError   = document.getElementById('nl-step-error-' + sid);
+  var submitBtn   = document.getElementById('nl-submit-' + sid);
+  var resetBtn    = document.getElementById('nl-reset-' + sid);
+  var retryBtn    = document.getElementById('nl-retry-' + sid);
+  var textarea    = document.getElementById('desc-' + sid);
+  var charUsed    = document.querySelector('#newsletter-form-' + sid + ' .nl-char-used');
+  var charCounter = document.querySelector('#newsletter-form-' + sid + ' .nl-char-counter');
+
+  if (!form) return;
+
+  /* ── Char counter ──────────────────────────────────────── */
+  if (textarea && charUsed) {
+    textarea.addEventListener('input', function () {
+      var len = this.value.length;
+      charUsed.textContent = len;
+      charCounter.classList.toggle('is-near', len >= MAX_CH * 0.85 && len < MAX_CH);
+      charCounter.classList.toggle('is-max',  len >= MAX_CH);
+    });
+  }
+
+  /* ── Helpers ───────────────────────────────────────────── */
+  function isValidEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  }
+
+  function setError(field, input, state) {
+    field.classList.toggle('has-error', state);
+    input.classList.toggle('is-invalid', state);
+  }
+
+  /* ── Live clear on interaction ─────────────────────────── */
+  form.querySelectorAll('.newsletter-input, .nl-select, .nl-textarea').forEach(function (el) {
+    ['input', 'change'].forEach(function (evt) {
+      el.addEventListener(evt, function () {
+        setError(el.closest('[data-field]'), el, false);
+      });
+    });
+  });
+
+  /* ── Validate ──────────────────────────────────────────── */
+  function validate() {
+    var valid = true;
+
+    form.querySelectorAll('[data-required]').forEach(function (input) {
+      var field = input.closest('[data-field]');
+      var val   = input.value.trim();
+      var ok;
+
+      if (input.dataset.type === 'email') {
+        ok = val !== '' && isValidEmail(val);
+      } else if (input === textarea) {
+        ok = val.length >= MIN_DESC;
+      } else {
+        ok = val !== '';
+      }
+
+      setError(field, input, !ok);
+      if (!ok) valid = false;
+    });
+
+    return valid;
+  }
+
+  /* ── Step switcher ─────────────────────────────────────── */
+  function showStep(el) {
+    [stepForm, stepSuccess, stepError].forEach(function (s) {
+      s.classList.add('nl-step--hidden');
+    });
+    el.classList.remove('nl-step--hidden');
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  /* ── Submit ────────────────────────────────────────────── */
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!validate()) return;
+
+    submitBtn.classList.add('is-loading');
+    submitBtn.disabled = true;
+
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(function (res) {
+      submitBtn.classList.remove('is-loading');
+      submitBtn.disabled = false;
+      showStep(res.ok ? stepSuccess : stepError);
+    })
+    .catch(function () {
+      submitBtn.classList.remove('is-loading');
+      submitBtn.disabled = false;
+      showStep(stepError);
+    });
+  });
+
+  /* ── Reset ─────────────────────────────────────────────── */
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function () {
+      form.reset();
+      if (charUsed)    charUsed.textContent = '0';
+      if (charCounter) charCounter.classList.remove('is-near', 'is-max');
+      form.querySelectorAll('[data-field]').forEach(function (f) { f.classList.remove('has-error'); });
+      form.querySelectorAll('.is-invalid').forEach(function (i) { i.classList.remove('is-invalid'); });
+      showStep(stepForm);
+    });
+  }
+
+  if (retryBtn) {
+    retryBtn.addEventListener('click', function () { showStep(stepForm); });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Contact",
+  "tag": "section",
+  "class": "contact",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Be the first to receive field-tested growing tips, course invitations, and stories straight from the market garden."
+    },
+    {
+      "type": "text",
+      "id": "follow_label",
+      "label": "Follow label",
+      "default": "Follow us"
+    },
+    {
+      "type": "header",
+      "content": "Form Labels"
+    },
+    {
+      "type": "text",
+      "id": "label_first_name",
+      "label": "First name label",
+      "default": "First Name"
+    },
+    {
+      "type": "text",
+      "id": "label_email",
+      "label": "Email label",
+      "default": "Email address"
+    },
+    {
+      "type": "text",
+      "id": "label_reason",
+      "label": "Reason dropdown label",
+      "default": "Reason for reaching out"
+    },
+    {
+      "type": "text",
+      "id": "label_desc",
+      "label": "Description field label",
+      "default": "Tell us about your produce"
+    },
+    {
+      "type": "text",
+      "id": "textarea_placeholder",
+      "label": "Description placeholder",
+      "default": "Describe what you grow, your weekly volume..."
+    },
+    {
+      "type": "range",
+      "id": "char_max",
+      "label": "Max characters (description)",
+      "min": 100,
+      "max": 1000,
+      "step": 50,
+      "default": 500
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Send me a message"
+    },
+    {
+      "type": "header",
+      "content": "Success State"
+    },
+    {
+      "type": "text",
+      "id": "success_title",
+      "label": "Success title",
+      "default": "You're in!"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thanks for reaching out. We'll be in touch within 2 business days."
+    },
+    {
+      "type": "header",
+      "content": "Social Links"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#e8e6df"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading & accent color",
+      "default": "#1b4a3a"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Body text color",
+      "default": "#3a3a3a"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Input border & placeholder color",
+      "default": "#9aa89e"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Button background",
+      "default": "#0f3f21"
+    },
+    {
+      "type": "color",
+      "id": "btn_text",
+      "label": "Button text",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact"
+    }
+  ]
+}
+{% endschema %}
