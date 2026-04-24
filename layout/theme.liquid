@@ -10,6 +10,7 @@
       2. Preload only the critical font variant (base weight)
       3. Additional variants load on-demand via @font-face
     {% endcomment %}
+
     {% unless settings.type_primary_font.system? %}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
 
@@ -24,13 +25,13 @@
     {% render 'meta-tags' %}
 
     {{ content_for_header }}
-    {% render 'organic-styles' %}
+    {{ 'tailwind-output.css' |  asset_url | stylesheet_tag }}
   </head>
 
   <body class="bg-surface font-body text-on-surface antialiased">
     {% sections 'header-group' %}
 
-    <main class="pt-20">
+    <main class="pt-16">
       {{ content_for_layout }}
     </main>
 

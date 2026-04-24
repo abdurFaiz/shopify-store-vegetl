@@ -18,32 +18,22 @@
 
 <div class="product-recommendations-wrapper" data-product-id="{{ product.id }}">
   <div class="recommendations-grid" style="--columns: {{ columns | default: 4 }};">
-    {% comment %}This will be populated by the recommendations API or fallback{% endcomment %}
-    
-    {% if recommendations.performed and recommendations.products_count > 0 %}
-      {% for recommended_product in recommendations.products limit: limit %}
-        {% render 'product-card', 
-          product: recommended_product, 
-          show_vendor: show_vendor 
-        %}
+    {% comment %}
+      Recommendations are loaded dynamically via JavaScript API.
+      This fallback shows products from the same collection.
+    {% endcomment %}
+
+    {% if product.collections.first %}
+      {% assign collection = product.collections.first %}
+      {% assign count = 0 %}
+      {% for related_product in collection.products %}
+        {% if count < limit %}
+          {% unless related_product.id == product.id %}
+            {% render 'product-card', product: related_product, show_vendor: show_vendor %}
+            {% assign count = count | plus: 1 %}
+          {% endunless %}
+        {% endif %}
       {% endfor %}
-    {% else %}
-      {% comment %}Fallback: Show products from the same collection{% endcomment %}
-      {% if product.collections.first %}
-        {% assign collection = product.collections.first %}
-        {% assign count = 0 %}
-        {% for related_product in collection.products %}
-          {% if count < limit %}
-            {% unless related_product.id == product.id %}
-              {% render 'product-card', 
-                product: related_product, 
-                show_vendor: show_vendor 
-              %}
-              {% assign count = count | plus: 1 %}
-            {% endunless %}
-          {% endif %}
-        {% endfor %}
-      {% endif %}
     {% endif %}
   </div>
 </div>

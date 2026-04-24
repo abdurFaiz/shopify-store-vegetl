@@ -3,17 +3,29 @@
   id="organic-header-{{ section.id }}"
 >
   <div class="flex justify-between items-center max-w-full mx-auto px-6 h-20">
-
     <!-- Brand Logo -->
     <a
       href="{{ routes.root_url }}"
-      class="text-2xl font-bold text-[#0f3f21] flex items-center gap-2 font-headline"
+      class="text-2xl font-bold text-[#0f3f21] flex items-center gap-1 font-headline"
     >
       {%- if section.settings.logo != blank -%}
         {{ section.settings.logo | image_url: width: 200 | image_tag: class: 'h-8 w-auto' }}
       {%- else -%}
-        <span class="material-symbols-outlined text-primary-container" data-icon="eco">eco</span>
-        {{ shop.name }}
+        <span class="text-primary-container" data-icon="eco">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-7"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12.75 3.03v.568c0 .334.148.65.405.864l1.068.89c.442.369.535 1.01.216 1.49l-.51.766a2.25 2.25 0 0 1-1.161.886l-.143.048a1.107 1.107 0 0 0-.57 1.664c.369.555.169 1.307-.427 1.605L9 13.125l.423 1.059a.956.956 0 0 1-1.652.928l-.679-.906a1.125 1.125 0 0 0-1.906.172L4.5 15.75l-.612.153M12.75 3.031a9 9 0 0 0-8.862 12.872M12.75 3.031a9 9 0 0 1 6.69 14.036m0 0-.177-.529A2.25 2.25 0 0 0 17.128 15H16.5l-.324-.324a1.453 1.453 0 0 0-2.328.377l-.036.073a1.586 1.586 0 0 1-.982.816l-.99.282c-.55.157-.894.702-.8 1.267l.073.438c.08.474.49.821.97.821.846 0 1.598.542 1.865 1.345l.215.643m5.276-3.67a9.012 9.012 0 0 1-5.276 3.67m0 0a9 9 0 0 1-10.275-4.835M15.75 9c0 .896-.393 1.7-1.016 2.25" />
+          </svg>
+        </span>
+        <span class="font-medium">
+          {{ shop.name }}
+        </span>
       {%- endif -%}
     </a>
 
@@ -31,15 +43,25 @@
 
     <!-- Trailing Actions -->
     <div class="flex items-center gap-3 md:gap-6">
-
       <!-- Cart -->
       <button
         type="button"
         id="cart-icon-bubble"
-        class="relative px-2.5 py-1 rounded-full border border-gray-200 text-slate-600 hover:bg-emerald-50/50 transition-all cursor-pointer bg-transparent"
+        class="relative px-2.5 py-2 rounded-full border border-gray-200 text-slate-600 hover:bg-emerald-50/50 transition-all cursor-pointer bg-transparent"
         data-cart-trigger
       >
-        <span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+        <span data-icon="shopping_basket">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+          </svg>
+        </span>
         <span
           class="absolute top-0 right-0 bg-[#0f3f21] text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center {% if cart.item_count == 0 %}hidden{% endif %}"
           data-cart-count
@@ -52,11 +74,27 @@
       {% if section.settings.button_label != blank %}
         <div class="hidden md:flex items-center justify-center">
           <a
-            {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+            {% if section.settings.button_link != blank %}
+              href="{{ section.settings.button_link }}"
+            {% endif %}
             class="bg-[#0f3f21] text-white pl-4 pr-1 py-1 rounded-full font-medium text-md scale-95 active:scale-90 transition-transform shadow-lg shadow-primary/20 flex items-center gap-2"
           >
             {{ section.settings.button_label }}
-            <span class="material-symbols-outlined text-sm text-[#0f3f21] bg-white rounded-full px-2.5 py-1.5" data-icon="call_made">call_made</span>
+            <span
+              class="text-sm text-[#0f3f21] bg-white rounded-full px-2.5 py-3"
+              data-icon="call_made"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+              </svg>
+            </span>
           </a>
         </div>
       {% endif %}
@@ -69,11 +107,16 @@
         aria-label="Toggle menu"
         aria-expanded="false"
       >
-        <span class="hamburger-bar block w-5 h-0.5 bg-[#0f3f21] rounded transition-all duration-300 origin-center"></span>
-        <span class="hamburger-bar block w-5 h-0.5 bg-[#0f3f21] rounded transition-all duration-300 origin-center"></span>
-        <span class="hamburger-bar block w-5 h-0.5 bg-[#0f3f21] rounded transition-all duration-300 origin-center"></span>
+        <span
+          class="hamburger-bar block w-5 h-0.5 bg-[#0f3f21] rounded transition-all duration-300 origin-center"
+        ></span>
+        <span
+          class="hamburger-bar block w-5 h-0.5 bg-[#0f3f21] rounded transition-all duration-300 origin-center"
+        ></span>
+        <span
+          class="hamburger-bar block w-5 h-0.5 bg-[#0f3f21] rounded transition-all duration-300 origin-center"
+        ></span>
       </button>
-
     </div>
   </div>
 
@@ -97,11 +140,27 @@
       <!-- CTA inside mobile menu -->
       {% if section.settings.button_label != blank %}
         <a
-          {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
-          class="mt-2 bg-[#0f3f21] text-white px-5 py-3 rounded-full font-medium text-base flex items-center justify-between transition-all active:scale-95"
+          {% if section.settings.button_link != blank %}
+            href="{{ section.settings.button_link }}"
+          {% endif %}
+          class="mt-2 bg-[#0f3f21] text-white pl-4 py-1 pr-1 rounded-full font-medium text-base flex items-center justify-between transition-all active:scale-95"
         >
           {{ section.settings.button_label }}
-          <span class="material-symbols-outlined text-sm text-[#0f3f21] bg-white rounded-full px-2 py-1" data-icon="call_made">call_made</span>
+          <span
+            class="text-sm text-[#0f3f21] bg-white rounded-full px-2 py-1"
+            data-icon="call_made"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+            </svg>
+          </span>
         </a>
       {% endif %}
     </nav>
@@ -130,25 +189,29 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const sid      = '{{ section.id }}';
-    const header   = document.getElementById('organic-header-' + sid);
-    const toggle   = document.getElementById('mobile-menu-toggle-' + sid);
-    const drawer   = document.getElementById('mobile-menu-' + sid);
-    const overlay  = document.getElementById('mobile-menu-overlay-' + sid);
+    const sid = '{{ section.id }}';
+    const header = document.getElementById('organic-header-' + sid);
+    const toggle = document.getElementById('mobile-menu-toggle-' + sid);
+    const drawer = document.getElementById('mobile-menu-' + sid);
+    const overlay = document.getElementById('mobile-menu-overlay-' + sid);
 
     /* ── Scroll hide/show ─────────────────────────────── */
     let lastScrollY = window.scrollY;
 
-    window.addEventListener('scroll', () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        header.style.transform = 'translateY(-100%)';
-        closeMenu();
-      } else {
-        header.style.transform = 'translateY(0)';
-      }
-      lastScrollY = currentScrollY;
-    }, { passive: true });
+    window.addEventListener(
+      'scroll',
+      () => {
+        const currentScrollY = window.scrollY;
+        if (currentScrollY > lastScrollY && currentScrollY > 50) {
+          header.style.transform = 'translateY(-100%)';
+          closeMenu();
+        } else {
+          header.style.transform = 'translateY(0)';
+        }
+        lastScrollY = currentScrollY;
+      },
+      { passive: true }
+    );
 
     /* ── Mobile menu toggle ───────────────────────────── */
     function openMenu() {
@@ -157,11 +220,11 @@
       drawer.setAttribute('aria-hidden', 'false');
 
       // Measure natural height then animate to it
-      drawer.style.maxHeight  = drawer.scrollHeight + 'px';
-      drawer.style.opacity    = '1';
+      drawer.style.maxHeight = drawer.scrollHeight + 'px';
+      drawer.style.opacity = '1';
 
-      overlay.style.opacity        = '1';
-      overlay.style.pointerEvents  = 'auto';
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'auto';
       document.body.style.overflow = 'hidden';
     }
 
@@ -170,11 +233,11 @@
       toggle.setAttribute('aria-expanded', 'false');
       drawer.setAttribute('aria-hidden', 'true');
 
-      drawer.style.maxHeight  = '0';
-      drawer.style.opacity    = '0';
+      drawer.style.maxHeight = '0';
+      drawer.style.opacity = '0';
 
-      overlay.style.opacity        = '0';
-      overlay.style.pointerEvents  = 'none';
+      overlay.style.opacity = '0';
+      overlay.style.pointerEvents = 'none';
       document.body.style.overflow = '';
     }
 
@@ -187,7 +250,7 @@
     overlay.addEventListener('click', closeMenu);
 
     /* Close on nav link click */
-    drawer.querySelectorAll('a').forEach(link => {
+    drawer.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', closeMenu);
     });
 

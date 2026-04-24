@@ -11,7 +11,10 @@ node_modules/
 
 # Shopify CLI files
 .shopify/
+shopify.theme.toml
 
 ## Release files
 release
 *.zip
+/node_modules
+.early.coverage

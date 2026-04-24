@@ -27,7 +27,10 @@
   }
 </style>
 
-<section class="py-12 lg:py-24 bg-[#f4f7f5] overflow-hidden relative full-width" id="Section-{{ section.id }}">
+<section
+  class="py-12 lg:py-24 bg-[#f4f7f5] overflow-hidden relative full-width flex justify-center items-center"
+  id="Section-{{ section.id }}"
+>
   <div class="max-w-[1440px] mx-auto px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-[1fr_2fr_1fr] gap-8 lg:gap-4 items-center relative z-10 w-full min-h-[500px]">
     <!-- Left Images (Grid on mobile, Absolute on LG) -->
     <div class="lg:absolute left-0 top-0 bottom-0 w-full lg:w-[240px] z-0 pointer-events-none flex lg:block flex-row justify-center gap-4 h-[200px] lg:h-auto overflow-hidden lg:overflow-visible">
@@ -37,12 +40,14 @@
           {{ section.settings.image_1 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
         {% else %}
           <img
-            src="{{ 'about-1.jpg' | file_url }}"
+            src="{{ 'about-1.jpg' | file_img_url : 'original' }}"
             alt="Hero Image"
             class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100"
-            loading="lazy"
+            loading="eager"
+            fetchpriority="auto"
             height="300"
             width="300"
+            style="height: 100%;"
           >
         {% endif %}
       </div>
@@ -52,12 +57,14 @@
           {{ section.settings.image_3 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
         {% else %}
           <img
-            src="{{ 'about-2.png' | file_url }}"
+            src="{{ 'about-2.png' | file_img_url : 'original' }}"
             alt="Hero Image"
             class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100"
-            loading="lazy"
+            loading="eager"
+            fetchpriority="auto"
             height="300"
             width="300"
+            style="height: 100%;"
           >
         {% endif %}
       </div>
@@ -71,12 +78,14 @@
           {{ section.settings.image_2 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
         {% else %}
           <img
-            src="{{ 'about-2.png' | file_url }}"
+            src="{{ 'about-2.png' | file_img_url : 'original' }}"
             alt="Hero Image"
             class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100"
-            loading="lazy"
+            loading="eager"
+            fetchpriority="auto"
             height="300"
             width="300"
+            style="height: 100%;"
           >
         {% endif %}
       </div>
@@ -86,21 +95,23 @@
           {{ section.settings.image_4 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
         {% else %}
           <img
-            src="{{ 'about-3.png' | file_url }}"
+            src="{{ 'about-3.png' | file_img_url : 'original' }}"
             alt="Hero Image"
             class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100"
-            loading="lazy"
+            loading="eager"
+            fetchpriority="auto"
             height="300"
             width="300"
+            style="height: 100%;"
           >
         {% endif %}
       </div>
     </div>
 
     <!-- Center Content -->
-    <div class="lg:col-start-2 lg:col-span-1 flex flex-col items-center justify-center text-center z-10 w-full max-w-[700px] mx-auto pt-10 pb-10">
+    <div class="lg:col-start-2 lg:col-span-1 flex flex-col gap-6 items-center justify-center text-center z-10 w-full max-w-[700px] mx-auto pt-10 pb-10">
       {% if section.settings.subheading != blank %}
-        <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide mb-6 bg-white shadow-sm">
+        <span class="inline-flex items-center gap-2 text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide mb-6 bg-white shadow-sm">
           <span class="w-1.5 h-1.5 rounded-full bg-[#0f3f21] mr-2"></span>
 
           {{ section.settings.subheading }}
@@ -126,13 +137,22 @@
           {% else %}
             href="#"
           {% endif %}
-          class="inline-flex items-center gap-3 bg-[#0f3f21] text-white pl-6 pr-1 py-1 rounded-full font-bold text-[14px] hover:bg-[#72d342] transition-all active:scale-95 shadow-md shadow-green-500/10 hover:-translate-y-0.5"
+          class="inline-flex items-center gap-3 bg-[#0f3f21] text-white pl-6 pr-0.5 py-0.5 rounded-full font-bold text-[14px] hover:bg-[#72d342] transition-all active:scale-95 shadow-md shadow-green-500/10 hover:-translate-y-0.5"
         >
           {{ section.settings.button_label }}
           <span class="bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-sm">
-            <span class="material-symbols-outlined text-[16px] font-bold text-[#0f3f21] " data-icon="call_made"
-              >call_made</span
-            >
+            <span class=" text-[16px] font-bold text-[#0f3f21] " data-icon="call_made">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+              </svg>
+            </span>
           </span>
         </a>
       {% endif %}
@@ -145,12 +165,14 @@
           {{ section.settings.image_1 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
         {% else %}
           <img
-            src="{{ 'about-4.png' | file_url }}"
+            src="{{ 'about-4.png' | file_img_url : 'original' }}"
             alt="Hero Image"
             class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100"
-            loading="lazy"
+            loading="eager"
+            fetchpriority="auto"
             height="300"
             width="300"
+            style="height: 100%;"
           >
         {% endif %}
       </div>
@@ -159,12 +181,14 @@
           {{ section.settings.image_2 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
         {% else %}
           <img
-            src="{{ 'about-2.png' | file_url }}"
+            src="{{ 'about-2.png' | file_img_url : 'original' }}"
             alt="Hero Image"
             class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100"
-            loading="lazy"
+            loading="eager"
+            fetchpriority="auto"
             height="300"
             width="300"
+            style="height: 100%;"
           >
         {% endif %}
       </div>
@@ -173,12 +197,14 @@
           {{ section.settings.image_3 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
         {% else %}
           <img
-            src="{{ 'about-1.jpg' | file_url }}"
+            src="{{ 'about-1.jpg' | file_img_url : 'original' }}"
             alt="Hero Image"
             class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100"
-            loading="lazy"
+            loading="eager"
+            fetchpriority="auto"
             height="300"
             width="300"
+            style="height: 100%;"
           >
         {% endif %}
       </div>
@@ -187,12 +213,14 @@
           {{ section.settings.image_4 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
         {% else %}
           <img
-            src="{{ 'about-3.png' | file_url }}"
+            src="{{ 'about-3.png' | file_img_url : 'original' }}"
             alt="Hero Image"
             class="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100"
-            loading="lazy"
+            loading="eager"
+            fetchpriority="auto"
             height="300"
             width="300"
+            style="height: 100%;"
           >
         {% endif %}
       </div>

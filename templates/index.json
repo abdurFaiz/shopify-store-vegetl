@@ -26,21 +26,21 @@
         "feature_2": {
           "type": "feature",
           "settings": {
-            "icon": "shutter_speed",
+            "icon": "inventory_2",
             "title": "Farm-to-Table Freshness"
           }
         },
         "feature_3": {
           "type": "feature",
           "settings": {
-            "icon": "psychology",
+            "icon": "spa",
             "title": "Sustainable Farming"
           }
         },
         "feature_4": {
           "type": "feature",
           "settings": {
-            "icon": "verified",
+            "icon": "verified_user",
             "title": "Local & Trusted"
           }
         }

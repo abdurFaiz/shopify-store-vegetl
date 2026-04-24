@@ -582,18 +582,30 @@
   }
 {% endstylesheet %}
 
+{%- assign product_images_json = product.images | json -%}
+{%- assign product_id = product.id -%}
+{%- assign rec_limit = section.settings.recommendations_limit -%}
+
+<script>
+  window.productData = {
+    images: {{ product_images_json }},
+    id: {{ product_id }},
+    recommendationsLimit: {{ rec_limit }}
+  };
+</script>
+
 {% javascript %}
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     // Thumbnail image switching
     const thumbnails = document.querySelectorAll('.product-thumbnail');
     const mainImage = document.querySelector('.product-main-image');
-    const productImages = {{ product.images | json }};
+    const productImages = window.productData.images;
 
     thumbnails.forEach((thumbnail, index) => {
-      thumbnail.addEventListener('click', function() {
-        thumbnails.forEach(t => t.classList.remove('active'));
+      thumbnail.addEventListener('click', function () {
+        thumbnails.forEach((t) => t.classList.remove('active'));
         this.classList.add('active');
-        
+
         if (productImages[index]) {
           const newImageUrl = productImages[index].src.replace(/\.(jpg|jpeg|png|gif|webp)/, '_800x.$1');
           mainImage.src = newImageUrl;
@@ -604,18 +616,18 @@
     // Product recommendations
     const recommendationsSection = document.querySelector('.product-recommendations');
     if (recommendationsSection) {
-      const productId = {{ product.id }};
-      const recommendationsUrl = `/recommendations/products.json?product_id=${productId}&limit={{ section.settings.recommendations_limit }}`;
-      
+      const productId = window.productData.id;
+      const recommendationsUrl = `/recommendations/products.json?product_id=${productId}&limit=${window.productData.recommendationsLimit}`;
+
       fetch(recommendationsUrl)
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           if (data.products && data.products.length > 0) {
             // Recommendations loaded successfully
             console.log('Product recommendations loaded:', data.products.length);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log('Using fallback recommendations from collection');
         });
     }
@@ -636,7 +648,7 @@
       fetch('/cart/add.js', {
         method: 'POST',
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        body: new FormData(form)
+        body: new FormData(form),
       })
         .then(function (res) {
           if (!res.ok) throw new Error('Add to cart failed');
