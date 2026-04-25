@@ -1,123 +1,174 @@
-<script src="{{ 'gsap.min.js' | asset_url }}" defer></script>
-<!-- GSAP ScrollTrigger -->
-<script src="{{ 'ScrollTrigger.min.js' | asset_url }}" defer></script>
-
 <script>
-  // Wait until the DOM is fully loaded before triggering animations
-  document.addEventListener('DOMContentLoaded', () => {
-    // Make sure we wait for GSAP to load
-    if (typeof gsap === "undefined") return;
-    
-    gsap.registerPlugin(ScrollTrigger);
+  (function () {
+    'use strict';
 
-    // 1. FADE UP: Standard fade and slide up
-    const fadeUpElements = gsap.utils.toArray('.gsap-fade-up');
-    fadeUpElements.forEach(elem => {
-      gsap.from(elem, {
-        scrollTrigger: {
-          trigger: elem,
-          start: "top 90%", // Trigger slightly before the element fully enters
-          toggleActions: "play none none none" // Play once
-        },
-        y: 60,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power3.out"
-      });
-    });
-
-    // 2. STAGGER FADE UP: Useful for lists, product grids, icons
-    const staggerParents = gsap.utils.toArray('.gsap-stagger-parent');
-    staggerParents.forEach(parent => {
-      gsap.from(parent.children, {
-        scrollTrigger: {
-          trigger: parent,
-          start: "top 85%",
-          toggleActions: "play none none none"
-        },
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15, // Delay between each child
-        ease: "power3.out"
-      });
-    });
-
-    // 3. PARALLAX: Image/Element moving at a different speed than scroll
-    const parallaxImgs = gsap.utils.toArray('.gsap-parallax');
-    parallaxImgs.forEach(img => {
-      // Ensure the parent handles overflow if desired
-      gsap.fromTo(img, 
-        { y: "-15%" }, // Start positioned slightly up
-        {
-          y: "15%", // Move down as you scroll
-          ease: "none",
-          scrollTrigger: {
-            trigger: img.parentElement,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true // Smooth scrubbing effect tied to scrollbar
-          }
-      });
-    });
-    
-    // 4. SCALE UP: Useful for badges or call to action buttons
-    const scaleUpElems = gsap.utils.toArray('.gsap-scale-up');
-    scaleUpElems.forEach(elem => {
-      gsap.from(elem, {
-        scrollTrigger: {
-          trigger: elem,
-          start: "top 85%",
-          toggleActions: "play none none none"
-        },
-        scale: 0.8,
-        opacity: 0,
-        duration: 1.2,
-        ease: "back.out(1.5)"
-      });
-    });
-    
-    // 5. GLOBAL CART HANDLING
-    // Handle opening the cart drawer via trigger (e.g. header icon)
-    document.querySelectorAll('[data-cart-trigger]').forEach(trigger => {
-      trigger.addEventListener('click', (e) => {
-        e.preventDefault();
-        document.dispatchEvent(new CustomEvent('cart:open'));
-      });
-    });
-
-    // Handle AJAX Add to Cart
-    document.addEventListener('click', async (e) => {
-      const addBtn = e.target.closest('[data-ajax-add-to-cart]');
-      if (!addBtn) return;
-
-      e.preventDefault();
-      const variantId = addBtn.dataset.variantId;
-      if (!variantId) return;
-
-      try {
-        const response = await fetch(window.Shopify.routes.root + 'cart/add.js', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            items: [{ id: variantId, quantity: 1 }]
-          })
+    // ─── Cart functionality runs immediately (no GSAP dependency) ────────────
+    function initCart() {
+      // Open cart drawer via [data-cart-trigger]
+      document.querySelectorAll('[data-cart-trigger]').forEach(function (trigger) {
+        trigger.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.dispatchEvent(new CustomEvent('cart:open'));
         });
+      });
 
-        if (response.ok) {
-          // Success: Dispatch "cart:added" event (handled in cart-drawer.liquid)
-          document.dispatchEvent(new CustomEvent('cart:added'));
-        } else {
-          const errorData = await response.json();
-          alert(errorData.description || "Couldn't add item to cart.");
+      // AJAX Add to Cart
+      document.addEventListener('click', async function (e) {
+        const addBtn = e.target.closest('[data-ajax-add-to-cart]');
+        if (!addBtn) return;
+
+        e.preventDefault();
+        const variantId = addBtn.dataset.variantId;
+        if (!variantId) return;
+
+        try {
+          const response = await fetch(window.Shopify.routes.root + 'cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] })
+          });
+
+          if (response.ok) {
+            document.dispatchEvent(new CustomEvent('cart:added'));
+          } else {
+            const errorData = await response.json();
+            alert(errorData.description || "Couldn't add item to cart.");
+            addBtn.disabled = false;
+          }
+        } catch (err) {
+          console.error('Add to cart error:', err);
           addBtn.disabled = false;
         }
-      } catch (err) {
-        console.error('Add to cart error:', err);
-        addBtn.disabled = false;
-      }
-      // Note: Button stays disabled - drawer opening indicates success
-    });
+      });
+    }
 
-  });
+    // ─── GSAP animations — loaded lazily ─────────────────────────────────────
+    var gsapLoaded = false;
+
+    function initGsapAnimations() {
+      if (gsapLoaded) return;
+      gsapLoaded = true;
+
+      // Dynamically inject gsap.min.js → then ScrollTrigger → then init
+      function loadScript(src, onload) {
+        var s = document.createElement('script');
+        s.src = src;
+        s.async = true;
+        s.onload = onload;
+        document.head.appendChild(s);
+      }
+
+      var gsapSrc = {{ 'gsap.min.js' | asset_url | json }};
+      var stSrc   = {{ 'ScrollTrigger.min.js' | asset_url | json }};
+
+      loadScript(gsapSrc, function () {
+        loadScript(stSrc, function () {
+          gsap.registerPlugin(ScrollTrigger);
+
+          // 1. FADE UP
+          gsap.utils.toArray('.gsap-fade-up').forEach(function (elem) {
+            gsap.from(elem, {
+              scrollTrigger: {
+                trigger: elem,
+                start: 'top 90%',
+                toggleActions: 'play none none none'
+              },
+              y: 60,
+              opacity: 0,
+              duration: 1.2,
+              ease: 'power3.out'
+            });
+          });
+
+          // 2. STAGGER FADE UP
+          gsap.utils.toArray('.gsap-stagger-parent').forEach(function (parent) {
+            gsap.from(parent.children, {
+              scrollTrigger: {
+                trigger: parent,
+                start: 'top 85%',
+                toggleActions: 'play none none none'
+              },
+              y: 50,
+              opacity: 0,
+              duration: 1,
+              stagger: 0.15,
+              ease: 'power3.out'
+            });
+          });
+
+          // 3. PARALLAX
+          gsap.utils.toArray('.gsap-parallax').forEach(function (img) {
+            gsap.fromTo(img,
+              { y: '-15%' },
+              {
+                y: '15%',
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: img.parentElement,
+                  start: 'top bottom',
+                  end: 'bottom top',
+                  scrub: true
+                }
+              }
+            );
+          });
+
+          // 4. SCALE UP
+          gsap.utils.toArray('.gsap-scale-up').forEach(function (elem) {
+            gsap.from(elem, {
+              scrollTrigger: {
+                trigger: elem,
+                start: 'top 85%',
+                toggleActions: 'play none none none'
+              },
+              scale: 0.8,
+              opacity: 0,
+              duration: 1.2,
+              ease: 'back.out(1.5)'
+            });
+          });
+        });
+      });
+    }
+
+    // ─── Trigger: load GSAP only when a .gsap-* element is near viewport ─────
+    function observeGsapElements() {
+      var targets = document.querySelectorAll(
+        '.gsap-fade-up, .gsap-stagger-parent, .gsap-parallax, .gsap-scale-up'
+      );
+
+      if (!targets.length) return; // No animated elements on this page — skip
+
+      if (!('IntersectionObserver' in window)) {
+        // Fallback for very old browsers: load immediately
+        initGsapAnimations();
+        return;
+      }
+
+      var observer = new IntersectionObserver(function (entries, obs) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            obs.disconnect(); // One trigger is enough
+            initGsapAnimations();
+          }
+        });
+      }, {
+        rootMargin: '200px 0px' // Start loading 200px before element enters view
+      });
+
+      targets.forEach(function (el) { observer.observe(el); });
+    }
+
+    // Boot
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () {
+        initCart();
+        observeGsapElements();
+      });
+    } else {
+      // DOM already ready (script placed before </body>)
+      initCart();
+      observeGsapElements();
+    }
+  })();
 </script>
