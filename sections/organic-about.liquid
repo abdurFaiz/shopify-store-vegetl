@@ -37,15 +37,15 @@
       <!-- Top Left Image -->
       <div class="lg:absolute top-[5%] lg:left-[20px] w-1/2 max-w-[180px] lg:w-[180px] h-full lg:h-[240px] rounded-[24px] overflow-hidden shadow-sm border border-black/5 pointer-events-auto hover:scale-105 transition-transform duration-500">
         {% if section.settings.image_1 != blank %}
-          {{ section.settings.image_1 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
+          {{ section.settings.image_1 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover', loading: 'lazy', fetchpriority: 'low' }}
         {% else %}
           {{
             images['about-1.jpg']
             | image_url: width: 400
             | image_tag:
               class: 'w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100',
-              loading: 'eager',
-              fetchpriority: 'high',
+              loading: 'lazy',
+              fetchpriority: 'low',
               width: 300,
               height: 300,
               sizes: '(max-width: 1024px) 180px, 240px',
@@ -57,15 +57,15 @@
       <!-- Bottom Left Image -->
       <div class="lg:absolute bottom-[0%] lg:left-[60px] w-1/2 max-w-[200px] lg:w-[200px] h-full lg:h-[260px] rounded-[24px] overflow-hidden shadow-sm border border-black/5 pointer-events-auto hover:scale-105 transition-transform duration-500">
         {% if section.settings.image_3 != blank %}
-          {{ section.settings.image_3 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
+          {{ section.settings.image_3 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover', loading: 'lazy', fetchpriority: 'low' }}
         {% else %}
           {{
             images['about-2.png']
             | image_url: width: 400
             | image_tag:
               class: 'w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100',
-              loading: 'eager',
-              fetchpriority: 'high',
+              loading: 'lazy',
+              fetchpriority: 'low',
               width: 300,
               height: 300,
               sizes: '(max-width: 1024px) 200px, 240px',
@@ -81,15 +81,15 @@
       <!-- Top Right Image -->
       <div class="absolute top-[10%] right-0 xl:right-[0px] w-[220px] h-[280px] rounded-[24px] overflow-hidden shadow-sm border border-black/5 pointer-events-auto hover:scale-105 transition-transform duration-500">
         {% if section.settings.image_2 != blank %}
-          {{ section.settings.image_2 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
+          {{ section.settings.image_2 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover', loading: 'lazy', fetchpriority: 'low' }}
         {% else %}
           {{
             images['about-2.png']
             | image_url: width: 400
             | image_tag:
               class: 'w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100',
-              loading: 'eager',
-              fetchpriority: 'high',
+              loading: 'lazy',
+              fetchpriority: 'low',
               width: 300,
               height: 300,
               sizes: '(max-width: 1024px) 220px, 280px',
@@ -101,15 +101,15 @@
       <!-- Bottom Right Image -->
       <div class="absolute bottom-[-10%] right-[40px] xl:right-[100px] w-[180px] h-[220px] rounded-[24px] overflow-hidden shadow-sm border border-black/5 pointer-events-auto hover:scale-105 transition-transform duration-500">
         {% if section.settings.image_4 != blank %}
-          {{ section.settings.image_4 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
+          {{ section.settings.image_4 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover', loading: 'lazy', fetchpriority: 'low' }}
         {% else %}
           {{
             images['about-3.png']
             | image_url: width: 400
             | image_tag:
               class: 'w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100',
-              loading: 'eager',
-              fetchpriority: 'high',
+              loading: 'lazy',
+              fetchpriority: 'low',
               width: 300,
               height: 300,
               sizes: '(max-width: 1024px) 180px, 220px',
@@ -174,15 +174,15 @@
     <div class="grid grid-cols-2 gap-4 lg:hidden mt-8 w-full px-4">
       <div class="h-48 rounded-[24px] overflow-hidden shadow-sm">
         {% if section.settings.image_1 != blank %}
-          {{ section.settings.image_1 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
+          {{ section.settings.image_1 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover', loading: 'lazy', fetchpriority: 'low' }}
         {% else %}
           {{
             'about-4.png'
             | image_url: width: 400
             | image_tag:
               class: 'w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100',
-              loading: 'eager',
-              fetchpriority: 'high',
+              loading: 'lazy',
+              fetchpriority: 'low',
               width: 300,
               height: 300,
               sizes: '50vw',
@@ -192,15 +192,15 @@
       </div>
       <div class="h-56 rounded-[24px] overflow-hidden mt-8 shadow-sm">
         {% if section.settings.image_2 != blank %}
-          {{ section.settings.image_2 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
+          {{ section.settings.image_2 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover', loading: 'lazy', fetchpriority: 'low' }}
         {% else %}
           {{
             'about-2.png'
             | image_url: width: 400
             | image_tag:
               class: 'w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100',
-              loading: 'eager',
-              fetchpriority: 'high',
+              loading: 'lazy',
+              fetchpriority: 'low',
               width: 300,
               height: 300,
               sizes: '50vw',
@@ -210,15 +210,15 @@
       </div>
       <div class="h-64 rounded-[24px] overflow-hidden -mt-4 shadow-sm">
         {% if section.settings.image_3 != blank %}
-          {{ section.settings.image_3 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
+          {{ section.settings.image_3 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover', loading: 'lazy', fetchpriority: 'low' }}
         {% else %}
           {{
             'about-1.png'
             | image_url: width: 400
             | image_tag:
               class: 'w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100',
-              loading: 'eager',
-              fetchpriority: 'high',
+              loading: 'lazy',
+              fetchpriority: 'low',
               width: 300,
               height: 300,
               sizes: '50vw',
@@ -228,15 +228,15 @@
       </div>
       <div class="h-48 rounded-[24px] overflow-hidden mt-4 shadow-sm">
         {% if section.settings.image_4 != blank %}
-          {{ section.settings.image_4 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover' }}
+          {{ section.settings.image_4 | image_url: width: 400 | image_tag: class: 'w-full h-full object-cover', loading: 'lazy', fetchpriority: 'low' }}
         {% else %}
           {{
             'about-3.png'
             | image_url: width: 400
             | image_tag:
               class: 'w-full h-full object-cover hover:scale-105 transition-transform duration-1000 bg-gray-100',
-              loading: 'eager',
-              fetchpriority: 'high',
+              loading: 'lazy',
+              fetchpriority: 'low',
               width: 300,
               height: 300,
               sizes: '50vw',
