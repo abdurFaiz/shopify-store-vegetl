@@ -1,4 +1,7 @@
-<section class="relative min-w-full full-width overflow-hidden bg-white py-16 lg:py-24" id="Section-{{ section.id }}">
+<section
+  class="relative min-w-full full-width overflow-hidden bg-white py-16 lg:py-24 flex justify-center"
+  id="Section-{{ section.id }}"
+>
   <!-- Subtle Background Rings / Ripples -->
   <div
     class="absolute top-[60%] right-[-20%] md:right-[-5%] lg:right-[10%] translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full border border-gray-200/70 pointer-events-none"
@@ -13,9 +16,19 @@
     class="absolute top-[60%] right-[-20%] md:right-[-5%] lg:right-[10%] translate-x-1/2 -translate-y-1/2 w-[1050px] h-[1050px] md:w-[1300px] md:h-[1300px] rounded-full border border-gray-200/50 pointer-events-none"
   ></div>
 
-  <div class="relative z-10 max-w-[850px] mx-auto px-6 flex flex-col items-center text-center">
-    <!-- Floating Avatar 1 (Top Left) -->
-    <div class="hidden md:block absolute top-[10%] left-[-15%] lg:left-[-22%] z-20 hover:-translate-y-2 transition-transform duration-500 gsap-fade-up">
+  <!-- Floating Avatar 1 (Top Left) -->
+  <div class="hidden md:block absolute top-[10%] left-[2%] lg:left-[15%] z-20 hover:-translate-y-2 transition-transform duration-500 gsap-fade-up">
+    {% if avatar_1 != blank %}
+      {{
+        avatar_1
+        | image_url: width: 200
+        | image_tag:
+          width: 90,
+          height: 90,
+          alt: 'Community Member',
+          class: 'w-[90px] h-[90px] object-cover rounded-full border-[4px] border-white shadow-lg bg-gray-100'
+      }}
+    {% else %}
       <img
         src="{{ 'avatar-1.jpg' | asset_url }}"
         width="90"
@@ -23,10 +36,22 @@
         alt="Community Member"
         class="w-[90px] h-[90px] object-cover rounded-full border-[4px] border-white shadow-lg bg-gray-100"
       >
-    </div>
+    {% endif %}
+  </div>
 
-    <!-- Floating Avatar 2 (Top Right) -->
-    <div class="hidden md:block absolute top-[18%] right-[-10%] lg:right-[-15%] z-20 hover:-translate-y-2 transition-transform duration-500 gsap-fade-up">
+  <!-- Floating Avatar 2 (Top Right) -->
+  <div class="hidden md:block absolute top-[18%] right-[2%] lg:right-[15%] z-20 hover:-translate-y-2 transition-transform duration-500 gsap-fade-up">
+    {% if avatar_2 != blank %}
+      {{
+        avatar_2
+        | image_url: width: 200
+        | image_tag:
+          width: 85,
+          height: 85,
+          alt: 'Community Member',
+          class: 'w-[85px] h-[85px] object-cover rounded-full border-[4px] border-white shadow-lg bg-gray-100'
+      }}
+    {% else %}
       <img
         src="{{ 'avatar-2.jpg' | asset_url }}"
         width="85"
@@ -34,10 +59,22 @@
         alt="Community Member"
         class="w-[85px] h-[85px] object-cover rounded-full border-[4px] border-white shadow-lg bg-gray-100"
       >
-    </div>
+    {% endif %}
+  </div>
 
-    <!-- Floating Avatar 3 (Bottom Left) -->
-    <div class="hidden md:block absolute bottom-[8%] left-[-10%] lg:left-[-18%] z-20 hover:-translate-y-2 transition-transform duration-500 gsap-fade-up">
+  <!-- Floating Avatar 3 (Bottom Left) -->
+  <div class="hidden md:block absolute bottom-[8%] left-[2%] lg:left-[10%] z-20 hover:-translate-y-2 transition-transform duration-500 gsap-fade-up">
+    {% if avatar_3 != blank %}
+      {{
+        avatar_3
+        | image_url: width: 200
+        | image_tag:
+          width: 80,
+          height: 80,
+          alt: 'Community Member',
+          class: 'w-[80px] h-[80px] object-cover rounded-full border-[4px] border-white shadow-lg bg-gray-100'
+      }}
+    {% else %}
       <img
         src="{{ 'avatar-3.jpg' | asset_url }}"
         width="80"
@@ -45,10 +82,22 @@
         alt="Community Member"
         class="w-[80px] h-[80px] object-cover rounded-full border-[4px] border-white shadow-lg bg-gray-100"
       >
-    </div>
+    {% endif %}
+  </div>
 
-    <!-- Floating Avatar 4 (Bottom Right) -->
-    <div class="hidden md:block absolute bottom-[15%] right-[-5%] lg:right-[-12%] z-20 hover:-translate-y-2 transition-transform duration-500 gsap-fade-up">
+  <!-- Floating Avatar 4 (Bottom Right) -->
+  <div class="hidden md:block absolute bottom-[15%] right-[2%] lg:right-[10%] z-20 hover:-translate-y-2 transition-transform duration-500 gsap-fade-up">
+    {% if avatar_4 != blank %}
+      {{
+        avatar_4
+        | image_url: width: 200
+        | image_tag:
+          width: 100,
+          height: 100,
+          alt: 'Community Member',
+          class: 'w-[100px] h-[100px] object-cover rounded-full border-[4px] border-white shadow-lg bg-gray-100'
+      }}
+    {% else %}
       <img
         src="{{ 'avatar-4.jpg' | asset_url }}"
         width="100"
@@ -56,35 +105,53 @@
         alt="Community Member"
         class="w-[100px] h-[100px] object-cover rounded-full border-[4px] border-white shadow-lg bg-gray-100"
       >
-    </div>
+    {% endif %}
+  </div>
 
+  <div class="relative z-10 max-w-[850px] mx-auto px-6 flex gap-6 flex-col items-center text-center">
     <!-- Main Content Stack -->
-    <div class="gsap-fade-up">
-      <h2 class="text-3xl lg:text-[46px] leading-[1.25] font-semibold text-[#1a201b] tracking-[-0.02em] mb-4 lg:mb-6 max-w-[650px] mx-auto px-2">
-        Grow With Our Organic Community.
-      </h2>
+    <div class="gsap-fade-up flex flex-col gap-6 items-center justify-center max-w-[500px]">
+      {% if heading != blank %}
+        <h2 class="text-3xl lg:text-[46px] leading-[1.25] font-semibold text-[#1a201b] tracking-[-0.02em] mb-4 lg:mb-6 max-w-[650px] mx-auto px-2">
+          {{ heading }}
+        </h2>
+      {% endif %}
 
-      <p class="text-[14px] md:text-[15px] text-gray-500 leading-relaxed max-w-[700px] mx-auto mb-8 lg:mb-10 font-medium px-2">
-        We are continually expanding our family of organic farming enthusiasts, local suppliers, and sustainable
-        grocers. Join our community to cultivate a greener, healthier future from soil to table.
-      </p>
+      {% if description != blank %}
+        <p class="text-[14px] md:text-[15px] text-gray-500 leading-relaxed max-w-[700px] mx-auto mb-8 lg:mb-10 font-medium px-2">
+          {{ description }}
+        </p>
+      {% endif %}
 
-      <a
-        href="#"
-        class="inline-flex items-center gap-3 bg-[#111] text-white rounded-full py-1.5 pl-6 pr-1.5 hover:bg-[#282828] hover:-translate-y-1 transition-all duration-300 shadow-xl shadow-black/10 mx-auto mb-16 group"
+      {% if button_text != blank %}
+        <a
+          href="{{ button_link | default: '#' }}"
+          class="inline-flex items-center gap-3 bg-[#111] text-white rounded-full py-0.5 pl-4 pr-0.5 hover:bg-[#282828] hover:-translate-y-1 transition-all duration-300 shadow-xl shadow-black/10 mx-auto mb-16 group"
+        >
+          <span class="font-medium text-[13px] tracking-wide">{{ button_text }}</span>
+          <span class="w-[32px] h-[32px] rounded-full bg-white text-[#111] flex items-center justify-center shrink-0 group-hover:bg-gray-100 transition-colors">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-4"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+            </svg>
+          </span>
+        </a>
+      {% endif %}
+    </div>
+
+    {% if large_number != blank %}
+      <div
+        class="text-[56px] md:text-[80px] lg:text-[130px] font-bold leading-none tracking-tighter drop-shadow-sm gsap-scale-up"
+        style="color: {{ number_color | default: '#006E1C' }};"
       >
-        <span class="font-medium text-[13px] tracking-wide">Join the Harvest</span>
-        <span class="w-[32px] h-[32px] rounded-full bg-white text-[#111] flex items-center justify-center shrink-0 group-hover:bg-gray-100 transition-colors">
-          <span class="material-symbols-outlined text-[16px] font-bold">north_east</span>
-        </span>
-      </a>
-    </div>
-
-    <div
-      class="text-[56px] md:text-[80px] lg:text-[130px] font-bold leading-none tracking-tighter drop-shadow-sm gsap-scale-up"
-      style="color: #006E1C;"
-    >
-      243,543+
-    </div>
+        {{ large_number }}
+      </div>
+    {% endif %}
   </div>
 </section>

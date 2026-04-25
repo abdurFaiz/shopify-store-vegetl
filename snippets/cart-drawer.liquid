@@ -1,14 +1,3 @@
-{% doc %}
-  Renders the global cart drawer that slides in from the right.
-  Triggered by dispatching a CustomEvent 'cart:open' on the document.
-  Refreshes its content via Shopify Cart API after each add-to-cart.
-{% enddoc %}
-
-<!--
-  ═══════════════════════════════════════════════
-       CART DRAWER OVERLAY + PANEL
-  ═══════════════════════════════════════════════
--->
 <div
   id="cart-drawer-overlay"
   aria-hidden="true"
@@ -49,7 +38,18 @@
     "
   >
     <div style="display: flex; align-items: center; gap: 10px;">
-      <span class="material-symbols-outlined" style="font-size: 20px; color: #1a201b;">shopping_basket</span>
+      <span style="font-size: 20px; color: #1a201b;">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+        </svg>
+      </span>
       <h2 style="font-size: 18px; font-weight: 700; color: #1a201b; margin: 0; letter-spacing: -0.02em;">Your Cart</h2>
       <span
         id="cart-drawer-count-badge"
@@ -81,7 +81,18 @@
       onmouseover="this.style.background='#f3f4f6'"
       onmouseout="this.style.background='#fff'"
     >
-      <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
+      <span style="font-size: 18px;">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </span>
     </button>
   </div>
 
@@ -160,6 +171,12 @@
   .cart-remove-btn:hover {
     color: #ef4444;
   }
+
+  #cart-drawer-items[aria-busy='true'] {
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
 </style>
 
 <script>
@@ -181,199 +198,73 @@
 
     closeBtn.addEventListener('click', closeDrawer);
     overlay.addEventListener('click', closeDrawer);
-
-    /* ── external trigger ───────────────────────────────── */
     document.addEventListener('cart:open', openDrawer);
 
-    /* ── fetch & render cart HTML ───────────────────────── */
+    /* ── Section Rendering API refresh ─────────────────── */
     async function refreshCart() {
+      itemsEl.setAttribute('aria-busy', 'true');
+
       try {
-        const res = await fetch(window.Shopify.routes.root + 'cart.js');
-        const cart = await res.json();
+        const url = `${window.Shopify.routes.root}?sections=cart-drawer-body`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Section fetch failed: ' + res.status);
 
-        /* update badge in drawer header */
-        if (badgeEl) badgeEl.textContent = cart.item_count;
+        const data = await res.json();
+        const html = data['cart-drawer-body'];
 
-        /* update header icon badge globally */
+        /* Parse the returned section HTML */
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+
+        /* Swap items */
+        const newItems = doc.getElementById('cart-drawer-items-inner');
+        if (newItems) itemsEl.innerHTML = newItems.outerHTML;
+
+        /* Swap footer */
+        const newFooter = doc.getElementById('cart-drawer-footer-inner');
+        if (newFooter) footerEl.innerHTML = newFooter.outerHTML;
+
+        /* Update badge counts */
+        const countEl = doc.getElementById('cart-drawer-count-inner');
+        const count = countEl ? parseInt(countEl.textContent.trim(), 10) : 0;
+
+        if (badgeEl) badgeEl.textContent = count;
         document.querySelectorAll('[data-cart-count]').forEach((el) => {
-          el.textContent = cart.item_count;
-          el.style.display = cart.item_count > 0 ? 'flex' : 'none';
+          el.textContent = count;
+          el.style.display = count > 0 ? 'flex' : 'none';
         });
 
-        renderItems(cart);
-        renderFooter(cart);
+        /* Re-bind interactive buttons */
+        bindCartButtons();
       } catch (e) {
         console.error('Cart refresh failed', e);
+      } finally {
+        itemsEl.removeAttribute('aria-busy');
       }
     }
 
-    /* ── render cart line items ─────────────────────────── */
-    function renderItems(cart) {
-      if (cart.item_count === 0) {
-        itemsEl.innerHTML = `
-        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;gap:12px;color:#9ca3af;">
-          <span class="material-symbols-outlined" style="font-size:48px;opacity:0.4;">shopping_basket</span>
-          <p style="font-size:14px;font-weight:500;">Your cart is empty</p>
-        </div>`;
-        return;
-      }
-
-      itemsEl.innerHTML = cart.items
-        .map(
-          (item, idx) => `
-      <div
-        data-line="${idx + 1}"
-        style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #f3f4f6;align-items:flex-start;"
-      >
-        <!-- Thumbnail -->
-        <a href="${item.url}" style="flex-shrink:0;">
-          <img
-            src="${item.image}"
-            alt="${item.product_title}"
-            width="72" height="72"
-            style="width:72px;height:72px;object-fit:cover;border-radius:16px;background:#f3f4f6;border:1px solid #e5e7eb;"
-            loading="lazy"
-          >
-        </a>
-
-        <!-- Details -->
-        <div style="flex:1;min-width:0;">
-          <a href="${item.url}" style="text-decoration:none;">
-            <p style="font-size:14px;font-weight:700;color:#1a201b;margin:0 0 2px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-              ${item.product_title}
-            </p>
-          </a>
-          ${
-            item.variant_title && item.variant_title !== 'Default Title'
-              ? `<p style="font-size:12px;color:#9ca3af;margin:0 0 8px;">${item.variant_title}</p>`
-              : '<div style="margin-bottom:8px;"></div>'
-          }
-
-          <!-- Qty controls + price row -->
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <button
-                class="cart-qty-btn"
-                data-action="decrease"
-                data-line="${idx + 1}"
-                data-qty="${item.quantity - 1}"
-                aria-label="Decrease quantity"
-              >
-                <span class="material-symbols-outlined" style="font-size:14px;">remove</span>
-              </button>
-              <span style="font-size:14px;font-weight:600;color:#1a201b;min-width:16px;text-align:center;">
-                ${item.quantity}
-              </span>
-              <button
-                class="cart-qty-btn"
-                data-action="increase"
-                data-line="${idx + 1}"
-                data-qty="${item.quantity + 1}"
-                aria-label="Increase quantity"
-              >
-                <span class="material-symbols-outlined" style="font-size:14px;">add</span>
-              </button>
-            </div>
-            <span style="font-size:14px;font-weight:700;color:#1a201b;white-space:nowrap;">
-              ${formatMoney(item.line_price)}
-            </span>
-          </div>
-        </div>
-
-        <!-- Remove -->
-        <button
-          class="cart-remove-btn"
-          data-line="${idx + 1}"
-          aria-label="Remove item"
-        >
-          <span class="material-symbols-outlined" style="font-size:18px;">delete</span>
-        </button>
-      </div>
-    `
-        )
-        .join('');
-
-      /* bind qty + remove buttons */
+    /* ── bind qty + remove buttons ──────────────────────── */
+    function bindCartButtons() {
       itemsEl.querySelectorAll('.cart-qty-btn').forEach((btn) => {
-        btn.addEventListener('click', () => updateLine(btn.dataset.line, parseInt(btn.dataset.qty)));
+        btn.addEventListener('click', () => updateLine(btn.dataset.line, parseInt(btn.dataset.qty, 10)));
       });
       itemsEl.querySelectorAll('.cart-remove-btn').forEach((btn) => {
         btn.addEventListener('click', () => updateLine(btn.dataset.line, 0));
       });
     }
 
-    /* ── render footer ──────────────────────────────────── */
-    function renderFooter(cart) {
-      footerEl.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-        <span style="font-size:14px;color:#6b7280;font-weight:500;">Subtotal</span>
-        <span style="font-size:18px;font-weight:700;color:#1a201b;">${formatMoney(cart.total_price)}</span>
-      </div>
-      <p style="font-size:12px;color:#9ca3af;text-align:center;margin:0 0 14px;">
-        Taxes and shipping calculated at checkout
-      </p>
-      <a
-        href="/checkout"
-        style="
-          display:block;width:100%;
-          background:#1a201b;color:#fff;
-          text-align:center;
-          padding:16px;
-          border-radius:16px;
-          font-size:14px;font-weight:700;
-          text-decoration:none;
-          letter-spacing:0.01em;
-          transition:background 0.2s,transform 0.15s;
-        "
-        onmouseover="this.style.background='#0f3f21';this.style.transform='translateY(-1px)'"
-        onmouseout="this.style.background='#1a201b';this.style.transform='translateY(0)'"
-      >
-        Checkout
-      </a>
-      <a
-        href="/cart"
-        style="
-          display:block;width:100%;
-          text-align:center;
-          padding:12px;
-          border-radius:16px;
-          font-size:13px;font-weight:500;
-          color:#6b7280;
-          text-decoration:none;
-          margin-top:8px;
-          transition:color 0.2s;
-        "
-        onmouseover="this.style.color='#1a201b'"
-        onmouseout="this.style.color='#6b7280'"
-      >
-        View full cart →
-      </a>
-    `;
-    }
-
     /* ── update line quantity ────────────────────────────── */
     async function updateLine(line, qty) {
       try {
-        await fetch('/cart/change.js', {
+        const res = await fetch('/cart/change.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ line: parseInt(line), quantity: qty }),
+          body: JSON.stringify({ line: parseInt(line, 10), quantity: qty }),
         });
+        if (!res.ok) throw new Error('Cart change failed: ' + res.status);
         await refreshCart();
       } catch (e) {
         console.error('Failed to update cart', e);
       }
-    }
-
-    /* ── money formatter ─────────────────────────────────── */
-    function formatMoney(cents) {
-      const amount = (cents / 100).toFixed(2);
-      return window.Shopify?.currency?.active
-        ? new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: window.Shopify.currency.active,
-          }).format(cents / 100)
-        : '$' + amount;
     }
 
     /* ── listen for add-to-cart events ──────────────────── */
@@ -382,7 +273,7 @@
       openDrawer();
     });
 
-    /* ── initial render ──────────────────────────────────── */
-    refreshCart();
+    /* ── bind initial server-rendered buttons ────────────── */
+    bindCartButtons();
   })();
 </script>

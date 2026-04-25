@@ -3,14 +3,6 @@
   <head>
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
-
-    {% comment %}
-      Font preloading:
-      1. Preconnect to font CDN for faster connection
-      2. Preload only the critical font variant (base weight)
-      3. Additional variants load on-demand via @font-face
-    {% endcomment %}
-
     {% unless settings.type_primary_font.system? %}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
 
@@ -18,14 +10,21 @@
       {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
     {% endunless %}
 
+    {% # Prefetch DNS for common CDNs %}
+    <link rel="dns-prefetch" href="https://cdn.shopify.com">
+
     {% # Load and preload the critical CSS %}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
 
+    {% # Apple meta tags %}
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
     {{ content_for_header }}
-    {{ 'tailwind-output.css' |  asset_url | stylesheet_tag }}
+    {{ 'tailwind-output.css' | asset_url | stylesheet_tag }}
   </head>
 
   <body class="bg-surface font-body text-on-surface antialiased">

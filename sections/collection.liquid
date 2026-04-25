@@ -1,4 +1,7 @@
-<section class="py-12 lg:py-24 bg-white full-width w-full" id="CollectionSection-{{ section.id }}">
+<section
+  class="py-12 lg:py-24 bg-white full-width w-full flex flex-col gap-6 lg:gap-10"
+  id="CollectionSection-{{ section.id }}"
+>
   <div class="max-w-full px-4 lg:px-6 mb-10 lg:mb-16 gsap-fade-up">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div class="max-w-[600px]">
@@ -22,10 +25,10 @@
     </div>
   </div>
 
-  <div class="max-w-full px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-{{ section.settings.columns_desktop }} gap-x-6 gap-y-12 gsap-stagger-parent">
+  <div class="max-w-full px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 gsap-stagger-parent">
     {% paginate collection.products by section.settings.products_per_page %}
       {%- for product in collection.products -%}
-        <div class="group flex flex-col">
+        <div class="group flex flex-col gap-4">
           <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-[36px] overflow-hidden mb-5 bg-gray-100 isolate border border-black/5">
             <a href="{{ product.url }}" class="block w-full h-full">
               {% if product.featured_image != blank %}
@@ -39,7 +42,8 @@
                   alt="{{ product.title }}"
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  loading="lazy"
+                  loading="eager"
+                  fetchpriority="high"
                   width="600"
                   height="600"
                 >
@@ -56,7 +60,18 @@
                 data-variant-id="{{ product.variants.first.id }}"
                 aria-label="Add {{ product.title | escape }} to cart"
               >
-                <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
+                <span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                  </svg>
+                </span>
               </button>
               <svg class="absolute -top-[24px] right-0 w-[24px] h-[24px] fill-[#fafbfa]" viewBox="0 0 24 24">
                 <path d="M24,24 H0 A24,24 0 0,0 24,0 Z" />
@@ -68,8 +83,8 @@
           </div>
 
           <div class="flex justify-between items-start gap-4 px-2">
-            <div>
-              <h3 class="font-bold text-[18px] text-[#1a201b] leading-tight mb-1.5">
+            <div class="flex flex-col gap-1">
+              <h3 class="font-bold text-[18px] text-[#1a201b] leading-tight">
                 <a href="{{ product.url }}">{{ product.title }}</a>
               </h3>
               <p class="text-[13px] text-gray-500 leading-snug">

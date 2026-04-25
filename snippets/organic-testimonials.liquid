@@ -1,143 +1,140 @@
-<section
-  class="py-12 lg:py-24 bg-white full-width w-full overflow-hidden"
-  id="testimonial-section-{{ id_suffix | default: section.id }}"
->
-  <div class="max-w-[1300px] mx-auto px-4 lg:px-6 w-full">
+<section class="py-12 lg:py-24 bg-white w-full overflow-hidden" id="organic-testimonials-section">
+  <div class="max-w-[1440px] mx-auto px-4 lg:px-6 flex flex-col gap-6 lg:gap-10 w-full" style="margin: auto">
     <!-- TOP HEADER -->
-    <div class="mb-14 lg:mb-20">
-      <span class="inline-flex items-center text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide mb-6 bg-white shadow-sm">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#0f3f21] mr-2"></span>
-        Testimonials
-      </span>
+    <div class="mb-14 lg:mb-20 flex flex-col gap-3 gsap-fade-up">
+      {% if heading != blank %}
+        <span class="inline-flex items-center gap-2 w-fit text-gray-600 border border-gray-200 px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide bg-white shadow-sm">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#0f3f21] mr-2"></span>
+          {{ heading }}
+        </span>
+      {% endif %}
 
       <div class="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-6">
         <h2 class="text-4xl md:text-[52px] leading-tight text-[#1a201b] font-semibold tracking-tight max-w-[700px]">
-          Real Stories From <span class="font-normal italic text-gray-700">Our Farmers</span>
+          Real Stories From Our Farmers
         </h2>
-
-        <p class="max-w-[360px] text-[15px] text-gray-600 leading-relaxed text-left lg:text-right pb-2">
-          Read real experiences from farmers who grow with us, sharing trust, quality, and success from field to market.
-        </p>
       </div>
     </div>
 
     <!-- MAIN CONTENT GRID SLIDER -->
-    {%- assign slider_id = 'testimonial-slider-'
-      | append: id_suffix
-      | default: 'testimonial-slider-'
-      | append: section.id
-    -%}
-    {%- assign track_id = 'testimonial-track-'
-      | append: id_suffix
-      | default: 'testimonial-track-'
-      | append: section.id
-    -%}
-    <div class="relative w-full" id="{{ slider_id }}">
-      <!-- ARROW NAVIGATION (STATIC, ONLY 1 PAIR) -->
+    <div class="relative w-full" id="organic-testimonial-slider">
+      <!-- ARROW NAVIGATION -->
       <div class="absolute bottom-0 right-0 z-10 flex items-center gap-3 pointer-events-none">
-        <div class=" pointer-events-auto flex gap-3 pl-4">
+        <div class="pointer-events-auto flex gap-3 pl-4">
           <button class="testimonial-prev w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors shadow-sm focus:outline-none">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
+            <span class="text-[20px]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+              </svg>
+            </span>
           </button>
           <button class="testimonial-next w-12 h-12 rounded-full bg-[#0f3f21] flex items-center justify-center text-white hover:bg-green-800 transition-colors shadow-md focus:outline-none">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
+            <span class="text-[20px]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+              </svg>
+            </span>
           </button>
         </div>
       </div>
 
       <div class="overflow-hidden w-full relative">
-        <div class="flex transition-transform duration-700 ease-in-out w-full" id="{{ track_id }}">
-          <!-- Testimonial 1 -->
-          <div class="w-full flex-shrink-0 grid grid-cols-1 lg:grid-cols-[0.6fr_1.3fr] gap-10 lg:gap-16 items-center">
-            <div class="w-full aspect-square md:aspect-[4/3] h-full rounded-[40px] overflow-hidden bg-gray-100">
-              <img
-                src="{{ 'testimonial.png' | file_url }}"
-                alt="Farmer"
-                class="w-full h-full object-cover transition-transform duration-1000 bg-gray-100"
-                loading="lazy"
-                height="400"
-                width="400"
-              >
-            </div>
-            <div class="flex flex-col">
-              <div class="text-[26px] sm:text-[30px] md:text-[36px] leading-[1.3] font-medium tracking-tight mb-12 sm:mb-16">
-                <span class="text-[#1a201b]"
-                  >"I have been farming for over 15 years, but working with this platform completely changed how
-                </span>
-                <span class="text-gray-500"
-                  >I sell my produce. Fair prices, timely support, and genuine care for farmers made a real difference
-                  for my family and my land."</span
-                >
+        <div class="flex transition-transform duration-700 ease-in-out w-full" id="organic-testimonial-track">
+          {%- assign testimonial_blocks = section.blocks | where: 'type', 'testimonial' -%}
+          {% for block in testimonial_blocks %}
+            <div
+              class="w-full flex-shrink-0 grid grid-cols-1 lg:grid-cols-[0.6fr_1.3fr] gap-10 lg:gap-16 items-center"
+              {{ block.shopify_attributes }}
+            >
+              <!-- IMAGE -->
+              <div class="w-full aspect-square md:aspect-[3/3] h-full rounded-[40px] overflow-hidden bg-gray-100">
+                {% if block.settings.testimonial_image != blank %}
+                  {{
+                    block.settings.testimonial_image
+                    | image_url: width: 1000
+                    | image_tag: class: 'w-full h-full object-cover transition-transform duration-1000'
+                  }}
+                {% else %}
+                  {%- assign fallback_imgs = 'testimonial.png,testimonial-2.png,testimonial-3.png' | split: ',' -%}
+                  {%- assign fallback_img = fallback_imgs[forloop.index0] -%}
+                  {{
+                    images[fallback_img]
+                    | image_url: width: 1000
+                    | image_tag:
+                      class: 'w-full h-full object-cover transition-transform duration-1000',
+                      loading: 'lazy',
+                      fetchpriority: 'low',
+                      sizes: '100vw',
+                      alt: 'Testimonial Image'
+                  }}
+                {% endif %}
               </div>
-              <div class="flex items-center justify-between mt-auto pb-1 md:pb-0">
-                <div class="flex flex-col">
-                  <span class="text-[#1a201b] font-bold text-[18px]">Aaron Mitchell</span>
-                  <span class="text-gray-500 text-[14px] mt-0.5">Florida, United States</span>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <!-- Testimonial 2 -->
-          <div class="w-full flex-shrink-0 grid grid-cols-1 lg:grid-cols-[0.6fr_1.3fr] gap-10 lg:gap-16 items-center">
-            <div class="w-full aspect-square md:aspect-[4/3] h-full rounded-[40px] overflow-hidden bg-gray-100">
-              <img
-                src="{{ 'testimonial-2.png' | file_url }}"
-                alt="Farmer"
-                class="w-full h-full object-cover transition-transform duration-1000 bg-gray-100"
-                loading="lazy"
-                height="400"
-                width="400"
-              >
-            </div>
-            <div class="flex flex-col">
-              <div class="text-[26px] sm:text-[30px] md:text-[36px] leading-[1.3] font-medium tracking-tight mb-12 sm:mb-16">
-                <span class="text-[#1a201b]">"It's amazing how much easier tracking orders has become. </span>
-                <span class="text-gray-500"
-                  >The logistics used to give me headaches, but now everything is smooth, and I get paid faster than
-                  ever."</span
-                >
-              </div>
-              <div class="flex items-center justify-between mt-auto pb-1 md:pb-0">
-                <div class="flex flex-col">
-                  <span class="text-[#1a201b] font-bold text-[18px]">Sarah Jenkins</span>
-                  <span class="text-gray-500 text-[14px] mt-0.5">California, United States</span>
+              <!-- QUOTE & AUTHOR -->
+              <div class="flex flex-col gap-4">
+                <div class="text-[26px] sm:text-[30px] md:text-[36px] leading-[1.3] font-medium tracking-tight mb-12 sm:mb-16">
+                  <span class="text-[#1a201b] text-[26px] sm:text-[30px] md:text-[40px]">"{{ block.settings.testimonial_text }}"</span>
                 </div>
-              </div>
-            </div>
-          </div>
 
-          <!-- Testimonial 3 -->
-          <div class="w-full flex-shrink-0 grid grid-cols-1 lg:grid-cols-[0.6fr_1.3fr] gap-10 lg:gap-16 items-center">
-            <div class="w-full aspect-square md:aspect-[4/3] h-full rounded-[40px] overflow-hidden bg-gray-100">
-              <img
-                src="{{ 'testimonial-3.png' | file_url }}"
-                alt="Farmer"
-                class="w-full h-full object-cover transition-transform duration-1000 bg-gray-100"
-                loading="lazy"
-                height="400"
-                width="400"
-              >
-            </div>
-            <div class="flex flex-col">
-              <div class="text-[26px] sm:text-[30px] md:text-[36px] leading-[1.3] font-medium tracking-tight mb-12 sm:mb-16">
-                <span class="text-[#1a201b]">"My crop yield significantly increased after utilizing the insights </span>
-                <span class="text-gray-500"
-                  >provided by this service. The community of farmers here is also incredibly supportive."</span
-                >
-              </div>
-              <div class="flex items-center justify-between mt-auto pb-1 md:pb-0">
-                <div class="flex flex-col">
-                  <span class="text-[#1a201b] font-bold text-[18px]">David Choi</span>
-                  <span class="text-gray-500 text-[14px] mt-0.5">Oregon, United States</span>
+                <div class="flex items-center justify-between mt-auto pb-1 md:pb-0">
+                  <div class="flex flex-col">
+                    <span class="text-[#1a201b] font-bold text-[18px]">{{ block.settings.testimonial_name }}</span>
+                    <span class="text-gray-500 text-[14px] mt-0.5">{{ block.settings.testimonial_role }}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          {% else %}
+            {%- for i in (1..3) -%}
+              {%- assign testimonial_text = 'I have been farming for over 15 years, but working with this platform completely changed how I sell my produce. Fair prices, timely support, and genuine care for farmers made a real difference for my family and my land.' -%}
+              {%- assign author = 'Aaron Mitchell' -%}
+              {%- assign location = 'Florida, United States' -%}
+              {%- assign img_src = 'testimonial.png' | file_url -%}
+
+              {%- if i == 2 -%}
+                {%- assign testimonial_text = "The freshness and quality of the organic vegetables are unmatched. It's amazing how much healthier my family feels since we started getting our weekly farm box. The delivery is always on time, and the produce tastes like it was just picked!" -%}
+                {%- assign author = 'Sarah Jenkins' -%}
+                {%- assign location = 'California, United States' -%}
+                {%- assign img_src = 'testimonial-2.png' | file_url -%}
+              {%- elsif i == 3 -%}
+                {%- assign testimonial_text = "We used to struggle finding reliable organic produce in the city, but discovering this farm has been incredible. Now we get farm-to-table vegetables all year round. The connection to the farmers and transparency is something you can't fake." -%}
+                {%- assign author = 'David Choi' -%}
+                {%- assign location = 'Oregon, United States' -%}
+                {%- assign img_src = 'testimonial-3.png' | file_url -%}
+              {%- endif -%}
+
+              <div class="w-full flex-shrink-0 grid grid-cols-1 lg:grid-cols-[0.6fr_1.3fr] gap-10 lg:gap-16 items-center">
+                <div class="w-full aspect-square md:aspect-[4/3] h-full rounded-[40px] overflow-hidden bg-gray-100">
+                  <img src="{{ img_src }}" alt="Farmer" width="500" height="500" class="w-full h-full object-cover">
+                </div>
+                <div class="flex flex-col gap-3">
+                  <div class="text-[26px] sm:text-[30px] md:text-[36px] leading-[1.3] font-medium tracking-tight mb-12 sm:mb-16">
+                    <span class="text-[#1a201b] text-[26px] sm:text-[30px] md:text-[36px]">"{{ testimonial_text }}"</span>
+                  </div>
+                  <div class="flex items-center justify-between mt-auto pb-1 md:pb-0">
+                    <div class="flex flex-col">
+                      <span class="text-[#1a201b] font-bold text-[18px]">{{ author }}</span>
+                      <span class="text-gray-500 text-[14px] mt-0.5">{{ location }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          {% endfor %}
         </div>
       </div>
     </div>
@@ -146,10 +143,9 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    var sliderId = '{{ slider_id }}';
-    var trackId = '{{ track_id }}';
-    var track = document.getElementById(trackId);
-    if (!track) return;
+    var slider = document.getElementById('organic-testimonial-slider');
+    var track = document.getElementById('organic-testimonial-track');
+    if (!track || !slider) return;
 
     var currentSlide = 0;
     var slidesCount = track.children.length;
@@ -165,15 +161,12 @@
       track.style.transform = 'translateX(-' + currentSlide * 100 + '%)';
     }
 
-    var sliderElement = document.getElementById(sliderId);
-    if (!sliderElement) return;
-
-    sliderElement.querySelectorAll('.testimonial-prev').forEach(function (btn) {
+    slider.querySelectorAll('.testimonial-prev').forEach(function (btn) {
       btn.addEventListener('click', function () {
         moveSlide('prev');
       });
     });
-    sliderElement.querySelectorAll('.testimonial-next').forEach(function (btn) {
+    slider.querySelectorAll('.testimonial-next').forEach(function (btn) {
       btn.addEventListener('click', function () {
         moveSlide('next');
       });
